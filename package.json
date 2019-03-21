@@ -1,7 +1,7 @@
 {
-  "name": "react-virtualized-table",
-  "version": "1.0.1",
-  "description": "react table component",
+  "name": "virtualized-table",
+  "version": "0.0.1",
+  "description": "Large data volume table",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -9,9 +9,12 @@
   "scripts": {
     "build": "webpack --env.NODE_ENV=production"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "react",
+    "table"
+  ],
+  "author": "PengChen",
+  "license": "MIT",
   "dependencies": {
     "prop-types": "15.6.0",
     "react": "16.2.0",

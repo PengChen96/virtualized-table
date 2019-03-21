@@ -7,7 +7,7 @@ export default class Table extends Component {
 
     return (
       <div>
-        table table
+        table table table
       </div>
     );
 
