@@ -1,17 +1,35 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 import {Table} from '../libs/Table';
 
-class App extends Component {
+const columns = [{
+  title: '标题列',
+  content: '内容列'
+}];
+const list = [{
+  title: '标题1',
+  content: '内容1'
+}, {
+  title: '标题1',
+  content: '内容1'
+}, {
+  title: '标题1',
+  content: '内容1'
+}];
+
+class App extends React.Component {
 
   componentDidMount () {
-    console.log("start");
+    console.log('start');
   }
 
   render() {
     return (
       <div className="App">
-        <Table/>1
+        <Table
+          title="title"
+          columns={columns}
+          list={list}/>
       </div>
     );
   }
