@@ -2,34 +2,36 @@
 import React from 'react';
 import {Table} from '../libs/Table';
 
-const columns = [{
-  title: '标题列',
-  content: '内容列'
-}];
-const list = [{
-  title: '标题1',
-  content: '内容1'
-}, {
-  title: '标题1',
-  content: '内容1'
-}, {
-  title: '标题1',
-  content: '内容1'
-}];
-
 class App extends React.Component {
 
-  componentDidMount () {
-    console.log('start');
+  constructor () {
+    super();
+    this.state = {
+      list: []
+    };
   }
-
+  getList(){
+    let list = [];
+    for (let i = 0; i < 10000; i++) {
+      list.push({
+        title: '标题'+i,
+        content: '内容'+i
+      });
+      this.setState({
+        list: list
+      });
+    }
+  };
   render() {
+    const {list} = this.state;
+    console.log(list);
     return (
       <div className="App">
+        <div onClick={() => this.getList()}>getlist</div>
         <Table
           title="title"
-          columns={columns}
-          list={list}/>
+          list={list}
+        />
       </div>
     );
   }
