@@ -37,6 +37,8 @@ module.exports = {
             "always"
         ],
         "no-console": 1,
-        "no-unused-vars": 2
+        "no-unused-vars": 2,
+        "space-infix-ops": 2,
+        "key-spacing": 2,
     }
 };
