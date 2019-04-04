@@ -1,2 +1,2 @@
-# react-virtualized-table
+# virtualized-table
 Large data volume table

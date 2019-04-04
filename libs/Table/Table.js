@@ -19,7 +19,7 @@ class Table extends React.Component {
       // 可视区域高度
       visibleHeight: 400,
       // 一行的高度
-      rowHeight: 40,
+      estimatedRowHeight: 40,
       // 可渲染的元素个数
       rowVisibleCount: 10,
       // 上下偏移渲染个数
@@ -53,10 +53,10 @@ class Table extends React.Component {
 
     console.log(props.dataSource !== state.dataSource);
     if (props.dataSource !== state.dataSource) {
-      let rowVisibleCount = Math.ceil(state.visibleHeight / state.rowHeight);
+      let rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
       let endRowIndex = state.startRowIndex + rowVisibleCount + state.rowOffsetCount * 2;
       //
-      let columnVisibleCount = Math.ceil(state.visibleWidth / state.estimatedColumnWidth)
+      let columnVisibleCount = Math.ceil(state.visibleWidth / state.estimatedColumnWidth);
       let endColumnIndex = state.startColumnIndex + columnVisibleCount + state.columnOffsetCount * 2;
 
       return {
@@ -68,8 +68,8 @@ class Table extends React.Component {
         //
         dataSource: props.dataSource,
         virtualData: props.dataSource.slice(state.startRowIndex, endRowIndex),
-        startVerticalOffset: state.startRowIndex * state.rowHeight,
-        endVerticalOffset: (props.dataSource.length - endRowIndex) * state.rowHeight,
+        startVerticalOffset: state.startRowIndex * state.estimatedRowHeight,
+        endVerticalOffset: (props.dataSource.length - endRowIndex) * state.estimatedRowHeight,
         rowVisibleCount
       };
     }
@@ -89,20 +89,20 @@ class Table extends React.Component {
     const {scrollTop} = this._container;
     const {
       dataSource,
-      rowHeight,
+      estimatedRowHeight,
       rowOffsetCount,
       rowVisibleCount
     } = this.state;
     // 获取垂直滚动的条数
-    let scrollTopNum = Math.floor(scrollTop / rowHeight);
+    let scrollTopNum = Math.floor(scrollTop / estimatedRowHeight);
     // 获取要渲染的行开始坐标，最小坐标为0  rowOffsetCount: 行偏移量
     let startRowIndex = (scrollTopNum - rowOffsetCount) > 0 ? (scrollTopNum - rowOffsetCount) : 0;
     // 获取要渲染的行结尾坐标，最大坐标为dataSource长度  rowOffsetCount: 行偏移量
     let endRowIndex = (rowVisibleCount + scrollTopNum + rowOffsetCount) > dataSource.length ? dataSource.length : (rowVisibleCount + scrollTopNum + rowOffsetCount);
     // 上方未渲染数据的paddingTop值
-    let startVerticalOffset = startRowIndex * rowHeight;
+    let startVerticalOffset = startRowIndex * estimatedRowHeight;
     // 上方未渲染数据的paddingBottom值
-    let endVerticalOffset = (dataSource.length - endRowIndex) * rowHeight;
+    let endVerticalOffset = (dataSource.length - endRowIndex) * estimatedRowHeight;
     // 需要渲染显示的行数据
     let virtualData = dataSource.slice(startRowIndex, endRowIndex);
     console.log(scrollTopNum, startRowIndex, endRowIndex, startVerticalOffset, endVerticalOffset, virtualData);
@@ -207,7 +207,7 @@ class Table extends React.Component {
       virtualData,
       startVerticalOffset,
       endVerticalOffset,
-      rowHeight
+      estimatedRowHeight
     } = this.state;
 
     return (
@@ -220,7 +220,7 @@ class Table extends React.Component {
             virtualData.map((row, rowIndex) => {
               return <React.Fragment key={rowIndex}>
                 <div className="v-table-row" style={{
-                  height: rowHeight,
+                  height: estimatedRowHeight,
                   width: visibleWidth,
                   paddingLeft: startHorizontalOffset,
                   paddingRight: endHorizontalOffset
