@@ -1,11 +1,26 @@
 
+
 .v-table-container {
+  display: flex;
 
-  width: 1200px;
-  height: 400px;
-  overflow-y: scroll;
-
-  .v-table-row {
-    display: flex;
+  .v-table-left-columns-container {
+    overflow: auto;
+    .v-table-row {
+      display: flex;
+    }
   }
+
+  .v-table-main-container {
+
+    //width: 1200px;
+    //height: 400px;
+    overflow: auto;
+
+    .v-table-row {
+      display: flex;
+    }
+  }
+
 }
+
+

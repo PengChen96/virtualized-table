@@ -16,6 +16,8 @@ class Table extends React.Component {
       dataSource: [],
       // 虚拟数据
       virtualData: [],
+
+
       // 可视区域高度
       visibleHeight: 400,
       // 一行的高度
@@ -30,10 +32,12 @@ class Table extends React.Component {
       // padding偏移量(垂直)
       startVerticalOffset: 0,
       endVerticalOffset: 0,
+      // 左边固定列个数
+      fixedLeftColumnCount: 1,
 
 
       // 可视区域宽度
-      visibleWidth: 1200,
+      visibleWidth: 800,
       // 预估的每列宽度
       estimatedColumnWidth: 150,
       // 可渲染个数（水平）
@@ -59,8 +63,11 @@ class Table extends React.Component {
       let columnVisibleCount = Math.ceil(state.visibleWidth / state.estimatedColumnWidth);
       let endColumnIndex = state.startColumnIndex + columnVisibleCount + state.columnOffsetCount * 2;
 
+      let fixedLeftColumns = props.columns.slice(0, props.fixedLeftColumnCount);
       return {
         columns: props.columns,
+        fixedLeftColumns,
+        fixedLeftColumnCount: props.fixedLeftColumnCount,
         virtualColumns: props.columns.slice(state.startColumnIndex, endColumnIndex),
         startHorizontalOffset: state.startColumnIndex * state.estimatedColumnWidth,
         endHorizontalOffset: (props.columns.length - endColumnIndex) * state.estimatedColumnWidth,
@@ -81,6 +88,10 @@ class Table extends React.Component {
     this.setState({
       visibleHeight: this._container.clientHeight,
       visibleWidth: this._container.clientWidth
+    });
+    this._container.addEventListener('scroll', () => {
+      console.log(this._container.scrollTop, this._leftContainer.scrollTop);
+      this._leftContainer.scrollTop = this._container.scrollTop;
     });
   }
 
@@ -105,7 +116,7 @@ class Table extends React.Component {
     let endVerticalOffset = (dataSource.length - endRowIndex) * estimatedRowHeight;
     // 需要渲染显示的行数据
     let virtualData = dataSource.slice(startRowIndex, endRowIndex);
-    console.log(scrollTopNum, startRowIndex, endRowIndex, startVerticalOffset, endVerticalOffset, virtualData);
+    console.log(scrollTopNum, startRowIndex, endRowIndex, startVerticalOffset, endVerticalOffset, virtualData, '垂直滚动');
     this.setState({
       startRowIndex,
       endRowIndex,
@@ -139,7 +150,16 @@ class Table extends React.Component {
     let endHorizontalOffset = (columns.length - endColumnIndex) * estimatedColumnWidth;
     // 需要渲染显示的列数据
     let virtualColumns = columns.slice(startColumnIndex, endColumnIndex);
-    console.log(scrollLeftNum, startColumnIndex, endColumnIndex, startHorizontalOffset, endHorizontalOffset, virtualColumns);
+    console.table({
+      'columns.length': columns.length,
+      'scrollLeftNum水平滚动的条数': scrollLeftNum,
+      'startColumnIndex要渲染的列开始坐标': startColumnIndex,
+      'endColumnIndex要渲染的列结尾坐标': endColumnIndex,
+      'startHorizontalOffset左边未渲染数据的paddingLeft值': startHorizontalOffset,
+      'endHorizontalOffset右边未渲染数据的paddingRight值': endHorizontalOffset
+    });
+    console.log('需要渲染显示的列数据', virtualColumns);
+    console.log('总columns', columns);
     this.setState({
       startColumnIndex,
       endColumnIndex,
@@ -199,6 +219,7 @@ class Table extends React.Component {
   render() {
 
     const {
+      fixedLeftColumns,
       virtualColumns,
       startHorizontalOffset,
       endHorizontalOffset,
@@ -207,37 +228,73 @@ class Table extends React.Component {
       virtualData,
       startVerticalOffset,
       endVerticalOffset,
-      estimatedRowHeight
+      estimatedRowHeight,
+      visibleHeight
     } = this.state;
 
     return (
-      <div className="v-table-container"
-        ref={c => this._container = c}
-        onScrollCapture={this._onScrollEvent.bind(this)}
-      >
-        <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
-          {
-            virtualData.map((row, rowIndex) => {
-              return <React.Fragment key={rowIndex}>
-                <div className="v-table-row" style={{
-                  height: estimatedRowHeight,
-                  width: visibleWidth,
-                  paddingLeft: startHorizontalOffset,
-                  paddingRight: endHorizontalOffset
-                }}>
-                  {
-                    virtualColumns.map((column, columnIndex) => {
-                      return <React.Fragment key={columnIndex}>
-                        {
-                          this._cellRender(row, rowIndex, column, columnIndex)
-                        }
-                      </React.Fragment>;
-                    })
-                  }
-                </div>
-              </React.Fragment>;
-            })
-          }
+      <div className="v-table-container">
+        {/* 左侧固定列*/}
+        <div className="v-table-left-columns-container"
+          ref={lc => this._leftContainer = lc}
+          style={{width: 300, height: 400}}
+        >
+          <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
+            {
+              virtualData.map((left_row, left_row_index) => {
+                return <React.Fragment key={left_row_index}>
+                  <div className="v-table-row" style={{
+                    width: 300,
+                    height: estimatedRowHeight
+                  }}>
+                    {
+                      fixedLeftColumns.map((left_column, left_column_index) => {
+                        return <React.Fragment key={left_column_index}>
+                          {
+                            this._cellRender(left_row, left_row_index, left_column, left_column_index)
+                          }
+                        </React.Fragment>;
+                      })
+                    }
+                  </div>
+                </React.Fragment>;
+              })
+            }
+          </div>
+        </div>
+        {/* 表格主内容*/}
+        <div className="v-table-main-container"
+          ref={c => this._container = c}
+          onScrollCapture={this._onScrollEvent.bind(this)}
+          style={{
+            width: visibleWidth,
+            height: visibleHeight
+          }}
+        >
+          <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
+            {
+              virtualData.map((row, rowIndex) => {
+                return <React.Fragment key={rowIndex}>
+                  <div className="v-table-row" style={{
+                    height: estimatedRowHeight,
+                    width: visibleWidth,
+                    paddingLeft: startHorizontalOffset,
+                    paddingRight: endHorizontalOffset
+                  }}>
+                    {
+                      virtualColumns.map((column, columnIndex) => {
+                        return <React.Fragment key={columnIndex}>
+                          {
+                            this._cellRender(row, rowIndex, column, columnIndex)
+                          }
+                        </React.Fragment>;
+                      })
+                    }
+                  </div>
+                </React.Fragment>;
+              })
+            }
+          </div>
         </div>
       </div>
     );
@@ -247,10 +304,18 @@ class Table extends React.Component {
 }
 
 Table.propTypes = {
+  // 标题
   title: PropTypes.string,
+  // 列
   columns: PropTypes.array,
-  list: PropTypes.array,
-  num: PropTypes.number
+  // 左边固定列 列数
+  fixedLeftColumnCount: PropTypes.number,
+  // 源数据
+  dataSource: PropTypes.array,
+  // 可视区域宽度
+  visibleWidth: PropTypes.number,
+  // 可视区域高度
+  visibleHeight: PropTypes.number
 };
 
 export default Table;
