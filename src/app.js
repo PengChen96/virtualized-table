@@ -57,20 +57,34 @@ class App extends React.Component {
       <div className="App">
         <div onClick={() => this.getList(10000)}>getList</div>
         <div onClick={() => this.getList(10000, '哈哈')}>getListVal</div>
-        {/*<Table*/}
-        {/*title="title"*/}
-        {/*columns={this.getColumns(10)}*/}
-        {/*dataSource={this.getList(1)}*/}
-        {/*/>*/}
+        <div className="v-table-header">
+          <Table
+            title="title"
+            visibleWidth={800}
+            visibleHeight={40}
+            columns={this.getColumns(25)}
+            dataSource={[{ title0: '内容'}]}
+            fixedLeftColumnCount={2}
+          />
+        </div>
         <Table
           title="title"
-          columns={this.getColumns(10)}
+          visibleWidth={800}
+          visibleHeight={800}
+          columns={this.getColumns(25)}
           dataSource={list}
           fixedLeftColumnCount={2}
+          onCellTap={this.onCellTap}
         />
       </div>
     );
   }
+
+  // 点击每个子项
+  onCellTap(record) {
+    console.log(record, '选择的回调');
+  }
+
 }
 
 export default App;

@@ -2,9 +2,10 @@
 
 .v-table-container {
   display: flex;
+  border: 1px solid #e3e4e8;
 
   .v-table-left-columns-container {
-    overflow: auto;
+    overflow: hidden;
     .v-table-row {
       display: flex;
     }
@@ -21,6 +22,15 @@
     }
   }
 
+  .v-table-fixed-left {
+    box-shadow: 6px 0 6px -4px rgba(0,0,0,0.15);
+  }
+  .v-table-fixed-right {
+    box-shadow: -6px 0 6px -4px rgba(0,0,0,0.15);
+  }
+
 }
+
+
 
 

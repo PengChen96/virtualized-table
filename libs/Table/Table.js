@@ -19,7 +19,7 @@ class Table extends React.Component {
 
 
       // 可视区域高度
-      visibleHeight: 400,
+      visibleHeight: props.visibleHeight || 400,
       // 一行的高度
       estimatedRowHeight: 40,
       // 可渲染的元素个数
@@ -37,7 +37,7 @@ class Table extends React.Component {
 
 
       // 可视区域宽度
-      visibleWidth: 800,
+      visibleWidth: props.visibleWidth || 1200,
       // 预估的每列宽度
       estimatedColumnWidth: 150,
       // 可渲染个数（水平）
@@ -50,6 +50,10 @@ class Table extends React.Component {
       // padding偏移量(水平)
       startHorizontalOffset: 0,
       endHorizontalOffset: 0,
+      // 固定列 列数
+      fixedLeftColumns: 0,
+      // 水平滚动距离
+      scrollLeft: 0
     };
   }
 
@@ -85,10 +89,10 @@ class Table extends React.Component {
   }
 
   componentDidMount () {
-    this.setState({
-      visibleHeight: this._container.clientHeight,
-      visibleWidth: this._container.clientWidth
-    });
+    // this.setState({
+    //   visibleHeight: this._container.clientHeight,
+    //   visibleWidth: this._container.clientWidth
+    // });
     this._container.addEventListener('scroll', () => {
       console.log(this._container.scrollTop, this._leftContainer.scrollTop);
       this._leftContainer.scrollTop = this._container.scrollTop;
@@ -161,6 +165,7 @@ class Table extends React.Component {
     console.log('需要渲染显示的列数据', virtualColumns);
     console.log('总columns', columns);
     this.setState({
+      scrollLeft,
       startColumnIndex,
       endColumnIndex,
       startHorizontalOffset,
@@ -208,7 +213,7 @@ class Table extends React.Component {
     let realRowIndex = rowIndex + this.state.startRowIndex;
     let realColumnIndex = columnIndex + this.state.startColumnIndex;
     let value = row[column['key']];
-    return <div style={{minWidth: 150}}>
+    return <div style={{minWidth: 150}} onClick={() => this.__onCellTap(row)}>
       {
         column.render ? column.render(value) : row[column['key']]
       }
@@ -224,6 +229,7 @@ class Table extends React.Component {
       startHorizontalOffset,
       endHorizontalOffset,
       visibleWidth,
+      scrollLeft,
       //
       virtualData,
       startVerticalOffset,
@@ -232,12 +238,14 @@ class Table extends React.Component {
       visibleHeight
     } = this.state;
 
+    console.log(virtualData, '-');
+    console.log(virtualColumns, '|');
     return (
       <div className="v-table-container">
         {/* 左侧固定列*/}
-        <div className="v-table-left-columns-container"
+        <div className={`v-table-left-columns-container ${scrollLeft > 0 && 'v-table-fixed-left'}`}
           ref={lc => this._leftContainer = lc}
-          style={{width: 300, height: 400}}
+          style={{width: 300, height: visibleHeight}}
         >
           <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
             {
@@ -301,6 +309,16 @@ class Table extends React.Component {
 
   }
 
+  // 点击每个子项
+  __onCellTap (row) {
+
+    const {onCellTap} = this.props;
+    if (typeof onCellTap === 'function') {
+      onCellTap(row);
+    }
+
+  }
+
 }
 
 Table.propTypes = {
@@ -315,7 +333,10 @@ Table.propTypes = {
   // 可视区域宽度
   visibleWidth: PropTypes.number,
   // 可视区域高度
-  visibleHeight: PropTypes.number
+  visibleHeight: PropTypes.number,
+
+  //  API
+  onCellTap: PropTypes.func
 };
 
 export default Table;
