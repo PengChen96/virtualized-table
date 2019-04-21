@@ -51,19 +51,22 @@ class App extends React.Component {
     }
     return columns;
   }
+
   render() {
     const {list} = this.state;
+    let columnData = [{ title0: '内容'}];
     return (
       <div className="App">
         <div onClick={() => this.getList(10000)}>getList</div>
         <div onClick={() => this.getList(10000, '哈哈')}>getListVal</div>
         <div className="v-table-header">
           <Table
+            ref={h => this._header = h}
             title="title"
             visibleWidth={800}
             visibleHeight={40}
             columns={this.getColumns(25)}
-            dataSource={[{ title0: '内容'}]}
+            dataSource={columnData}
             fixedLeftColumnCount={2}
           />
         </div>
@@ -74,12 +77,19 @@ class App extends React.Component {
           columns={this.getColumns(25)}
           dataSource={list}
           fixedLeftColumnCount={2}
+          onScroll={this.onScroll.bind(this)}
           onCellTap={this.onCellTap}
         />
       </div>
     );
   }
 
+  // 滚动
+  onScroll(scrollLeft) {
+    console.log(this._header._container.scrollLeft, 'header');
+    console.log(scrollLeft, 'onScroll callback');
+    this._header._container.scrollLeft = scrollLeft;
+  }
   // 点击每个子项
   onCellTap(record) {
     console.log(record, '选择的回调');

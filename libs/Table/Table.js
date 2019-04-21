@@ -89,10 +89,10 @@ class Table extends React.Component {
   }
 
   componentDidMount () {
-    // this.setState({
-    //   visibleHeight: this._container.clientHeight,
-    //   visibleWidth: this._container.clientWidth
-    // });
+    this.setState({
+      visibleHeight: this._container.clientHeight,
+      visibleWidth: this._container.clientWidth
+    });
     this._container.addEventListener('scroll', () => {
       console.log(this._container.scrollTop, this._leftContainer.scrollTop);
       this._leftContainer.scrollTop = this._container.scrollTop;
@@ -177,6 +177,7 @@ class Table extends React.Component {
   // 滚动事件
   _onScrollEvent() {
     console.log(this);
+    this.__onScroll(this._container.scrollLeft);
     // 垂直方向滚动
     this._onVerticalScroll();
     // 水平方向滚动
@@ -309,6 +310,16 @@ class Table extends React.Component {
 
   }
 
+  // 滚动
+  __onScroll (scrollLeft) {
+
+    const {onScroll} = this.props;
+    if (typeof onScroll === 'function') {
+      onScroll(scrollLeft);
+    }
+
+  }
+
   // 点击每个子项
   __onCellTap (row) {
 
@@ -336,6 +347,9 @@ Table.propTypes = {
   visibleHeight: PropTypes.number,
 
   //  API
+  // 滚动
+  onScroll: PropTypes.func,
+  // 点击每个子项
   onCellTap: PropTypes.func
 };
 
