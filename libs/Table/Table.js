@@ -277,7 +277,9 @@ class Table extends React.Component {
           onScrollCapture={this._onScrollEvent.bind(this)}
           style={{
             width: visibleWidth,
-            height: visibleHeight
+            height: visibleHeight,
+            // 设置最小高度[visibleHeight计算会少滚动条的高度]
+            minHeight: estimatedRowHeight
           }}
         >
           <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
