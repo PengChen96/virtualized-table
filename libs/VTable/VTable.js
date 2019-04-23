@@ -1,9 +1,8 @@
 
 import React from 'react';
-import {Table} from '../libs/Table';
-import {VTable} from '../libs/VTable';
+import Grid from './Grid';
 
-class App extends React.Component {
+class VTable extends React.Component {
 
   constructor () {
     super();
@@ -32,7 +31,7 @@ class App extends React.Component {
     let columns = [{
       key: 'title0',
       title: '标题列',
-      width: '100px',
+      width: 100,
       render: (value) => {
         return <div>
           <input type="checkbox"/>
@@ -44,7 +43,7 @@ class App extends React.Component {
       columns.push({
         key: 'title' + i,
         title: '标题列',
-        width: '100px',
+        width: 150,
         render: (value) => {
           return <span>{value}值</span>;
         }
@@ -61,7 +60,7 @@ class App extends React.Component {
         <div onClick={() => this.getList(10000)}>getList</div>
         <div onClick={() => this.getList(10000, '哈哈')}>getListVal</div>
         <div className="v-table-header">
-          <Table
+          <Grid
             ref={h => this._header = h}
             title="title"
             visibleWidth={800}
@@ -71,7 +70,7 @@ class App extends React.Component {
             fixedLeftColumnCount={2}
           />
         </div>
-        <Table
+        <Grid
           title="title"
           visibleWidth={800}
           visibleHeight={800}
@@ -81,7 +80,6 @@ class App extends React.Component {
           onScroll={this.onScroll.bind(this)}
           onCellTap={this.onCellTap}
         />
-        <VTable/>
       </div>
     );
   }
@@ -99,4 +97,4 @@ class App extends React.Component {
 
 }
 
-export default App;
+export default VTable;

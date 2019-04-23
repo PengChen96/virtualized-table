@@ -1,0 +1,46 @@
+
+/* VTable*/
+.v-table-header {
+  .v-grid-container {
+    .v-grid-main-container {
+      overflow-y: hidden;
+      //border:1px solid #333;
+    }
+  }
+}
+
+/* Grid*/
+.v-grid-container {
+  display: flex;
+  border: 1px solid #e3e4e8;
+
+  .v-grid-left-columns-container {
+    overflow: hidden;
+    .v-grid-row {
+      display: flex;
+    }
+  }
+
+  .v-grid-main-container {
+
+    //width: 1200px;
+    //height: 400px;
+    overflow: auto;
+
+    .v-grid-row {
+      display: flex;
+    }
+  }
+
+  .v-grid-fixed-left {
+    box-shadow: 6px 0 6px -4px rgba(0,0,0,0.15);
+  }
+  .v-grid-fixed-right {
+    box-shadow: -6px 0 6px -4px rgba(0,0,0,0.15);
+  }
+}
+
+
+
+
+
