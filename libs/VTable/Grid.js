@@ -58,11 +58,13 @@ class Grid extends React.Component {
       fixedLeftColumnsWidth: 0,
       // 主要滚动列
       scrollColumns: [],
+      scrollColumnsWidth: props.visibleWidth || 1200
     };
   }
 
   static getDerivedStateFromProps(props, state) {
 
+    console.log('=====');
     console.log(props.dataSource !== state.dataSource);
     if (props.dataSource !== state.dataSource) {
       let rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
@@ -72,12 +74,15 @@ class Grid extends React.Component {
       let endColumnIndex = state.startColumnIndex + columnVisibleCount + state.columnOffsetCount * 2;
 
       let fixedLeftColumns = props.columns.slice(0, props.fixedLeftColumnCount);
+      let fixedLeftColumnsWidth = calculateColumnsWidth(fixedLeftColumns);
       let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, props.columns.length);
+      let scrollColumnsWidth = state.visibleWidth - fixedLeftColumnsWidth;
       return {
         columns: props.columns,
         fixedLeftColumns,
-        fixedLeftColumnsWidth: calculateColumnsWidth(fixedLeftColumns),
+        fixedLeftColumnsWidth,
         scrollColumns,
+        scrollColumnsWidth,
         fixedLeftColumnCount: props.fixedLeftColumnCount,
         virtualColumns: scrollColumns.slice(state.startColumnIndex, endColumnIndex),
         startHorizontalOffset: state.startColumnIndex * state.estimatedColumnWidth,
@@ -95,20 +100,70 @@ class Grid extends React.Component {
 
   }
 
+  componentWillReceiveProps(props) {
+
+    let {state} = this;
+    if (props.dataSource !== state.dataSource) {
+      let rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
+      let endRowIndex = state.startRowIndex + rowVisibleCount + state.rowOffsetCount * 2;
+      //
+      let visibleWidth = this._masterContainer.clientWidth;
+      let fixedLeftColumns = props.columns.slice(0, props.fixedLeftColumnCount);
+      let fixedLeftColumnsWidth = calculateColumnsWidth(fixedLeftColumns);
+      let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, props.columns.length);
+      let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth;
+
+      let columnVisibleCount = Math.ceil(scrollColumnsWidth / state.estimatedColumnWidth);
+      let endColumnIndex = state.startColumnIndex + columnVisibleCount + state.columnOffsetCount * 2;
+
+
+      this.setState({
+        columns: props.columns,
+        fixedLeftColumns,
+        fixedLeftColumnsWidth,
+        scrollColumns,
+        scrollColumnsWidth,
+        fixedLeftColumnCount: props.fixedLeftColumnCount,
+        virtualColumns: scrollColumns.slice(state.startColumnIndex, endColumnIndex),
+        startHorizontalOffset: state.startColumnIndex * state.estimatedColumnWidth,
+        endHorizontalOffset: (scrollColumns.length - endColumnIndex) * state.estimatedColumnWidth,
+        columnVisibleCount,
+        // //
+        dataSource: props.dataSource,
+        virtualData: props.dataSource.slice(state.startRowIndex, endRowIndex),
+        startVerticalOffset: state.startRowIndex * state.estimatedRowHeight,
+        endVerticalOffset: (props.dataSource.length - endRowIndex) * state.estimatedRowHeight,
+        rowVisibleCount
+      });
+    }
+
+  }
+
   componentDidMount () {
+    let {props} = this;
+    let visibleHeight = this._masterContainer.clientHeight;
+    let visibleWidth = this._masterContainer.clientWidth;
+    let fixedLeftColumns = props.columns.slice(0, props.fixedLeftColumnCount);
+    let fixedLeftColumnsWidth = calculateColumnsWidth(fixedLeftColumns);
+    let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, props.columns.length);
+    let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth;
     this.setState({
-      visibleHeight: this._container.clientHeight,
-      visibleWidth: this._container.clientWidth
+      visibleHeight,
+      visibleWidth,
+      fixedLeftColumns,
+      fixedLeftColumnsWidth,
+      scrollColumns,
+      scrollColumnsWidth
     });
-    this._container.addEventListener('scroll', () => {
-      console.log(this._container.scrollTop, this._leftContainer.scrollTop);
-      this._leftContainer.scrollTop = this._container.scrollTop;
+    this._scrollContainer.addEventListener('scroll', () => {
+      console.log(this._scrollContainer.scrollTop, this._leftContainer.scrollTop);
+      this._leftContainer.scrollTop = this._scrollContainer.scrollTop;
     });
   }
 
   // 垂直方向滚动
   _onVerticalScroll() {
-    const {scrollTop} = this._container;
+    const {scrollTop} = this._scrollContainer;
     const {
       dataSource,
       estimatedRowHeight,
@@ -139,7 +194,7 @@ class Grid extends React.Component {
 
   // 水平方向滚动
   _onHorizontalScroll() {
-    const {scrollLeft} = this._container;
+    const {scrollLeft} = this._scrollContainer;
     const {
       scrollColumns,
       estimatedColumnWidth,
@@ -184,7 +239,7 @@ class Grid extends React.Component {
   // 滚动事件
   _onScrollEvent() {
     console.log(this);
-    this.__onScroll(this._container.scrollLeft);
+    this.__onScroll(this._scrollContainer.scrollLeft);
     // 垂直方向滚动
     this._onVerticalScroll();
     // 水平方向滚动
@@ -193,25 +248,25 @@ class Grid extends React.Component {
     // 当前的滚动位置 减去  上一次的滚动位置
     // 如果为true则代表向下滚动，false代表向上滚动
     const {scrollPosition} = this.state;
-    let flagToDirection = this._container.scrollTop - scrollPosition > 0;
+    let flagToDirection = this._scrollContainer.scrollTop - scrollPosition > 0;
     // 记录当前的滚动位置
     this.setState({
-      scrollPosition: this._container.scrollTop
+      scrollPosition: this._scrollContainer.scrollTop
     });
-    const height = this._container.scrollHeight - this._container.scrollTop - this._container.clientHeight;
+    const height = this._scrollContainer.scrollHeight - this._scrollContainer.scrollTop - this._scrollContainer.clientHeight;
     // 记录滚动位置距离底部的位置
-    let scrollBottom = this._container.scrollHeight - (this._container.scrollTop + this._container.clientHeight) < 100;
+    let scrollBottom = this._scrollContainer.scrollHeight - (this._scrollContainer.scrollTop + this._scrollContainer.clientHeight) < 100;
     // 如果已达到指定位置则触发 （向下滚动）
     if (flagToDirection && scrollBottom) {
     }
     // 向上滚动
-    if (!flagToDirection && this._container.scrollTop < 100) {
+    if (!flagToDirection && this._scrollContainer.scrollTop < 100) {
     }
     console.table({
-      'scrollTop 滚动的高度': this._container.scrollTop,
-      'scrollLeft 滚动的宽度': this._container.scrollLeft,
-      'clientHeight 视窗高度': this._container.clientHeight,
-      'scrollHeight 页面高度': this._container.scrollHeight,
+      'scrollTop 滚动的高度': this._scrollContainer.scrollTop,
+      'scrollLeft 滚动的宽度': this._scrollContainer.scrollLeft,
+      'clientHeight 视窗高度': this._scrollContainer.clientHeight,
+      'scrollHeight 页面高度': this._scrollContainer.scrollHeight,
       'height 距离页面底部的高度': height,
       '滚动方向': flagToDirection ? '下' : '上'
     });
@@ -222,7 +277,16 @@ class Grid extends React.Component {
     let realColumnIndex = columnIndex + this.state.startColumnIndex;
     let value = row[column['key']];
     let minWidth = column.width || 150;
-    return <div style={{minWidth}} onClick={() => this.__onCellTap(row)}>
+    return <div onClick={() => this.__onCellTap(row)}
+      style={{
+        minWidth,
+        height: this.state.estimatedRowHeight,
+        borderBottom: '1px solid #eee',
+        lineHeight: '16px',
+        display: 'flex',
+        alignItems: 'center'
+      }}
+    >
       {
         column.render ? column.render(value) : row[column['key']]
       }
@@ -235,10 +299,11 @@ class Grid extends React.Component {
     const {
       fixedLeftColumns,
       fixedLeftColumnsWidth,
+      scrollColumnsWidth,
       virtualColumns,
       startHorizontalOffset,
       endHorizontalOffset,
-      visibleWidth,
+      // visibleWidth,
       scrollLeft,
       //
       virtualData,
@@ -251,41 +316,52 @@ class Grid extends React.Component {
     console.log(virtualData, '-');
     console.log(virtualColumns, '|');
     return (
-      <div className="v-grid-container">
+      <div className="v-grid-container"
+        ref={mc => this._masterContainer = mc}
+        // style={{
+        //   width: visibleWidth,
+        //   height: visibleHeight
+        // }}
+      >
         {/* 左侧固定列*/}
         <div className={`v-grid-left-columns-container ${scrollLeft > 0 && 'v-grid-fixed-left'}`}
           ref={lc => this._leftContainer = lc}
-          style={{width: fixedLeftColumnsWidth, height: visibleHeight}}
+          style={{
+            width: fixedLeftColumnsWidth,
+            minWidth: fixedLeftColumnsWidth,
+            height: visibleHeight
+          }}
         >
           <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
             {
               virtualData.map((left_row, left_row_index) => {
-                return <React.Fragment key={left_row_index}>
+                return <div key={left_row_index}>
                   <div className="v-grid-row" style={{
                     width: fixedLeftColumnsWidth,
+                    minWidth: fixedLeftColumnsWidth,
                     height: estimatedRowHeight
                   }}>
                     {
                       fixedLeftColumns.map((left_column, left_column_index) => {
-                        return <React.Fragment key={left_column_index}>
+                        return <div key={left_column_index}>
                           {
                             this._cellRender(left_row, left_row_index, left_column, left_column_index)
                           }
-                        </React.Fragment>;
+                        </div>;
                       })
                     }
                   </div>
-                </React.Fragment>;
+                </div>;
               })
             }
           </div>
         </div>
         {/* 表格主内容*/}
         <div className="v-grid-main-container"
-          ref={c => this._container = c}
+          ref={sc => this._scrollContainer = sc}
           onScrollCapture={this._onScrollEvent.bind(this)}
           style={{
-            width: visibleWidth,
+            width: scrollColumnsWidth,
             height: visibleHeight,
             // 设置最小高度[visibleHeight计算会少滚动条的高度]
             minHeight: estimatedRowHeight
@@ -294,24 +370,24 @@ class Grid extends React.Component {
           <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
             {
               virtualData.map((row, rowIndex) => {
-                return <React.Fragment key={rowIndex}>
+                return <div key={rowIndex}>
                   <div className="v-grid-row" style={{
                     height: estimatedRowHeight,
-                    width: visibleWidth,
+                    width: scrollColumnsWidth,
                     paddingLeft: startHorizontalOffset,
                     paddingRight: endHorizontalOffset
                   }}>
                     {
                       virtualColumns.map((column, columnIndex) => {
-                        return <React.Fragment key={columnIndex}>
+                        return <div key={columnIndex}>
                           {
                             this._cellRender(row, rowIndex, column, columnIndex)
                           }
-                        </React.Fragment>;
+                        </div>;
                       })
                     }
                   </div>
-                </React.Fragment>;
+                </div>;
               })
             }
           </div>

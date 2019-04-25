@@ -1,6 +1,6 @@
 {
   "name": "virtualized-table",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "Large data volume table",
   "main": "dist/index.js",
   "files": [
@@ -17,6 +17,10 @@
   ],
   "author": "PengChen",
   "license": "MIT",
+  "peerDependencies": {
+    "react": ">=16.0.0",
+    "react-dom": ">=16.0.0"
+  },
   "dependencies": {
     "prop-types": "15.6.0",
     "react": "16.2.0",

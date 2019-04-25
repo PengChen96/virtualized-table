@@ -1,14 +1,28 @@
 
 import React from 'react';
 import Grid from './Grid';
+import PropTypes from 'prop-types';
 
 class VTable extends React.Component {
 
   constructor () {
     super();
     this.state = {
-      list: []
+      list: [],
+      columns: [],
+      dataSource: []
     };
+  }
+  componentWillReceiveProps(props) {
+
+    let {state} = this;
+    if (props.dataSource !== state.dataSource) {
+      this.setState({
+        columns: props.columns,
+        dataSource: props.dataSource
+      });
+    }
+
   }
 
   getList(num = 1,val = ''){
@@ -53,42 +67,47 @@ class VTable extends React.Component {
   }
 
   render() {
-    const {list} = this.state;
-    let columnData = [{ title0: '内容'}];
+    const {
+      columns,
+      dataSource
+    } = this.state;
+    let columnData = [{ title: '内容'}];
     return (
-      <div className="App">
+      <div className="v-table">
         <div onClick={() => this.getList(10000)}>getList</div>
         <div onClick={() => this.getList(10000, '哈哈')}>getListVal</div>
         <div className="v-table-header">
           <Grid
             ref={h => this._header = h}
             title="title"
-            visibleWidth={800}
+            visibleWidth={1000}
             visibleHeight={40}
-            columns={this.getColumns(25)}
+            columns={columns}
             dataSource={columnData}
             fixedLeftColumnCount={2}
           />
         </div>
-        <Grid
-          title="title"
-          visibleWidth={800}
-          visibleHeight={800}
-          columns={this.getColumns(25)}
-          dataSource={list}
-          fixedLeftColumnCount={2}
-          onScroll={this.onScroll.bind(this)}
-          onCellTap={this.onCellTap}
-        />
+        <div className="v-table-content">
+          <Grid
+            title="title"
+            visibleWidth={1000}
+            visibleHeight={400}
+            columns={columns}
+            dataSource={dataSource}
+            fixedLeftColumnCount={2}
+            onScroll={this.onScroll.bind(this)}
+            onCellTap={this.onCellTap}
+          />
+        </div>
       </div>
     );
   }
 
   // 滚动
   onScroll(scrollLeft) {
-    console.log(this._header._container.scrollLeft, 'header');
+    console.log(this._header._scrollContainer.scrollLeft, 'header');
     console.log(scrollLeft, 'onScroll callback');
-    this._header._container.scrollLeft = scrollLeft;
+    this._header._scrollContainer.scrollLeft = scrollLeft;
   }
   // 点击每个子项
   onCellTap(record) {
@@ -96,5 +115,26 @@ class VTable extends React.Component {
   }
 
 }
+
+VTable.propTypes = {
+  // 标题
+  title: PropTypes.string,
+  // 列
+  columns: PropTypes.array,
+  // 左边固定列 列数
+  fixedLeftColumnCount: PropTypes.number,
+  // 源数据
+  dataSource: PropTypes.array,
+  // 可视区域宽度
+  visibleWidth: PropTypes.number,
+  // 可视区域高度
+  visibleHeight: PropTypes.number,
+
+  //  API
+  // 滚动
+  onScroll: PropTypes.func,
+  // 点击每个子项
+  onCellTap: PropTypes.func
+};
 
 export default VTable;
