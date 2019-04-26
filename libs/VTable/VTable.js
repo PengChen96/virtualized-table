@@ -117,8 +117,6 @@ class VTable extends React.Component {
 }
 
 VTable.propTypes = {
-  // 标题
-  title: PropTypes.string,
   // 列
   columns: PropTypes.array,
   // 左边固定列 列数

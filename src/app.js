@@ -32,7 +32,7 @@ class App extends React.Component {
     let columns = [{
       key: 'title0',
       title: '标题列',
-      width: '100px',
+      width: 100,
       render: (value) => {
         return <div>
           <input type="checkbox"/>
@@ -44,7 +44,7 @@ class App extends React.Component {
       columns.push({
         key: 'title' + i,
         title: '标题列',
-        width: '100px',
+        width: 150,
         render: (value) => {
           return <span>{value}值</span>;
         }
@@ -81,7 +81,10 @@ class App extends React.Component {
           onScroll={this.onScroll.bind(this)}
           onCellTap={this.onCellTap}
         />
-        <VTable/>
+        <VTable
+          columns={this.getColumns(25)}
+          dataSource={list}
+        />
       </div>
     );
   }

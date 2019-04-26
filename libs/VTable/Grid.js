@@ -70,13 +70,14 @@ class Grid extends React.Component {
       let rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
       let endRowIndex = state.startRowIndex + rowVisibleCount + state.rowOffsetCount * 2;
       //
-      let columnVisibleCount = Math.ceil(state.visibleWidth / state.estimatedColumnWidth);
-      let endColumnIndex = state.startColumnIndex + columnVisibleCount + state.columnOffsetCount * 2;
-
+      let visibleWidth = state.visibleWidth;
       let fixedLeftColumns = props.columns.slice(0, props.fixedLeftColumnCount);
       let fixedLeftColumnsWidth = calculateColumnsWidth(fixedLeftColumns);
       let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, props.columns.length);
-      let scrollColumnsWidth = state.visibleWidth - fixedLeftColumnsWidth;
+      let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth;
+
+      let columnVisibleCount = Math.ceil(scrollColumnsWidth / state.estimatedColumnWidth);
+      let endColumnIndex = state.startColumnIndex + columnVisibleCount + state.columnOffsetCount * 2;
       return {
         columns: props.columns,
         fixedLeftColumns,
@@ -115,7 +116,6 @@ class Grid extends React.Component {
 
       let columnVisibleCount = Math.ceil(scrollColumnsWidth / state.estimatedColumnWidth);
       let endColumnIndex = state.startColumnIndex + columnVisibleCount + state.columnOffsetCount * 2;
-
 
       this.setState({
         columns: props.columns,
@@ -281,10 +281,11 @@ class Grid extends React.Component {
       style={{
         minWidth,
         height: this.state.estimatedRowHeight,
-        borderBottom: '1px solid #eee',
+        // borderBottom: '1px solid #eee',
         lineHeight: '16px',
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        boxSizing: 'border-box'
       }}
     >
       {

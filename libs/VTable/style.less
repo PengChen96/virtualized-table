@@ -1,8 +1,11 @@
 
+@borderColor: #e3e4e8;
+
 /* VTable*/
 .v-table-header {
   .v-grid-container {
     background: #f4f6f9;
+    border-bottom: none;
     .v-grid-main-container {
       overflow: hidden;
       //border:1px solid #333;
@@ -13,13 +16,15 @@
 /* Grid*/
 .v-grid-container {
   display: flex;
-  border: 1px solid #e3e4e8;
+  border: 1px solid @borderColor;
 
   .v-grid-left-columns-container {
     overflow: hidden;
     .v-grid-row {
       display: flex;
+      border-bottom: 1px solid @borderColor;
     }
+
   }
 
   .v-grid-main-container {
@@ -30,6 +35,7 @@
 
     .v-grid-row {
       display: flex;
+      border-bottom: 1px solid @borderColor;
     }
   }
 
