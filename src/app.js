@@ -60,6 +60,10 @@ class App extends React.Component {
       <div className="App">
         <div onClick={() => this.getList(10000)}>getList</div>
         <div onClick={() => this.getList(10000, '哈哈')}>getListVal</div>
+        <VTable
+          columns={this.getColumns(25)}
+          dataSource={list}
+        />
         <div className="v-table-header">
           <Table
             ref={h => this._header = h}
@@ -81,10 +85,7 @@ class App extends React.Component {
           onScroll={this.onScroll.bind(this)}
           onCellTap={this.onCellTap}
         />
-        <VTable
-          columns={this.getColumns(25)}
-          dataSource={list}
-        />
+
       </div>
     );
   }

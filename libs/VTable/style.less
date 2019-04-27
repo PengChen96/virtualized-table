@@ -6,6 +6,9 @@
   .v-grid-container {
     background: #f4f6f9;
     border-bottom: none;
+    .v-grid-left-columns-container {
+      overflow: hidden;
+    }
     .v-grid-main-container {
       overflow: hidden;
       //border:1px solid #333;
@@ -19,10 +22,19 @@
   border: 1px solid @borderColor;
 
   .v-grid-left-columns-container {
-    overflow: hidden;
+    &::-webkit-scrollbar {
+      background-color: transparent;
+      width: 0;
+    }
+    overflow-x: scroll;
     .v-grid-row {
       display: flex;
       border-bottom: 1px solid @borderColor;
+
+      &:hover {
+        background: #e6f7ff;
+      }
+
     }
 
   }
@@ -36,6 +48,9 @@
     .v-grid-row {
       display: flex;
       border-bottom: 1px solid @borderColor;
+      &:hover {
+        background: #e6f7ff;
+      }
     }
   }
 
