@@ -8,10 +8,19 @@
     border-bottom: none;
     .v-grid-left-columns-container {
       overflow: hidden;
+      .v-grid-cell {
+        border-bottom: none !important;
+      }
     }
     .v-grid-main-container {
-      overflow: hidden;
-      //border:1px solid #333;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      &::-webkit-scrollbar {
+        background: transparent;
+      }
+      .v-grid-cell {
+        border-bottom: none !important;
+      }
     }
   }
 }
@@ -22,21 +31,26 @@
   border: 1px solid @borderColor;
 
   .v-grid-left-columns-container {
-    &::-webkit-scrollbar {
-      background-color: transparent;
-      width: 0;
-    }
+    overflow-y: hidden;
     overflow-x: scroll;
+    &::-webkit-scrollbar {
+      background: transparent;
+    }
     .v-grid-row {
       display: flex;
-      border-bottom: 1px solid @borderColor;
-
-      &:hover {
-        background: #e6f7ff;
+      //&:hover {
+      //  background: #e6f7ff;
+      //}
+      .v-grid-cell {
+        position: relative;
+        border-bottom: 1px solid @borderColor;
+        line-height: 16px;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 6px 12px;
       }
-
     }
-
   }
 
   .v-grid-main-container {
@@ -47,9 +61,17 @@
 
     .v-grid-row {
       display: flex;
-      border-bottom: 1px solid @borderColor;
-      &:hover {
-        background: #e6f7ff;
+      //&:hover {
+      //  background: #e6f7ff;
+      //}
+      .v-grid-cell {
+        position: relative;
+        border-bottom: 1px solid @borderColor;
+        line-height: 16px;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 6px 12px;
       }
     }
   }

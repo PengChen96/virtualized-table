@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {Table} from '../libs/Table';
+// import {Table} from '../libs/Table';
 import {VTable} from '../libs/VTable';
 
 class App extends React.Component {
@@ -39,6 +39,18 @@ class App extends React.Component {
           {value}
         </div>;
       }
+    }, {
+      key: 'title0',
+      title: '标题列',
+      width: 170,
+    }, {
+      key: 'title0',
+      title: '标题列',
+      width: 170,
+    }, {
+      key: 'title0',
+      title: '标题列',
+      width: 170,
     }];
     for (let i = 0; i < num; i++) {
       columns.push({
@@ -55,7 +67,7 @@ class App extends React.Component {
 
   render() {
     const {list} = this.state;
-    let columnData = [{ title0: '内容'}];
+    // let columnData = [{ title0: '内容'}];
     return (
       <div className="App">
         <div onClick={() => this.getList(10000)}>getList</div>
@@ -64,28 +76,27 @@ class App extends React.Component {
           columns={this.getColumns(25)}
           dataSource={list}
         />
-        <div className="v-table-header">
-          <Table
-            ref={h => this._header = h}
-            title="title"
-            visibleWidth={800}
-            visibleHeight={40}
-            columns={this.getColumns(25)}
-            dataSource={columnData}
-            fixedLeftColumnCount={2}
-          />
-        </div>
-        <Table
-          title="title"
-          visibleWidth={800}
-          visibleHeight={800}
-          columns={this.getColumns(25)}
-          dataSource={list}
-          fixedLeftColumnCount={2}
-          onScroll={this.onScroll.bind(this)}
-          onCellTap={this.onCellTap}
-        />
-
+        {/*<div className="v-table-header">*/}
+        {/*<Table*/}
+        {/*ref={h => this._header = h}*/}
+        {/*title="title"*/}
+        {/*visibleWidth={800}*/}
+        {/*visibleHeight={40}*/}
+        {/*columns={this.getColumns(25)}*/}
+        {/*dataSource={columnData}*/}
+        {/*fixedLeftColumnCount={2}*/}
+        {/*/>*/}
+        {/*</div>*/}
+        {/*<Table*/}
+        {/*title="title"*/}
+        {/*visibleWidth={800}*/}
+        {/*visibleHeight={800}*/}
+        {/*columns={this.getColumns(25)}*/}
+        {/*dataSource={list}*/}
+        {/*fixedLeftColumnCount={2}*/}
+        {/*onScroll={this.onScroll.bind(this)}*/}
+        {/*onCellTap={this.onCellTap}*/}
+        {/*/>*/}
       </div>
     );
   }

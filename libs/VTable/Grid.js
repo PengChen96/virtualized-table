@@ -42,7 +42,7 @@ class Grid extends React.Component {
       // 可渲染个数（水平）
       columnVisibleCount: 8,
       // 左右偏移渲染个数
-      columnOffsetCount: 4,
+      columnOffsetCount: props.columnOffsetCount || 4,
       // 可视区坐标(columnIndex水平)
       startColumnIndex: 0,
       endColumnIndex: 0,
@@ -64,20 +64,25 @@ class Grid extends React.Component {
 
   static getDerivedStateFromProps(props, state) {
 
-    console.log('=====');
     console.log(props.dataSource !== state.dataSource);
     if (props.dataSource !== state.dataSource) {
+      // 行
       let rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
       let endRowIndex = state.startRowIndex + rowVisibleCount + state.rowOffsetCount * 2;
-      //
+      // 列
       let visibleWidth = state.visibleWidth;
       let fixedLeftColumns = props.columns.slice(0, props.fixedLeftColumnCount);
       let fixedLeftColumnsWidth = calculateColumnsWidth(fixedLeftColumns);
       let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, props.columns.length);
       let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth;
-
       let columnVisibleCount = Math.ceil(scrollColumnsWidth / state.estimatedColumnWidth);
       let endColumnIndex = state.startColumnIndex + columnVisibleCount + state.columnOffsetCount * 2;
+
+      let leftOffsetColumns = scrollColumns.slice(0, state.startColumnIndex);
+      let startHorizontalOffset = calculateColumnsWidth(leftOffsetColumns);
+      let rightOffsetColumns = scrollColumns.slice(endColumnIndex, scrollColumns.length);
+      let endHorizontalOffset = calculateColumnsWidth(rightOffsetColumns);
+
       return {
         columns: props.columns,
         fixedLeftColumns,
@@ -86,8 +91,8 @@ class Grid extends React.Component {
         scrollColumnsWidth,
         fixedLeftColumnCount: props.fixedLeftColumnCount,
         virtualColumns: scrollColumns.slice(state.startColumnIndex, endColumnIndex),
-        startHorizontalOffset: state.startColumnIndex * state.estimatedColumnWidth,
-        endHorizontalOffset: (scrollColumns.length - endColumnIndex) * state.estimatedColumnWidth,
+        startHorizontalOffset,
+        endHorizontalOffset,
         columnVisibleCount,
         //
         dataSource: props.dataSource,
@@ -113,9 +118,13 @@ class Grid extends React.Component {
       let fixedLeftColumnsWidth = calculateColumnsWidth(fixedLeftColumns);
       let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, props.columns.length);
       let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth;
-
       let columnVisibleCount = Math.ceil(scrollColumnsWidth / state.estimatedColumnWidth);
       let endColumnIndex = state.startColumnIndex + columnVisibleCount + state.columnOffsetCount * 2;
+
+      let leftOffsetColumns = scrollColumns.slice(0, state.startColumnIndex);
+      let startHorizontalOffset = calculateColumnsWidth(leftOffsetColumns);
+      let rightOffsetColumns = scrollColumns.slice(endColumnIndex, scrollColumns.length);
+      let endHorizontalOffset = calculateColumnsWidth(rightOffsetColumns);
 
       this.setState({
         columns: props.columns,
@@ -125,8 +134,8 @@ class Grid extends React.Component {
         scrollColumnsWidth,
         fixedLeftColumnCount: props.fixedLeftColumnCount,
         virtualColumns: scrollColumns.slice(state.startColumnIndex, endColumnIndex),
-        startHorizontalOffset: state.startColumnIndex * state.estimatedColumnWidth,
-        endHorizontalOffset: (scrollColumns.length - endColumnIndex) * state.estimatedColumnWidth,
+        startHorizontalOffset,
+        endHorizontalOffset,
         columnVisibleCount,
         // //
         dataSource: props.dataSource,
@@ -211,9 +220,13 @@ class Grid extends React.Component {
     let endColumnIndex = (columnVisibleCount + scrollLeftNum + columnOffsetCount) > scrollColumns.length ? scrollColumns.length : (columnVisibleCount + scrollLeftNum + columnOffsetCount);
     // let endColumnIndex = columnVisibleCount + scrollLeftNum;
     // 左边未渲染数据的paddingLeft值
-    let startHorizontalOffset = startColumnIndex * estimatedColumnWidth;
+    // let startHorizontalOffset = startColumnIndex * estimatedColumnWidth;
+    let leftOffsetColumns = scrollColumns.slice(0, startColumnIndex);
+    let startHorizontalOffset = calculateColumnsWidth(leftOffsetColumns);
     // 右边未渲染数据的paddingRight值
-    let endHorizontalOffset = (scrollColumns.length - endColumnIndex) * estimatedColumnWidth;
+    // let endHorizontalOffset = (scrollColumns.length - endColumnIndex) * estimatedColumnWidth;
+    let rightOffsetColumns = scrollColumns.slice(endColumnIndex, scrollColumns.length);
+    let endHorizontalOffset = calculateColumnsWidth(rightOffsetColumns);
     // 需要渲染显示的列数据
     let virtualColumns = scrollColumns.slice(startColumnIndex, endColumnIndex);
     console.table({
@@ -276,20 +289,18 @@ class Grid extends React.Component {
     let realRowIndex = rowIndex + this.state.startRowIndex;
     let realColumnIndex = columnIndex + this.state.startColumnIndex;
     let value = row[column['key']];
-    let minWidth = column.width || 150;
+    let width = column.width || 150;
     return <div onClick={() => this.__onCellTap(row)}
+      className="v-grid-cell"
       style={{
-        minWidth,
-        height: this.state.estimatedRowHeight,
-        // borderBottom: '1px solid #eee',
-        lineHeight: '16px',
-        display: 'flex',
-        alignItems: 'center',
-        boxSizing: 'border-box'
+        width: width,
+        minWidth: width,
+        height: this.state.estimatedRowHeight
       }}
     >
       {
-        column.render ? column.render(value) : row[column['key']]
+        this.props.type === 'header' ? row[column['key']] :
+          column.render ? column.render(value) : row[column['key']]
       }
       [{realRowIndex}, {realColumnIndex}]
     </div>;
@@ -418,9 +429,22 @@ class Grid extends React.Component {
 
   }
 
+  // 左侧固定列cell每个子项渲染
+  __leftCellRender (left_row, left_row_index, left_column, left_column_index) {
+
+    const {leftCellRender} = this.props;
+    if (typeof leftCellRender === 'function') {
+      leftCellRender(left_row, left_row_index, left_column, left_column_index);
+      console.log(leftCellRender(left_row, left_row_index, left_column, left_column_index));
+    }
+
+  }
+
 }
 
 Grid.propTypes = {
+  // 类型 header
+  type: PropTypes.string,
   // 标题
   title: PropTypes.string,
   // 列
@@ -433,12 +457,15 @@ Grid.propTypes = {
   visibleWidth: PropTypes.number,
   // 可视区域高度
   visibleHeight: PropTypes.number,
-
+  // 左右偏移量
+  columnOffsetCount: PropTypes.number,
   //  API
   // 滚动
   onScroll: PropTypes.func,
   // 点击每个子项
-  onCellTap: PropTypes.func
+  onCellTap: PropTypes.func,
+  // 左侧固定列cell每个子项渲染
+  leftCellRender: PropTypes.func
 };
 
 export default Grid;

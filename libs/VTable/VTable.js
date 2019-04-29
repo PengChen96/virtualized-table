@@ -10,6 +10,7 @@ class VTable extends React.Component {
     this.state = {
       list: [],
       columns: [],
+      columnData: [{}],
       dataSource: []
     };
   }
@@ -19,65 +20,35 @@ class VTable extends React.Component {
     if (props.dataSource !== state.dataSource) {
       this.setState({
         columns: props.columns,
+        columnData: this.getColumnData(props.columns),
         dataSource: props.dataSource
       });
     }
 
   }
 
-  getList(num = 1,val = ''){
-    let list = [];
-    for (let i = 0; i < num; i++) {
-      list.push({
-        title0: '内容' + i + val,
-        title1: '内容' + i + val,
-        title2: '内容' + i + val,
-        title3: '内容' + i + val,
-        title4: '内容' + i + val,
-        title5: '内容' + i + val,
-      });
-      this.setState({
-        list
-      });
-    }
-  };
-  getColumns(num = 1) {
-    let columns = [{
-      key: 'title0',
-      title: '标题列',
-      width: 100,
-      render: (value) => {
-        return <div>
-          <input type="checkbox"/>
-          {value}
-        </div>;
-      }
-    }];
-    for (let i = 0; i < num; i++) {
-      columns.push({
-        key: 'title' + i,
-        title: '标题列',
-        width: 150,
-        render: (value) => {
-          return <span>{value}值</span>;
-        }
-      });
-    }
-    return columns;
+  getColumnData(columns) {
+
+    let data = [{}];
+    columns.forEach((item) => {
+      data[0][item.key] = item.title;
+    });
+    return data;
+
   }
 
   render() {
     const {
       columns,
+      // columnData,
       dataSource
     } = this.state;
-    let columnData = [{ title: '内容'}];
+    let columnData = this.getColumnData(columns);
     return (
       <div className="v-table">
-        <div onClick={() => this.getList(10000)}>getList</div>
-        <div onClick={() => this.getList(10000, '哈哈')}>getListVal</div>
         <div className="v-table-header">
           <Grid
+            type="header"
             ref={h => this._header = h}
             title="title"
             visibleWidth={1000}
@@ -95,6 +66,7 @@ class VTable extends React.Component {
             columns={columns}
             dataSource={dataSource}
             fixedLeftColumnCount={2}
+            columnOffsetCount={26}
             onScroll={this.onScroll.bind(this)}
             onCellTap={this.onCellTap}
           />
@@ -112,6 +84,10 @@ class VTable extends React.Component {
   // 点击每个子项
   onCellTap(record) {
     console.log(record, '选择的回调');
+  }
+  //
+  test() {
+    console.log('test');
   }
 
 }
