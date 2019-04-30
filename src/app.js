@@ -28,17 +28,33 @@ class App extends React.Component {
       });
     }
   };
+  onCheckedClick() {
+    console.log('11');
+    let {list} = this.state;
+    list.map(item => {
+      item.checked = true;
+      return item;
+    });
+    console.log(list);
+    this.setState({
+      list
+    });
+  }
   getColumns(num = 1) {
     let columns = [{
       key: 'title0',
       title: '标题列',
       width: 100,
-      render: (value) => {
-        return <div>
-          <input type="checkbox"/>
-          {value}
-        </div>;
-      }
+      // render: (value, row) => {
+      //   console.log(value, '===');
+      //   return <div style={{position: 'relative'}}>
+      //     {
+      //       row && row.hover && <div className="close" onClick={this.onCheckedClick.bind(this)}/>
+      //     }
+      //     <input type="checkbox" checked={row.checked}/>
+      //     {/*{value}*/}
+      //   </div>;
+      // }
     }, {
       key: 'title0',
       title: '标题列',
@@ -76,6 +92,7 @@ class App extends React.Component {
           columns={this.getColumns(25)}
           dataSource={list}
           fixedLeftColumnCount={2}
+          rowSelection={{a: true}}
         />
         {/*<div className="v-table-header">*/}
         {/*<Table*/}

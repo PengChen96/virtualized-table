@@ -290,6 +290,7 @@ class Grid extends React.Component {
     let realColumnIndex = columnIndex + this.state.startColumnIndex;
     let value = row[column['key']];
     let width = column.width || 150;
+
     return <div
       onClick={() => this.__onCellTap(row)}
       className="v-grid-cell"
@@ -301,14 +302,33 @@ class Grid extends React.Component {
       }}
     >
       {
-        this.props.type === 'header' ? row[column['key']] :
-          column.render ? column.render(value) : row[column['key']]
+        this._render(value, row, rowIndex, column, columnIndex)
       }
+      {/*{*/}
+      {/*this.props.type === 'header' ? row[column['key']] :*/}
+      {/*column.render ? column.render(value, row, rowIndex, column, columnIndex) : row[column['key']]*/}
+      {/*}*/}
       [{realRowIndex}, {realColumnIndex}]
     </div>;
   }
+  _render(value, row, rowIndex, column, columnIndex) {
+    if (this.props.type === 'header') {
+      if (columnIndex === 0) {
+        return column.render ? column.render(value, row, rowIndex, column, columnIndex) : row[column['key']];
+      } else {
+        return row[column['key']];
+      }
+    } else {
+      return column.render ? column.render(value, row, rowIndex, column, columnIndex) : row[column['key']];
+    }
+  }
 
   _mouseEnter(rowIndex) {
+    // 当表头，不执行
+    if (this.props.type === 'header') {
+      return;
+    }
+    // 添加hover
     let {virtualData} = this.state;
     virtualData.map((row, index) => {
       row.hover = false;
@@ -321,6 +341,11 @@ class Grid extends React.Component {
     });
   }
   _mouseLeave(rowIndex) {
+    // 当表头，不执行
+    if (this.props.type === 'header') {
+      return;
+    }
+    // 移除hover
     let {virtualData} = this.state;
     virtualData[rowIndex].hover = false;
     this.setState({
@@ -347,8 +372,8 @@ class Grid extends React.Component {
       visibleHeight
     } = this.state;
 
-    console.log(virtualData, '-');
-    console.log(virtualColumns, '|');
+    // console.log(virtualData, '-');
+    // console.log(virtualColumns, '|');
     return (
       <div className="v-grid-container"
         ref={mc => this._masterContainer = mc}

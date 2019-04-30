@@ -18,9 +18,25 @@ class VTable extends React.Component {
 
     let {state} = this;
     if (props.dataSource !== state.dataSource) {
+      let columns = props.columns;
+      // 复选框
+      if (props.rowSelection) {
+        columns.unshift({
+          key: 'checkbox',
+          width: 60,
+          title: 'hhh',
+          render: (value, row) => {
+            console.log(value, row, '复选框');
+            return <div>
+              <input type="checkbox"/>
+            </div>;
+          }
+        });
+      }
+      console.log(columns);
       this.setState({
-        columns: props.columns,
-        columnData: this.getColumnData(props.columns),
+        columns,
+        columnData: this.getColumnData(columns),
         dataSource: props.dataSource
       });
     }
@@ -59,6 +75,7 @@ class VTable extends React.Component {
             columns={columns}
             dataSource={columnData}
             fixedLeftColumnCount={fixedLeftColumnCount}
+            rowSelection={this.props.rowSelection}
           />
         </div>
         <div className="v-table-content">
@@ -106,6 +123,8 @@ VTable.propTypes = {
   visibleWidth: PropTypes.number,
   // 可视区域高度
   visibleHeight: PropTypes.number,
+  // 复选框
+  rowSelection: PropTypes.object,
 
   //  API
   // 点击每个子项
