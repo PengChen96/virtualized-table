@@ -290,12 +290,14 @@ class Grid extends React.Component {
     let realColumnIndex = columnIndex + this.state.startColumnIndex;
     let value = row[column['key']];
     let width = column.width || 150;
-    return <div onClick={() => this.__onCellTap(row)}
+    return <div
+      onClick={() => this.__onCellTap(row)}
       className="v-grid-cell"
       style={{
         width: width,
         minWidth: width,
-        height: this.state.estimatedRowHeight
+        height: this.state.estimatedRowHeight,
+        background: row.hover ? '#e6f7ff' : ''
       }}
     >
       {
@@ -304,6 +306,26 @@ class Grid extends React.Component {
       }
       [{realRowIndex}, {realColumnIndex}]
     </div>;
+  }
+
+  _mouseEnter(rowIndex) {
+    let {virtualData} = this.state;
+    virtualData.map((row, index) => {
+      row.hover = false;
+      if (index === rowIndex) {
+        row.hover = true;
+      }
+    });
+    this.setState({
+      virtualData
+    });
+  }
+  _mouseLeave(rowIndex) {
+    let {virtualData} = this.state;
+    virtualData[rowIndex].hover = false;
+    this.setState({
+      virtualData
+    });
   }
 
   render() {
@@ -348,11 +370,15 @@ class Grid extends React.Component {
             {
               virtualData.map((left_row, left_row_index) => {
                 return <div key={left_row_index}>
-                  <div className="v-grid-row" style={{
-                    width: fixedLeftColumnsWidth,
-                    minWidth: fixedLeftColumnsWidth,
-                    height: estimatedRowHeight
-                  }}>
+                  <div
+                    className="v-grid-row"
+                    onMouseEnter={()=>this._mouseEnter(left_row_index)}
+                    onMouseLeave={()=>this._mouseLeave(left_row_index)}
+                    style={{
+                      width: fixedLeftColumnsWidth,
+                      minWidth: fixedLeftColumnsWidth,
+                      height: estimatedRowHeight
+                    }}>
                     {
                       fixedLeftColumns.map((left_column, left_column_index) => {
                         return <div key={left_column_index}>
@@ -383,12 +409,17 @@ class Grid extends React.Component {
             {
               virtualData.map((row, rowIndex) => {
                 return <div key={rowIndex}>
-                  <div className="v-grid-row" style={{
-                    height: estimatedRowHeight,
-                    width: scrollColumnsWidth,
-                    paddingLeft: startHorizontalOffset,
-                    paddingRight: endHorizontalOffset
-                  }}>
+                  <div
+                    className="v-grid-row"
+                    onMouseEnter={()=>this._mouseEnter(rowIndex)}
+                    onMouseLeave={()=>this._mouseLeave(rowIndex)}
+                    style={{
+                      height: estimatedRowHeight,
+                      width: scrollColumnsWidth,
+                      paddingLeft: startHorizontalOffset,
+                      paddingRight: endHorizontalOffset
+                    }}
+                  >
                     {
                       virtualColumns.map((column, columnIndex) => {
                         return <div key={columnIndex}>

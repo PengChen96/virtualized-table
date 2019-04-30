@@ -43,6 +43,9 @@ class VTable extends React.Component {
       // columnData,
       dataSource
     } = this.state;
+    let {
+      fixedLeftColumnCount = 0
+    } = this.props;
     let columnData = this.getColumnData(columns);
     return (
       <div className="v-table">
@@ -55,7 +58,7 @@ class VTable extends React.Component {
             visibleHeight={40}
             columns={columns}
             dataSource={columnData}
-            fixedLeftColumnCount={2}
+            fixedLeftColumnCount={fixedLeftColumnCount}
           />
         </div>
         <div className="v-table-content">
@@ -65,8 +68,8 @@ class VTable extends React.Component {
             visibleHeight={400}
             columns={columns}
             dataSource={dataSource}
-            fixedLeftColumnCount={2}
-            columnOffsetCount={26}
+            fixedLeftColumnCount={fixedLeftColumnCount}
+            columnOffsetCount={4}
             onScroll={this.onScroll.bind(this)}
             onCellTap={this.onCellTap}
           />
@@ -105,8 +108,6 @@ VTable.propTypes = {
   visibleHeight: PropTypes.number,
 
   //  API
-  // 滚动
-  onScroll: PropTypes.func,
   // 点击每个子项
   onCellTap: PropTypes.func
 };
