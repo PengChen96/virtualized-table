@@ -42,15 +42,15 @@ class App extends React.Component {
     }, {
       key: 'title0',
       title: '标题列',
-      width: 170,
+      width: 150,
     }, {
       key: 'title0',
       title: '标题列',
-      width: 170,
+      width: 150,
     }, {
       key: 'title0',
       title: '标题列',
-      width: 170,
+      width: 150,
     }];
     for (let i = 0; i < num; i++) {
       columns.push({
@@ -75,6 +75,7 @@ class App extends React.Component {
         <VTable
           columns={this.getColumns(25)}
           dataSource={list}
+          fixedLeftColumnCount={2}
         />
         {/*<div className="v-table-header">*/}
         {/*<Table*/}
