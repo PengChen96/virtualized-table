@@ -6,7 +6,7 @@
   <h1 align="center" style="margin-top: 0px">virtualized-table</h1>
 </p>
 
-
+[![npm version](https://badge.fury.io/js/virtualized-table.svg)](http://badge.fury.io/js/virtualized-table)  
 大数据量虚拟化表格组件
 
 ## Usage
