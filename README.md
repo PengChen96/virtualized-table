@@ -1,9 +1,11 @@
 
-<img src="./logo.png">
+<p align="center">
+  <a href="#">
+    <img width="300" src="./logo.png">
+  </a>
+</p>
 
-# virtualized-table
-
-## Introduction
+<h1 align="center">virtualized-table</h1>
 大数据量虚拟化表格组件
 
 
