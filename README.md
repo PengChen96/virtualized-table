@@ -21,3 +21,7 @@ $ npm install virtualized-table
       fixedLeftColumnCount={2}
     />
 ```
+
+
+## License
+virtualized-table is available under the MIT License.
