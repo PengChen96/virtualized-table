@@ -1,13 +1,13 @@
 
-<p align="center" style="margin-bottom: 0px">
+<p align="center">
   <a href="#">
     <img width="300" src="./logo.png">
   </a>
+  <h1 align="center" style="margin-top: 0px">virtualized-table</h1>
 </p>
 
-<h1 style="margin-top: 0px">virtualized-table</h1>
+
 大数据量虚拟化表格组件
-<div align="center">
 
 ## Usage
 
