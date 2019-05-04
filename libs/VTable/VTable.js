@@ -57,6 +57,12 @@ class VTable extends React.Component {
       if (props.rowSelection) {
         columns.unshift({
           width: 60,
+          headRender: (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) => {
+            //console.log(value, row, '复选框');
+            return <div>
+              <input type="checkbox" onChange={() => this._select(row, realRowIndex)} checked={row.checked || false}/>
+            </div>;
+          },
           render: (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) => {
             //console.log(value, row, '复选框');
             return <div>
@@ -82,6 +88,12 @@ class VTable extends React.Component {
     if (props.rowSelection) {
       columns.unshift({
         width: 60,
+        headRender: (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) => {
+          //console.log(value, row, '复选框');
+          return <div>
+            <input type="checkbox" onChange={() => this._select(row, realRowIndex)} checked={row.checked || false}/>
+          </div>;
+        },
         render: (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) => {
           //console.log(value, row, '复选框');
           return <div>

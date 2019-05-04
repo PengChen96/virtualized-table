@@ -94,7 +94,6 @@ class VTableCustomExample extends React.Component {
       <div className="App">
         <div onClick={() => this.getList(10000)}>getList</div>
         <div onClick={() => this.getList(10000, '哈哈')}>getListVal</div>
-        <input type="text"/>
         <VTable
           columns={this.getColumns(25)}
           dataSource={list}
