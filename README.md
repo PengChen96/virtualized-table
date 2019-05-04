@@ -5,7 +5,9 @@
   </a>
 </p>
 
-<h1 align="center">virtualized-table</h1>
+<h1 align="center" style="margin-top: 0">virtualized-table</h1>
+
+## Introduction
 大数据量虚拟化表格组件
 
 
