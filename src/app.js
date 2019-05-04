@@ -1,7 +1,9 @@
 
 import React from 'react';
-// import {Table} from '../libs/Table';
 import {VTable} from '../libs/VTable';
+// import {Table} from '../libs/Table';
+ import VTableCustomExample from './example/VTableCustomExample';
+
 
 class App extends React.Component {
 
@@ -29,33 +31,35 @@ class App extends React.Component {
       });
     }
   };
-  //onCheckedClick() {
-  //  console.log('11');
-  //  let {list} = this.state;
-  //  list.map(item => {
-  //    item.checked = true;
-  //    return item;
-  //  });
-  //  console.log(list);
-  //  this.setState({
-  //    list
-  //  });
-  //}
+  onCheckedClick() {
+    console.log('11');
+    //let {list} = this.state;
+    //list.map(item => {
+    //  item.checked = true;
+    //  return item;
+    //});
+    //console.log(list);
+    //this.setState({
+    //  list
+    //});
+  }
   getColumns(num = 1) {
     let columns = [{
-      key: 'title0',
-      title: '标题列',
+      key: 'checkbox',
+      title: '复选框',
       width: 100,
-      // render: (value, row) => {
-      //   console.log(value, '===');
-      //   return <div style={{position: 'relative'}}>
-      //     {
-      //       row && row.hover && <div className="close" onClick={this.onCheckedClick.bind(this)}/>
-      //     }
-      //     <input type="checkbox" checked={row.checked}/>
-      //     {/*{value}*/}
-      //   </div>;
-      // }
+       render: (value, row) => {
+
+         //console.log(row);
+         //return <div style={{position: 'relative'}}>
+         //  {
+         //    row && row.hover && <div className="close" onClick={this.onCheckedClick.bind(this)}/>
+         //  }
+         //  <input type="checkbox" checked={row.checked}/>
+         //  {/*{value}*/}
+         //</div>;
+
+       }
     }, {
       key: 'title0',
       title: '标题列',
@@ -75,7 +79,7 @@ class App extends React.Component {
         title: '标题列',
         width: 150,
         render: (value) => {
-          return <span>{value}值</span>;
+          return <span>{value}值<input type="text"/></span>;
         }
       });
     }
@@ -87,6 +91,9 @@ class App extends React.Component {
     // let columnData = [{ title0: '内容'}];
     return (
       <div className="App">
+        {/*example*/}
+        <VTableCustomExample/>
+
         <div onClick={() => this.getList(10000)}>getList</div>
         <div onClick={() => this.getList(10000, '哈哈')}>getListVal</div>
         <VTable
@@ -96,6 +103,7 @@ class App extends React.Component {
           rowSelection={{a: true}}
           onSelectAll={this.onSelectAll}
           onSelect={this.onSelect}
+          onCellTap={this.onCellTap}
         />
         {/*<div className="v-table-header">*/}
         {/*<Table*/}
@@ -130,7 +138,7 @@ class App extends React.Component {
   }
   // 点击每个子项
   onCellTap(record) {
-    console.log(record, '选择的回调');
+    console.log(record, '每个子项的回调');
   }
   // 用户手动选择/取消选择所有行的回调
   onSelectAll(selected, selectedRows) {
