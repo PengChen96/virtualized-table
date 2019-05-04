@@ -27,6 +27,7 @@
 
 /* Grid*/
 .v-grid-container {
+  position: relative;
   display: flex;
   border: 1px solid @borderColor;
 
@@ -84,15 +85,14 @@
   .v-grid-fixed-right {
     box-shadow: -6px 0 6px -4px rgba(0,0,0,0.15);
   }
-}
 
-.close {
-  width: 10px;
-  height: 10px;
-  background: red;
-  position: absolute;
-  top: 0;
-  left: 0;
+  .v-container-empty {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 }
 
 

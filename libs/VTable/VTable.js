@@ -99,7 +99,7 @@ class VTable extends React.Component {
   }
 
   // 获取表头
-  getColumnData(columns, checked = false) {
+  getColumnData(columns) {
 
     let data = [{}];
     columns.forEach((item) => {
@@ -107,8 +107,6 @@ class VTable extends React.Component {
     });
     // 表头复选框“全选”标志
     data[0].selection = 'all';
-    // 复选框“全选”是否勾选
-    data[0].checked = checked;
     return data;
 
   }
@@ -120,7 +118,9 @@ class VTable extends React.Component {
       dataSource
     } = this.state;
     let {
-      fixedLeftColumnCount = 0
+      fixedLeftColumnCount = 0,
+      columnOffsetCount = 0,
+      emptyText
     } = this.props;
 
     return (
@@ -135,6 +135,7 @@ class VTable extends React.Component {
             columns={columns}
             dataSource={columnData}
             fixedLeftColumnCount={fixedLeftColumnCount}
+            columnOffsetCount={columnOffsetCount}
             rowSelection={this.props.rowSelection}
           />
         </div>
@@ -146,9 +147,10 @@ class VTable extends React.Component {
             columns={columns}
             dataSource={dataSource}
             fixedLeftColumnCount={fixedLeftColumnCount}
-            columnOffsetCount={4}
+            columnOffsetCount={columnOffsetCount}
             onScroll={this.onScroll.bind(this)}
-            onCellTap={this.onCellTap}
+            onCellTap={this.__onCellTap.bind(this)}
+            emptyText={emptyText}
           />
         </div>
       </div>
@@ -161,13 +163,17 @@ class VTable extends React.Component {
     console.log(scrollLeft, 'onScroll callback');
     this._header._scrollContainer.scrollLeft = scrollLeft;
   }
-  // 点击每个子项
-  onCellTap(record) {
-    console.log(record, '选择的回调');
-  }
   //
   test() {
     console.log('test');
+  }
+  // 点击每个子项
+  __onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) {
+
+    const {onCellTap} = this.props;
+    if (typeof onCellTap === 'function') {
+      onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
+    }
   }
   // 用户手动选择/取消选择行的回调
   _select(row, realRowIndex) {
@@ -186,7 +192,6 @@ class VTable extends React.Component {
     }
 
   }
-
   // 用户手动选择/取消选择所有行的回调
   __onSelectAll(row) {
 
@@ -266,6 +271,8 @@ VTable.propTypes = {
   columns: PropTypes.array,
   // 左边固定列 列数
   fixedLeftColumnCount: PropTypes.number,
+  // 左右偏移量
+  columnOffsetCount: PropTypes.number,
   // 源数据
   dataSource: PropTypes.array,
   // 可视区域宽度
@@ -274,14 +281,17 @@ VTable.propTypes = {
   visibleHeight: PropTypes.number,
   // 复选框
   rowSelection: PropTypes.object,
+  // 空页面渲染
+  emptyText: PropTypes.element,
 
   //  API
-  // 点击每个子项 Function(record)
+  // 点击每个子项 Function(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)
   onCellTap: PropTypes.func,
   // 勾选全部 Function(selected, selectedRows)
   onSelectAll: PropTypes.func,
   // 勾选行 Function(record, selected, selectedRows)
   onSelect: PropTypes.func
+
 };
 
 export default VTable;
