@@ -16,6 +16,7 @@ class App extends React.Component {
     let list = [];
     for (let i = 0; i < num; i++) {
       list.push({
+        id: i,
         title0: '内容' + i + val,
         title1: '内容' + i + val,
         title2: '内容' + i + val,
@@ -28,18 +29,18 @@ class App extends React.Component {
       });
     }
   };
-  onCheckedClick() {
-    console.log('11');
-    let {list} = this.state;
-    list.map(item => {
-      item.checked = true;
-      return item;
-    });
-    console.log(list);
-    this.setState({
-      list
-    });
-  }
+  //onCheckedClick() {
+  //  console.log('11');
+  //  let {list} = this.state;
+  //  list.map(item => {
+  //    item.checked = true;
+  //    return item;
+  //  });
+  //  console.log(list);
+  //  this.setState({
+  //    list
+  //  });
+  //}
   getColumns(num = 1) {
     let columns = [{
       key: 'title0',
@@ -93,6 +94,8 @@ class App extends React.Component {
           dataSource={list}
           fixedLeftColumnCount={2}
           rowSelection={{a: true}}
+          onSelectAll={this.onSelectAll}
+          onSelect={this.onSelect}
         />
         {/*<div className="v-table-header">*/}
         {/*<Table*/}
@@ -128,6 +131,14 @@ class App extends React.Component {
   // 点击每个子项
   onCellTap(record) {
     console.log(record, '选择的回调');
+  }
+  // 用户手动选择/取消选择所有行的回调
+  onSelectAll(selected, selectedRows) {
+    console.log(selected, selectedRows, 'onSelectAll');
+  }
+  // 用户手动选择/取消选择行的回调
+  onSelect(record, selected, selectedRows) {
+    console.log(record, selected, selectedRows, 'onSelect');
   }
 
 }

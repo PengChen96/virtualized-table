@@ -302,7 +302,7 @@ class Grid extends React.Component {
       }}
     >
       {
-        this._render(value, row, rowIndex, column, columnIndex)
+        this._render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)
       }
       {/*{*/}
       {/*this.props.type === 'header' ? row[column['key']] :*/}
@@ -311,15 +311,19 @@ class Grid extends React.Component {
       [{realRowIndex}, {realColumnIndex}]
     </div>;
   }
-  _render(value, row, rowIndex, column, columnIndex) {
+  _render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) {
     if (this.props.type === 'header') {
       if (columnIndex === 0) {
-        return column.render ? column.render(value, row, rowIndex, column, columnIndex) : row[column['key']];
+        return column.render ? column.render(
+          value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex
+        ) : row[column['key']];
       } else {
         return row[column['key']];
       }
     } else {
-      return column.render ? column.render(value, row, rowIndex, column, columnIndex) : row[column['key']];
+      return column.render ? column.render(
+        value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex
+      ) : row[column['key']];
     }
   }
 
