@@ -1,3 +1,6 @@
+
+<img src="./logo.png">
+
 # virtualized-table
 
 ## Introduction
