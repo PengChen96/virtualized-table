@@ -51,7 +51,7 @@
         align-items: center;
         box-sizing: border-box;
         //padding: 6px 12px;
-        word-break: break-all
+        word-break: break-all;
       }
     }
   }
@@ -95,6 +95,16 @@
     top: 0;
     left: 0;
   }
+  .v-container-loading {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    padding-top: 80px;
+  }
 }
 
 // 行删除图标样式
@@ -115,5 +125,43 @@
     transform: rotate(45deg);
   }
 }
+// 复选框
+.v-checkbox-container {
+  position: relative;
+  cursor: pointer;
+  input {
+    cursor: pointer;
+  }
+  input:checked + .show-box {
+    &:before {
+      border: solid #ff8040; // 勾的颜色
+      border-width: 0 2px 2px 0; // 勾的宽度
+    }
+  }
+  .show-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+    border: 1px solid #d1d3d8;
+    background: white; // 这里取个巧，与下面颜色一样而已
+    &:hover {
+      border-color: #ff8040;
+    }
 
+    &:before { // 使用了 absolute 所以无所谓是 before 还是 after
+      content: ''; // 空白内容占位，当做盒模型处理，见下面
+      position: absolute;
+      top: 2px;
+      left: 6px;
+      width: 3px; // 勾的短边
+      height: 8px; // 勾的长边
+      border: solid #fff; // 勾的颜色
+      border-width: 0 2px 2px 0; // 勾的宽度
+      transform: rotate(45deg); // 定制宽高加上旋转可以伪装内部的白色勾
+    }
+  }
+}
 

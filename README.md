@@ -47,6 +47,8 @@ rowKey | 行键 | string | index
 onRowRemove | 删除行 | func | Function(row)
 rowRemoveText | 删除行内容 | element | -
 className | .v-table样式 | string | -
+loading | 是否显示加载中 | bool | false
+loadingText | 加载中内容 | element | "数据加载中，请稍后.."
 
 #### columns
 参数 | 说明 | 类型 | 默认值 

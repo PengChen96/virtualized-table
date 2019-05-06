@@ -303,7 +303,7 @@ class Grid extends React.Component {
         minWidth: width,
         height: this.state.estimatedRowHeight,
         // 勾选或hover颜色
-        background: (row.checked || row.hover) ? '#e6f7ff' : '',
+        background: (row.checked || row.hover) ? '#fff9e1' : '',
         ...column.style
       }}
     >
@@ -485,6 +485,12 @@ class Grid extends React.Component {
                   }
                 </div>
           }
+          {
+            this.props.loading &&
+              <div className="v-container-loading">
+                {this.props.loadingText || '数据加载中，请稍后..'}
+              </div>
+          }
         </div>
       </div>
     );
@@ -532,6 +538,10 @@ Grid.propTypes = {
   columnOffsetCount: PropTypes.number,
   // 空页面渲染
   emptyText: PropTypes.element,
+  // loading
+  loading: PropTypes.bool,
+  // loadingText
+  loadingText: PropTypes.element,
   //  API
   // 滚动
   onScroll: PropTypes.func,

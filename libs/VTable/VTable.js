@@ -60,8 +60,9 @@ class VTable extends React.Component {
           style: {justifyContent: 'center'},
           headRender: (value, row, rowIndex, realRowIndex) => {
             //console.log(value, row, '复选框');
-            return <div>
+            return <div className="v-checkbox-container" onClick={(e) => this._select(e, row, realRowIndex)}>
               <input type="checkbox" onChange={(e) => this._select(e, row, realRowIndex)} checked={row.checked || false}/>
+              <div className="show-box" />
             </div>;
           },
           render: (value, row, rowIndex, realRowIndex) => {
@@ -70,8 +71,9 @@ class VTable extends React.Component {
               row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row)}>
                 {props.rowRemoveText || <div className="v-row-remove"/>}
               </div>,
-              <div key={1} onClick={(e) => this._select(e, row, realRowIndex)}>
+              <div className="v-checkbox-container" key={1} onClick={(e) => this._select(e, row, realRowIndex)}>
                 <input type="checkbox" checked={row.checked || false}/>
+                <div className="show-box" />
               </div>
             ];
           }
@@ -97,8 +99,9 @@ class VTable extends React.Component {
         style: {justifyContent: 'center'},
         headRender: (value, row, rowIndex, realRowIndex) => {
           //console.log(value, row, '复选框');
-          return <div>
-            <input type="checkbox" onChange={(e) => this._select(e, row, realRowIndex)} checked={row.checked || false}/>
+          return <div className="v-checkbox-container" onClick={(e) => this._select(e, row, realRowIndex)}>
+            <input type="checkbox" checked={row.checked || false}/>
+            <div className="show-box" />
           </div>;
         },
         render: (value, row, rowIndex, realRowIndex) => {
@@ -107,8 +110,9 @@ class VTable extends React.Component {
             row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row)}>
               {props.rowRemoveText || <div className="v-row-remove"/>}
             </div>,
-            <div key={1} onClick={(e) => this._select(e, row, realRowIndex)}>
+            <div className="v-checkbox-container" key={1} onClick={(e) => this._select(e, row, realRowIndex)}>
               <input type="checkbox" checked={row.checked || false}/>
+              <div className="show-box" />
             </div>
           ];
         }
@@ -147,7 +151,8 @@ class VTable extends React.Component {
       visibleHeight = 400,
       fixedLeftColumnCount = 0,
       columnOffsetCount = 0,
-      emptyText
+      emptyText,
+      loading
     } = this.props;
 
     return (
@@ -178,6 +183,7 @@ class VTable extends React.Component {
             onScroll={this.onScroll.bind(this)}
             onCellTap={this.__onCellTap.bind(this)}
             emptyText={emptyText}
+            loading={loading}
           />
         </div>
       </div>
@@ -280,7 +286,7 @@ class VTable extends React.Component {
   __onSelect(row, realRowIndex) {
 
     const {onSelect, rowKey} = this.props;
-    const {selected, selectedRows} = this.state;
+    const {selected, selectedRows, columnData, dataSource} = this.state;
     if (typeof onSelect === 'function') {
 
       if (row.checked) {
@@ -295,6 +301,15 @@ class VTable extends React.Component {
       // 过滤空元素
       let _selected = selected.filter(x => x);
       let _selectedRows = selectedRows.filter(x => x === 0 ? true : x);
+      // 是否已经全部勾选
+      if (_selected.length === dataSource.length) {
+        columnData[0].checked = true;
+      } else {
+        columnData[0].checked = false;
+      }
+      this.setState({
+        columnData
+      });
       onSelect(row, _selected, _selectedRows);
 
     }
@@ -322,6 +337,10 @@ VTable.propTypes = {
   rowSelection: PropTypes.object,
   // 空页面渲染
   emptyText: PropTypes.element,
+  // loading
+  loading: PropTypes.bool,
+  // loadingText
+  loadingText: PropTypes.element,
   // rowKey
   rowKey: PropTypes.string,
 

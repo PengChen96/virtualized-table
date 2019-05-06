@@ -108,6 +108,9 @@ class App extends React.Component {
           onCellTap={this.onCellTap}
           onRowRemove={this.onRowRemove}
           visibleHeight={600}
+          emptyText={<div>22</div>}
+          loading={false}
+          loadingText={<div>11</div>}
           // rowRemoveText={<div>x</div>}
         />
         {/*<div className="v-table-header">*/}
