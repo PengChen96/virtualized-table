@@ -84,6 +84,8 @@ class Grid extends React.Component {
       let endHorizontalOffset = calculateColumnsWidth(rightOffsetColumns);
 
       return {
+        visibleHeight: props.visibleHeight,
+        //
         columns: props.columns,
         fixedLeftColumns,
         fixedLeftColumnsWidth,
@@ -127,6 +129,8 @@ class Grid extends React.Component {
       let endHorizontalOffset = calculateColumnsWidth(rightOffsetColumns);
 
       this.setState({
+        visibleHeight: props.visibleHeight,
+        //
         columns: props.columns,
         fixedLeftColumns,
         fixedLeftColumnsWidth,
@@ -293,7 +297,7 @@ class Grid extends React.Component {
 
     return <div
       onClick={() => this.__onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)}
-      className="v-grid-cell"
+      className={`v-grid-cell ${column.className || ''}`}
       style={{
         width: width,
         minWidth: width,

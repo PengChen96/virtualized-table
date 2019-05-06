@@ -142,15 +142,16 @@ class VTable extends React.Component {
       dataSource
     } = this.state;
     let {
+      className,
       visibleWidth = 1200,
-      visibleHeight,
+      visibleHeight = 400,
       fixedLeftColumnCount = 0,
       columnOffsetCount = 0,
       emptyText
     } = this.props;
 
     return (
-      <div className="v-table">
+      <div className={`v-table ${className}`}>
         <div className="v-table-header">
           <Grid
             type="header"
@@ -207,7 +208,7 @@ class VTable extends React.Component {
     e.stopPropagation();
     const {onRowRemove} = this.props;
     if (typeof onRowRemove === 'function') {
-      onRowRemove(row);
+      onRowRemove(e, row);
     }
   }
   // 用户手动选择/取消选择行的回调
@@ -303,6 +304,8 @@ class VTable extends React.Component {
 }
 
 VTable.propTypes = {
+  // v-table className
+  className: PropTypes.string,
   // 列
   columns: PropTypes.array,
   // 左边固定列 列数

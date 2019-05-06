@@ -46,6 +46,7 @@ onSelect | 勾选行 | func | Function(record, selected, selectedRows)
 rowKey | 行键 | string | index
 onRowRemove | 删除行 | func | Function(row)
 rowRemoveText | 删除行内容 | element | -
+className | .v-table样式 | string | -
 
 #### columns
 参数 | 说明 | 类型 | 默认值 
@@ -56,6 +57,7 @@ width | 列宽度 | number | 150
 style | 样式 | object | -
 render | 数据渲染函数 | func | Function(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)
 headRender | 渲染表头函数 | func | Function(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)
+className | 单元格样式 | string | -
 
 ## License
 virtualized-table is available under the MIT License.

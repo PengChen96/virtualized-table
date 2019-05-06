@@ -97,6 +97,7 @@ class App extends React.Component {
         <div onClick={() => this.getList(10000)}>getList</div>
         <div onClick={() => this.getList(10000, '哈哈')}>getListVal</div>
         <VTable
+          className="a"
           columns={this.getColumns(25)}
           dataSource={list}
           fixedLeftColumnCount={2}
@@ -106,6 +107,7 @@ class App extends React.Component {
           onSelect={this.onSelect}
           onCellTap={this.onCellTap}
           onRowRemove={this.onRowRemove}
+          visibleHeight={600}
           // rowRemoveText={<div>x</div>}
         />
         {/*<div className="v-table-header">*/}
@@ -152,8 +154,8 @@ class App extends React.Component {
     console.log(record, selected, selectedRows, 'onSelect');
   }
   // 删除行
-  onRowRemove(row) {
-    console.log(row, 'onRowRemove');
+  onRowRemove(e, row) {
+    console.log(e, row, 'onRowRemove');
   }
 
 }
