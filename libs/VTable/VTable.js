@@ -71,7 +71,7 @@ class VTable extends React.Component {
                 {props.rowRemoveText || <div className="v-row-remove"/>}
               </div>,
               <div key={1} onClick={(e) => this._select(e, row, realRowIndex)}>
-                <input type="checkbox" defaultChecked={row.checked || false}/>
+                <input type="checkbox" checked={row.checked || false}/>
               </div>
             ];
           }
@@ -108,7 +108,7 @@ class VTable extends React.Component {
               {props.rowRemoveText || <div className="v-row-remove"/>}
             </div>,
             <div key={1} onClick={(e) => this._select(e, row, realRowIndex)}>
-              <input type="checkbox" defaultChecked={row.checked || false}/>
+              <input type="checkbox" checked={row.checked || false}/>
             </div>
           ];
         }
