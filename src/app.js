@@ -106,7 +106,7 @@ class App extends React.Component {
           onSelect={this.onSelect}
           onCellTap={this.onCellTap}
           onRowRemove={this.onRowRemove}
-          rowRemoveText={<div>x</div>}
+          // rowRemoveText={<div>x</div>}
         />
         {/*<div className="v-table-header">*/}
         {/*<Table*/}
