@@ -57,17 +57,19 @@ class VTable extends React.Component {
       if (props.rowSelection) {
         columns.unshift({
           width: 60,
-          headRender: (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) => {
+          style: {justifyContent: 'center'},
+          headRender: (value, row, rowIndex, realRowIndex) => {
             //console.log(value, row, '复选框');
             return <div>
               <input type="checkbox" onChange={() => this._select(row, realRowIndex)} checked={row.checked || false}/>
             </div>;
           },
-          render: (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) => {
+          render: (value, row, rowIndex, realRowIndex) => {
             //console.log(value, row, '复选框');
-            return <div>
-              <input type="checkbox" onChange={() => this._select(row, realRowIndex)} checked={row.checked || false}/>
-            </div>;
+            return [
+              row && row.hover && <div key={0} className="v-row-remove" onClick={() => this.__onRowRemove(row)}/>,
+              <input key={1} type="checkbox" onChange={() => this._select(row, realRowIndex)} checked={row.checked || false}/>
+            ];
           }
         });
       }
@@ -88,17 +90,19 @@ class VTable extends React.Component {
     if (props.rowSelection) {
       columns.unshift({
         width: 60,
-        headRender: (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) => {
+        style: {justifyContent: 'center'},
+        headRender: (value, row, rowIndex, realRowIndex) => {
           //console.log(value, row, '复选框');
           return <div>
             <input type="checkbox" onChange={() => this._select(row, realRowIndex)} checked={row.checked || false}/>
           </div>;
         },
-        render: (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) => {
+        render: (value, row, rowIndex, realRowIndex) => {
           //console.log(value, row, '复选框');
-          return <div>
-            <input type="checkbox" onChange={() => this._select(row, realRowIndex)} checked={row.checked || false}/>
-          </div>;
+          return [
+            row && row.hover && <div key={0} className="v-row-remove" onClick={() => this.__onRowRemove(row)}/>,
+            <input key={1} type="checkbox" onChange={() => this._select(row, realRowIndex)} checked={row.checked || false}/>
+          ];
         }
       });
     }
@@ -106,7 +110,7 @@ class VTable extends React.Component {
       columns,
       columnData: this.getColumnData(columns),
       dataSource: props.dataSource
-    })
+    });
 
   }
 
@@ -130,6 +134,8 @@ class VTable extends React.Component {
       dataSource
     } = this.state;
     let {
+      visibleWidth = 1200,
+      visibleHeight,
       fixedLeftColumnCount = 0,
       columnOffsetCount = 0,
       emptyText
@@ -142,7 +148,7 @@ class VTable extends React.Component {
             type="header"
             ref={h => this._header = h}
             title="title"
-            visibleWidth={1000}
+            visibleWidth={visibleWidth}
             visibleHeight={40}
             columns={columns}
             dataSource={columnData}
@@ -154,8 +160,8 @@ class VTable extends React.Component {
         <div className="v-table-content">
           <Grid
             title="title"
-            visibleWidth={1000}
-            visibleHeight={400}
+            visibleWidth={visibleWidth}
+            visibleHeight={visibleHeight}
             columns={columns}
             dataSource={dataSource}
             fixedLeftColumnCount={fixedLeftColumnCount}
@@ -187,6 +193,14 @@ class VTable extends React.Component {
       onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
     }
   }
+  // 删除行
+  __onRowRemove(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) {
+
+    const {onRowRemove} = this.props;
+    if (typeof onRowRemove === 'function') {
+      onRowRemove(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
+    }
+  }
   // 用户手动选择/取消选择行的回调
   _select(row, realRowIndex) {
 
@@ -207,7 +221,7 @@ class VTable extends React.Component {
   // 用户手动选择/取消选择所有行的回调
   __onSelectAll(row) {
 
-    const {onSelectAll} = this.props;
+    const {onSelectAll, rowKey} = this.props;
     const {dataSource} = this.state;
     if (typeof onSelectAll === 'function') {
 
@@ -242,10 +256,10 @@ class VTable extends React.Component {
           dataSource,
           // 这里不能改变源数据
           selected: _dataSource,
-          selectedRows: _dataSource.map((item, index) => {return index})
+          selectedRows: _dataSource.map((item, index) => {return rowKey ? item[rowKey] : index;})
         });
         _selected = _dataSource;
-        _selectedRows = _dataSource.map((item, index) => {return index})
+        _selectedRows = _dataSource.map((item, index) => {return rowKey ? item[rowKey] : index;});
       }
       onSelectAll(_selected, _selectedRows);
     }
@@ -254,7 +268,7 @@ class VTable extends React.Component {
   // 用户手动选择/取消选择行的回调
   __onSelect(row, realRowIndex) {
 
-    const {onSelect} = this.props;
+    const {onSelect, rowKey} = this.props;
     const {selected, selectedRows} = this.state;
     if (typeof onSelect === 'function') {
 
@@ -265,7 +279,7 @@ class VTable extends React.Component {
       } else {
         row.checked = true;
         selected[realRowIndex] = row;
-        selectedRows[realRowIndex] = realRowIndex;
+        selectedRows[realRowIndex] = rowKey ? row[rowKey] : realRowIndex;
       }
       // 过滤空元素
       let _selected = selected.filter(x => x);
@@ -295,6 +309,8 @@ VTable.propTypes = {
   rowSelection: PropTypes.object,
   // 空页面渲染
   emptyText: PropTypes.element,
+  // rowKey
+  rowKey: PropTypes.string,
 
   //  API
   // 点击每个子项 Function(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)
@@ -302,7 +318,9 @@ VTable.propTypes = {
   // 勾选全部 Function(selected, selectedRows)
   onSelectAll: PropTypes.func,
   // 勾选行 Function(record, selected, selectedRows)
-  onSelect: PropTypes.func
+  onSelect: PropTypes.func,
+  // 删除行 Function(row)
+  onRowRemove: PropTypes.func
 
 };
 

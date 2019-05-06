@@ -4,7 +4,7 @@
 
 import React from 'react';
 import {VTable} from '../../libs/VTable';
-import "./VTableCustomExample.less";
+import './VTableCustomExample.less';
 
 class VTableCustomExample extends React.Component {
 
@@ -35,13 +35,29 @@ class VTableCustomExample extends React.Component {
     }
   };
   getColumns(num = 1) {
-    let self = this;
     let columns = [{
       key: 'checkbox',
       title: '复选框',
       width: 100,
       style: {justifyContent: 'center'},
-      render: (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) => {
+      render: (value, row) => {
+
+        return [
+          <div key={0}>
+            {
+              row && row.hover &&
+              <div className="v-close" onClick={this.onCloseClick.bind(this, row)}>
+                x
+              </div>
+            }
+          </div>,
+          <div key={1}>
+            <input type="checkbox" checked={row.checked} onClick={this.onCheckboxClick.bind(this, row)}/>
+          </div>
+        ];
+
+      },
+      headRender: (value, row) => {
 
         return [
           <div key={0}>
@@ -62,8 +78,8 @@ class VTableCustomExample extends React.Component {
       key: 'title0',
       title: '自定义标题列',
       width: 150,
-      headRender: (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) => {
-        return <div>自定义标题列xxx</div>
+      headRender: () => {
+        return <div>自定义标题列xxx</div>;
       }
     }];
     for (let i = 0; i < num; i++) {
@@ -75,12 +91,11 @@ class VTableCustomExample extends React.Component {
           //console.log(this.state.realColumnIndex, realColumnIndex, '----', this.state.realColumnIndex === realColumnIndex);
           //let flag = this.state.realColumnIndex === realColumnIndex;
           return <input
-                  type="text"
-                  className={`R${realRowIndex}C${realColumnIndex}`}
-                  ref="bb"
-                  defaultValue={value}
-                  onKeyPress={this.handleEnterKey.bind(this)}
-                />;
+            type="text"
+            className={`R${realRowIndex}C${realColumnIndex}`}
+            defaultValue={value}
+            onKeyPress={this.handleEnterKey.bind(this)}
+          />;
         }
       });
     }
@@ -111,7 +126,7 @@ class VTableCustomExample extends React.Component {
     this.setState({
       realRowIndex,
       realColumnIndex
-    })
+    });
   }
   // 勾选
   onCheckboxClick(row) {
@@ -144,7 +159,7 @@ class VTableCustomExample extends React.Component {
       this.setState({
         realColumnIndex: index
       }, () => {
-        console.log(`R${realRowIndex}C${realColumnIndex}`)
+        console.log(`R${realRowIndex}C${realColumnIndex}`);
         document.getElementsByClassName(`R${realRowIndex}C${index}`)[0].focus();
       });
     }

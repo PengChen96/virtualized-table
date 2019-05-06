@@ -2,7 +2,7 @@
 import React from 'react';
 import {VTable} from '../libs/VTable';
 // import {Table} from '../libs/Table';
- import VTableCustomExample from './example/VTableCustomExample';
+import VTableCustomExample from './example/VTableCustomExample';
 
 
 class App extends React.Component {
@@ -48,18 +48,18 @@ class App extends React.Component {
       key: 'checkbox',
       title: '复选框',
       width: 100,
-       render: (value, row) => {
-
-         //console.log(row);
-         //return <div style={{position: 'relative'}}>
-         //  {
-         //    row && row.hover && <div className="close" onClick={this.onCheckedClick.bind(this)}/>
-         //  }
-         //  <input type="checkbox" checked={row.checked}/>
-         //  {/*{value}*/}
-         //</div>;
-
-       }
+      // render: (value, row) => {
+      //
+      //   console.log(row);
+      //   return <div style={{position: 'relative'}}>
+      //     {
+      //       row && row.hover && <div className="v-close" onClick={this.onCheckedClick.bind(this)}/>
+      //     }
+      //     <input type="checkbox" checked={row.checked}/>
+      //     {/*{value}*/}
+      //   </div>;
+      //
+      // }
     }, {
       key: 'title0',
       title: '标题列',
@@ -101,6 +101,7 @@ class App extends React.Component {
           dataSource={list}
           fixedLeftColumnCount={2}
           rowSelection={{a: true}}
+          rowKey="title0"
           onSelectAll={this.onSelectAll}
           onSelect={this.onSelect}
           onCellTap={this.onCellTap}
@@ -137,8 +138,8 @@ class App extends React.Component {
     this._header._container.scrollLeft = scrollLeft;
   }
   // 点击每个子项
-  onCellTap(record) {
-    console.log(record, '每个子项的回调');
+  onCellTap(record, row) {
+    console.log(record, row, '每个子项的回调');
   }
   // 用户手动选择/取消选择所有行的回调
   onSelectAll(selected, selectedRows) {

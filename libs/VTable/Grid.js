@@ -310,7 +310,7 @@ class Grid extends React.Component {
       {/*this.props.type === 'header' ? row[column['key']] :*/}
       {/*column.render ? column.render(value, row, rowIndex, column, columnIndex) : row[column['key']]*/}
       {/*}*/}
-      [{realRowIndex}, {realColumnIndex}]
+      {/*[{realRowIndex}, {realColumnIndex}]*/}
     </div>;
   }
   _render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) {
@@ -387,101 +387,101 @@ class Grid extends React.Component {
     // console.log(virtualColumns, '|');
     return (
       <div>
-          <div className="v-grid-container"
-               ref={mc => this._masterContainer = mc}
-            // style={{
-            //   width: visibleWidth,
-            //   height: visibleHeight
-            // }}
-          >
+        <div className="v-grid-container"
+          ref={mc => this._masterContainer = mc}
+          // style={{
+          //   width: visibleWidth,
+          //   height: visibleHeight
+          // }}
+        >
 
-            {/* 左侧固定列*/}
-            <div className={`v-grid-left-columns-container ${scrollLeft > 0 && 'v-grid-fixed-left'}`}
-                 ref={lc => this._leftContainer = lc}
-                 style={{
+          {/* 左侧固定列*/}
+          <div className={`v-grid-left-columns-container ${scrollLeft > 0 && 'v-grid-fixed-left'}`}
+            ref={lc => this._leftContainer = lc}
+            style={{
               width: fixedLeftColumnsWidth,
               minWidth: fixedLeftColumnsWidth,
               height: visibleHeight
             }}
-            >
-              <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
-                {
-                  virtualData.map((left_row, left_row_index) => {
-                    return <div key={left_row_index}>
-                      <div
-                        className="v-grid-row"
-                        onMouseEnter={()=>this._mouseEnter(left_row_index)}
-                        onMouseLeave={()=>this._mouseLeave(left_row_index)}
-                        style={{
+          >
+            <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
+              {
+                virtualData.map((left_row, left_row_index) => {
+                  return <div key={left_row_index}>
+                    <div
+                      className="v-grid-row"
+                      onMouseEnter={()=>this._mouseEnter(left_row_index)}
+                      onMouseLeave={()=>this._mouseLeave(left_row_index)}
+                      style={{
                         width: fixedLeftColumnsWidth,
                         minWidth: fixedLeftColumnsWidth,
                         height: estimatedRowHeight
                       }}>
-                        {
-                          fixedLeftColumns.map((left_column, left_column_index) => {
-                            return <div key={left_column_index}>
-                              {
-                                this._cellRender(left_row, left_row_index, left_column, left_column_index)
-                              }
-                            </div>;
-                          })
-                        }
-                      </div>
-                    </div>;
-                  })
-                }
-              </div>
+                      {
+                        fixedLeftColumns.map((left_column, left_column_index) => {
+                          return <div key={left_column_index}>
+                            {
+                              this._cellRender(left_row, left_row_index, left_column, left_column_index)
+                            }
+                          </div>;
+                        })
+                      }
+                    </div>
+                  </div>;
+                })
+              }
             </div>
-            {/* 表格主内容*/}
-            <div className="v-grid-main-container"
-                 ref={sc => this._scrollContainer = sc}
-                 onScrollCapture={this._onScrollEvent.bind(this)}
-                 style={{
+          </div>
+          {/* 表格主内容*/}
+          <div className="v-grid-main-container"
+            ref={sc => this._scrollContainer = sc}
+            onScrollCapture={this._onScrollEvent.bind(this)}
+            style={{
               width: scrollColumnsWidth,
               height: visibleHeight,
               // 设置最小高度[visibleHeight计算会少滚动条的高度]
               minHeight: estimatedRowHeight
             }}
-            >
-              <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
-                {
-                  virtualData.map((row, rowIndex) => {
-                    return <div key={rowIndex}>
-                      <div
-                        className="v-grid-row"
-                        onMouseEnter={()=>this._mouseEnter(rowIndex)}
-                        onMouseLeave={()=>this._mouseLeave(rowIndex)}
-                        style={{
-                      height: estimatedRowHeight,
-                      width: scrollColumnsWidth,
-                      paddingLeft: startHorizontalOffset,
-                      paddingRight: endHorizontalOffset
-                    }}
-                      >
-                        {
-                          virtualColumns.map((column, columnIndex) => {
-                            return <div key={columnIndex}>
-                              {
-                                this._cellRender(row, rowIndex, column, columnIndex)
-                              }
-                            </div>;
-                          })
-                        }
-                      </div>
-                    </div>;
-                  })
-                }
-              </div>
+          >
+            <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
+              {
+                virtualData.map((row, rowIndex) => {
+                  return <div key={rowIndex}>
+                    <div
+                      className="v-grid-row"
+                      onMouseEnter={()=>this._mouseEnter(rowIndex)}
+                      onMouseLeave={()=>this._mouseLeave(rowIndex)}
+                      style={{
+                        height: estimatedRowHeight,
+                        width: scrollColumnsWidth,
+                        paddingLeft: startHorizontalOffset,
+                        paddingRight: endHorizontalOffset
+                      }}
+                    >
+                      {
+                        virtualColumns.map((column, columnIndex) => {
+                          return <div key={columnIndex}>
+                            {
+                              this._cellRender(row, rowIndex, column, columnIndex)
+                            }
+                          </div>;
+                        })
+                      }
+                    </div>
+                  </div>;
+                })
+              }
             </div>
-            {
-              dataSource.length < 1 &&
+          </div>
+          {
+            dataSource.length < 1 &&
                 <div className="v-container-empty">
                   {
                     this.props.emptyText
                   }
                 </div>
-            }
-          </div>
+          }
+        </div>
       </div>
     );
 
