@@ -44,6 +44,8 @@ onCellTap | 点击每个子项 | func | Function(value, row, rowIndex, realRowIn
 onSelectAll | 勾选全部 | func | Function(selected, selectedRows)
 onSelect | 勾选行 | func | Function(record, selected, selectedRows)
 rowKey | 行键 | string | index
+onRowRemove | 删除行 | func | Function(row)
+rowRemoveText | 行键 | element | -
 
 #### columns
 参数 | 说明 | 类型 | 默认值 

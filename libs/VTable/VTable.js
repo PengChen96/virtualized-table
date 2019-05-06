@@ -61,14 +61,18 @@ class VTable extends React.Component {
           headRender: (value, row, rowIndex, realRowIndex) => {
             //console.log(value, row, '复选框');
             return <div>
-              <input type="checkbox" onChange={() => this._select(row, realRowIndex)} checked={row.checked || false}/>
+              <input type="checkbox" onChange={(e) => this._select(e, row, realRowIndex)} checked={row.checked || false}/>
             </div>;
           },
           render: (value, row, rowIndex, realRowIndex) => {
             //console.log(value, row, '复选框');
             return [
-              row && row.hover && <div key={0} className="v-row-remove" onClick={() => this.__onRowRemove(row)}/>,
-              <input key={1} type="checkbox" onChange={() => this._select(row, realRowIndex)} checked={row.checked || false}/>
+              row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row)}>
+                {props.rowRemoveText || <div className="v-row-remove"/>}
+              </div>,
+              <div key={1} onClick={(e) => this._select(e, row, realRowIndex)}>
+                <input type="checkbox" defaultChecked={row.checked || false}/>
+              </div>
             ];
           }
         });
@@ -94,14 +98,18 @@ class VTable extends React.Component {
         headRender: (value, row, rowIndex, realRowIndex) => {
           //console.log(value, row, '复选框');
           return <div>
-            <input type="checkbox" onChange={() => this._select(row, realRowIndex)} checked={row.checked || false}/>
+            <input type="checkbox" onChange={(e) => this._select(e, row, realRowIndex)} checked={row.checked || false}/>
           </div>;
         },
         render: (value, row, rowIndex, realRowIndex) => {
           //console.log(value, row, '复选框');
           return [
-            row && row.hover && <div key={0} className="v-row-remove" onClick={() => this.__onRowRemove(row)}/>,
-            <input key={1} type="checkbox" onChange={() => this._select(row, realRowIndex)} checked={row.checked || false}/>
+            row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row)}>
+              {props.rowRemoveText || <div className="v-row-remove"/>}
+            </div>,
+            <div key={1} onClick={(e) => this._select(e, row, realRowIndex)}>
+              <input type="checkbox" defaultChecked={row.checked || false}/>
+            </div>
           ];
         }
       });
@@ -194,16 +202,18 @@ class VTable extends React.Component {
     }
   }
   // 删除行
-  __onRowRemove(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) {
+  __onRowRemove(e, row) {
 
+    e.stopPropagation();
     const {onRowRemove} = this.props;
     if (typeof onRowRemove === 'function') {
-      onRowRemove(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
+      onRowRemove(row);
     }
   }
   // 用户手动选择/取消选择行的回调
-  _select(row, realRowIndex) {
+  _select(e, row, realRowIndex) {
 
+    e.stopPropagation();
     // 表头的全选
     if (row.selection && row.selection === 'all') {
 
@@ -320,7 +330,9 @@ VTable.propTypes = {
   // 勾选行 Function(record, selected, selectedRows)
   onSelect: PropTypes.func,
   // 删除行 Function(row)
-  onRowRemove: PropTypes.func
+  onRowRemove: PropTypes.func,
+  // 删除行内容样式
+  rowRemoveText: PropTypes.element
 
 };
 

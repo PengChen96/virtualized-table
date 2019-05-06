@@ -105,6 +105,8 @@ class App extends React.Component {
           onSelectAll={this.onSelectAll}
           onSelect={this.onSelect}
           onCellTap={this.onCellTap}
+          onRowRemove={this.onRowRemove}
+          rowRemoveText={<div>x</div>}
         />
         {/*<div className="v-table-header">*/}
         {/*<Table*/}
@@ -148,6 +150,10 @@ class App extends React.Component {
   // 用户手动选择/取消选择行的回调
   onSelect(record, selected, selectedRows) {
     console.log(record, selected, selectedRows, 'onSelect');
+  }
+  // 删除行
+  onRowRemove(row) {
+    console.log(row, 'onRowRemove');
   }
 
 }
