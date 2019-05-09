@@ -1,6 +1,6 @@
 {
   "name": "virtualized-table",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "Large data volume table",
   "main": "dist/index.js",
   "files": [
