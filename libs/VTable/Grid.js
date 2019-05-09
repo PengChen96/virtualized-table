@@ -64,7 +64,6 @@ class Grid extends React.Component {
 
   static getDerivedStateFromProps(props, state) {
 
-    console.log(props.dataSource !== state.dataSource);
     if (props.dataSource !== state.dataSource) {
       // 行
       let rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
@@ -169,7 +168,6 @@ class Grid extends React.Component {
       scrollColumnsWidth
     });
     this._scrollContainer.addEventListener('scroll', () => {
-      console.log(this._scrollContainer.scrollTop, this._leftContainer.scrollTop);
       this._leftContainer.scrollTop = this._scrollContainer.scrollTop;
     });
   }
@@ -195,7 +193,7 @@ class Grid extends React.Component {
     let endVerticalOffset = (dataSource.length - endRowIndex) * estimatedRowHeight;
     // 需要渲染显示的行数据
     let virtualData = dataSource.slice(startRowIndex, endRowIndex);
-    console.log(scrollTopNum, startRowIndex, endRowIndex, startVerticalOffset, endVerticalOffset, virtualData, '垂直滚动');
+
     this.setState({
       startRowIndex,
       endRowIndex,
@@ -233,16 +231,7 @@ class Grid extends React.Component {
     let endHorizontalOffset = calculateColumnsWidth(rightOffsetColumns);
     // 需要渲染显示的列数据
     let virtualColumns = scrollColumns.slice(startColumnIndex, endColumnIndex);
-    console.table({
-      'scrollColumns.length': scrollColumns.length,
-      'scrollLeftNum水平滚动的条数': scrollLeftNum,
-      'startColumnIndex要渲染的列开始坐标': startColumnIndex,
-      'endColumnIndex要渲染的列结尾坐标': endColumnIndex,
-      'startHorizontalOffset左边未渲染数据的paddingLeft值': startHorizontalOffset,
-      'endHorizontalOffset右边未渲染数据的paddingRight值': endHorizontalOffset
-    });
-    console.log('需要渲染显示的列数据', virtualColumns);
-    console.log('总scrollColumns', scrollColumns);
+
     this.setState({
       scrollLeft,
       startColumnIndex,
@@ -255,7 +244,7 @@ class Grid extends React.Component {
 
   // 滚动事件
   _onScrollEvent() {
-    console.log(this);
+
     this.__onScroll(this._scrollContainer.scrollLeft);
     // 垂直方向滚动
     this._onVerticalScroll();
@@ -270,7 +259,6 @@ class Grid extends React.Component {
     this.setState({
       scrollPosition: this._scrollContainer.scrollTop
     });
-    const height = this._scrollContainer.scrollHeight - this._scrollContainer.scrollTop - this._scrollContainer.clientHeight;
     // 记录滚动位置距离底部的位置
     let scrollBottom = this._scrollContainer.scrollHeight - (this._scrollContainer.scrollTop + this._scrollContainer.clientHeight) < 100;
     // 如果已达到指定位置则触发 （向下滚动）
@@ -279,14 +267,7 @@ class Grid extends React.Component {
     // 向上滚动
     if (!flagToDirection && this._scrollContainer.scrollTop < 100) {
     }
-    console.table({
-      'scrollTop 滚动的高度': this._scrollContainer.scrollTop,
-      'scrollLeft 滚动的宽度': this._scrollContainer.scrollLeft,
-      'clientHeight 视窗高度': this._scrollContainer.clientHeight,
-      'scrollHeight 页面高度': this._scrollContainer.scrollHeight,
-      'height 距离页面底部的高度': height,
-      '滚动方向': flagToDirection ? '下' : '上'
-    });
+
   }
 
   _cellRender(row, rowIndex, column, columnIndex) {
@@ -310,29 +291,21 @@ class Grid extends React.Component {
       {
         this._render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)
       }
-      {/*{*/}
-      {/*this.props.type === 'header' ? row[column['key']] :*/}
-      {/*column.render ? column.render(value, row, rowIndex, column, columnIndex) : row[column['key']]*/}
-      {/*}*/}
-      {/*[{realRowIndex}, {realColumnIndex}]*/}
     </div>;
   }
   _render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) {
     if (this.props.type === 'header') {
+
       return column.headRender ? column.headRender(
         value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex
       ) : row[column['key']];
-      //if (columnIndex === 0) {
-      //  return column.render ? column.render(
-      //    value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex
-      //  ) : row[column['key']];
-      //} else {
-      //  return row[column['key']];
-      //}
+
     } else {
+
       return column.render ? column.render(
         value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex
       ) : row[column['key']];
+
     }
   }
 
@@ -387,16 +360,10 @@ class Grid extends React.Component {
       dataSource
     } = this.state;
 
-    // console.log(virtualData, '-');
-    // console.log(virtualColumns, '|');
     return (
       <div>
         <div className="v-grid-container"
           ref={mc => this._masterContainer = mc}
-          // style={{
-          //   width: visibleWidth,
-          //   height: visibleHeight
-          // }}
         >
 
           {/* 左侧固定列*/}

@@ -59,14 +59,12 @@ class VTable extends React.Component {
           width: 60,
           style: {justifyContent: 'center'},
           headRender: (value, row, rowIndex, realRowIndex) => {
-            //console.log(value, row, '复选框');
             return <div className="v-checkbox-container" onClick={(e) => this._select(e, row, realRowIndex)}>
               <input type="checkbox" onChange={(e) => this._select(e, row, realRowIndex)} checked={row.checked || false}/>
               <div className="show-box" />
             </div>;
           },
           render: (value, row, rowIndex, realRowIndex) => {
-            //console.log(value, row, '复选框');
             return [
               row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row)}>
                 {props.rowRemoveText || <div className="v-row-remove"/>}
@@ -98,14 +96,12 @@ class VTable extends React.Component {
         width: 60,
         style: {justifyContent: 'center'},
         headRender: (value, row, rowIndex, realRowIndex) => {
-          //console.log(value, row, '复选框');
           return <div className="v-checkbox-container" onClick={(e) => this._select(e, row, realRowIndex)}>
             <input type="checkbox" checked={row.checked || false}/>
             <div className="show-box" />
           </div>;
         },
         render: (value, row, rowIndex, realRowIndex) => {
-          //console.log(value, row, '复选框');
           return [
             row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row)}>
               {props.rowRemoveText || <div className="v-row-remove"/>}
@@ -152,7 +148,8 @@ class VTable extends React.Component {
       fixedLeftColumnCount = 0,
       columnOffsetCount = 0,
       emptyText,
-      loading
+      loading,
+      loadingText
     } = this.props;
 
     return (
@@ -184,6 +181,7 @@ class VTable extends React.Component {
             onCellTap={this.__onCellTap.bind(this)}
             emptyText={emptyText}
             loading={loading}
+            loadingText={loadingText}
           />
         </div>
       </div>
@@ -192,13 +190,7 @@ class VTable extends React.Component {
 
   // 滚动
   onScroll(scrollLeft) {
-    console.log(this._header._scrollContainer.scrollLeft, 'header');
-    console.log(scrollLeft, 'onScroll callback');
     this._header._scrollContainer.scrollLeft = scrollLeft;
-  }
-  //
-  test() {
-    console.log('test');
   }
   // 点击每个子项
   __onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) {
