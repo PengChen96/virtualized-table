@@ -168,8 +168,18 @@ class Grid extends React.Component {
       scrollColumnsWidth
     });
     this._scrollContainer.addEventListener('scroll', () => {
-      this._leftContainer.scrollTop = this._scrollContainer.scrollTop;
+      this._syncScrollTop(this._scrollContainer, this._leftContainer);
     });
+  }
+
+  // 同步滚动条
+  _syncScrollTop (scrollContainer, leftContainer) {
+    if (scrollContainer.scrollTop > leftContainer.scrollTop) {
+      leftContainer.scrollTop += 10;
+      this._syncScrollTop(scrollContainer, leftContainer);
+    } else {
+      leftContainer.scrollTop = scrollContainer.scrollTop;
+    }
   }
 
   // 垂直方向滚动
