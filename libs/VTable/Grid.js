@@ -26,7 +26,7 @@ class Grid extends React.Component {
       // 可渲染的元素个数
       rowVisibleCount: 10,
       // 上下偏移渲染个数
-      rowOffsetCount: 5,
+      rowOffsetCount: 10,
       // 可视区坐标(rowIndex垂直)
       startRowIndex: 0,
       endRowIndex: 0,
@@ -167,19 +167,20 @@ class Grid extends React.Component {
       scrollColumns,
       scrollColumnsWidth
     });
-    this._scrollContainer.addEventListener('scroll', () => {
-      this._syncScrollTop(this._scrollContainer, this._leftContainer);
-    });
+    // this._scrollContainer.addEventListener('scroll', () => {
+    //   this._syncScrollTop(this._scrollContainer, this._leftContainer);
+    // });
   }
 
-  // 同步滚动条
+  // 同步左侧滚动条
   _syncScrollTop (scrollContainer, leftContainer) {
-    if (scrollContainer.scrollTop > leftContainer.scrollTop) {
-      leftContainer.scrollTop += 10;
-      this._syncScrollTop(scrollContainer, leftContainer);
-    } else {
-      leftContainer.scrollTop = scrollContainer.scrollTop;
-    }
+    leftContainer.scrollTop = scrollContainer.scrollTop;
+    // if (scrollContainer.scrollTop > leftContainer.scrollTop) {
+    //   leftContainer.scrollTop += 10;
+    //   this._syncScrollTop(scrollContainer, leftContainer);
+    // } else {
+    //   leftContainer.scrollTop = scrollContainer.scrollTop;
+    // }
   }
 
   // 垂直方向滚动
@@ -255,6 +256,8 @@ class Grid extends React.Component {
   // 滚动事件
   _onScrollEvent() {
 
+    this._syncScrollTop(this._scrollContainer, this._leftContainer);
+    // 同步header滚动条
     this.__onScroll(this._scrollContainer.scrollLeft);
     // 垂直方向滚动
     this._onVerticalScroll();
@@ -285,6 +288,10 @@ class Grid extends React.Component {
     let realColumnIndex = columnIndex + this.state.startColumnIndex;
     let value = row[column['key']];
     let width = column.width || 150;
+    let {
+      rowActiveKey = 'active',
+      rowActiveColor = '#fff1f0',
+    } = this.props;
 
     return <div
       onClick={() => this.__onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)}
@@ -294,7 +301,7 @@ class Grid extends React.Component {
         minWidth: width,
         height: this.state.estimatedRowHeight,
         // 勾选或hover颜色
-        background: (row.checked || row.hover) ? '#fff9e1' : '',
+        background: row[rowActiveKey] ? rowActiveColor : ((row.checked || row.hover) ? '#fff9e1' : ''),
         ...column.style
       }}
     >
@@ -519,6 +526,10 @@ Grid.propTypes = {
   loading: PropTypes.bool,
   // loadingText
   loadingText: PropTypes.element,
+  // 标记行的键
+  rowActiveKey: PropTypes.string,
+  // 标记行的颜色
+  rowActiveColor: PropTypes.string,
   //  API
   // 滚动
   onScroll: PropTypes.func,

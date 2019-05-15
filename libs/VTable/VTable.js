@@ -149,7 +149,9 @@ class VTable extends React.Component {
       columnOffsetCount = 0,
       emptyText,
       loading,
-      loadingText
+      loadingText,
+      rowActiveKey,
+      rowActiveColor
     } = this.props;
 
     return (
@@ -182,6 +184,8 @@ class VTable extends React.Component {
             emptyText={emptyText}
             loading={loading}
             loadingText={loadingText}
+            rowActiveKey={rowActiveKey}
+            rowActiveColor={rowActiveColor}
           />
         </div>
       </div>
@@ -333,8 +337,12 @@ VTable.propTypes = {
   loading: PropTypes.bool,
   // loadingText
   loadingText: PropTypes.element,
-  // rowKey
+  // rowKey for select
   rowKey: PropTypes.string,
+  // 标记行的键
+  rowActiveKey: PropTypes.string,
+  // 标记行的颜色
+  rowActiveColor: PropTypes.string,
 
   //  API
   // 点击每个子项 Function(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)
