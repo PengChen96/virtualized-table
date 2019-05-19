@@ -10,11 +10,16 @@ class App extends React.Component {
   constructor () {
     super();
     this.state = {
-      list: []
+      list: [],
+      loading: false
     };
   }
 
   getList(num = 1,val = ''){
+
+    this.setState({
+      loading: true
+    });
     let list = [];
     for (let i = 0; i < num; i++) {
       list.push({
@@ -30,6 +35,12 @@ class App extends React.Component {
         list
       });
     }
+    setTimeout(() => {
+      this.setState({
+        loading: false
+      });
+    }, 1000)
+
   };
   onCheckedClick() {
     console.log('11');
@@ -45,9 +56,9 @@ class App extends React.Component {
   }
   getColumns(num = 1) {
     let columns = [{
-      key: 'checkbox',
+      key: 'id',
       title: '复选框',
-      width: 100,
+      width: 100
       // render: (value, row) => {
       //
       //   console.log(row);
@@ -76,10 +87,10 @@ class App extends React.Component {
     for (let i = 0; i < num; i++) {
       columns.push({
         key: 'title' + i,
-        title: '标题列',
+        title: '标题列' + i,
         width: 150,
         render: (value) => {
-          return <span>{value}值<input type="text"/></span>;
+          return <span>{value}值</span>;
         }
       });
     }
@@ -87,12 +98,11 @@ class App extends React.Component {
   }
 
   render() {
-    const {list} = this.state;
+    const {list, loading} = this.state;
     // let columnData = [{ title0: '内容'}];
     return (
       <div className="App">
-        {/*example*/}
-        <VTableCustomExample/>
+
 
         <div onClick={() => this.getList(10000)}>getList</div>
         <div onClick={() => this.getList(10000, '哈哈')}>getListVal</div>
@@ -108,11 +118,13 @@ class App extends React.Component {
           onCellTap={this.onCellTap}
           onRowRemove={this.onRowRemove}
           visibleHeight={600}
-          emptyText={<div>22</div>}
-          loading={false}
-          loadingText={<div>11</div>}
+          emptyText={<div>未查询到数据</div>}
+          loading={loading}
+          loadingText={<div>数据加载中...</div>}
           // rowRemoveText={<div>x</div>}
         />
+        {/*example*/}
+        <VTableCustomExample/>
         {/*<div className="v-table-header">*/}
         {/*<Table*/}
         {/*ref={h => this._header = h}*/}

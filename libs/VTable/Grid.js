@@ -465,7 +465,7 @@ class Grid extends React.Component {
             dataSource.length < 1 &&
                 <div className="v-container-empty">
                   {
-                    this.props.emptyText
+                    this.props.emptyText || "暂无数据"
                   }
                 </div>
           }
