@@ -52,8 +52,8 @@ class VTable extends React.Component {
 
     let {state} = this;
     if (props.dataSource !== state.dataSource) {
-      let columns = props.columns;
-      let footerColumns = JSON.parse(JSON.stringify(columns));
+      let columns = JSON.parse(JSON.stringify(props.columns));
+      let footerColumns = JSON.parse(JSON.stringify(props.columns));
       // 复选框
       if (props.rowSelection) {
         columns.unshift({
@@ -78,7 +78,7 @@ class VTable extends React.Component {
           }
         });
         //
-        footerColumns = JSON.parse(JSON.stringify(columns));
+        footerColumns = JSON.parse(JSON.stringify(props.columns));
         footerColumns[0] = {width: 60};
       }
       this.setState({
@@ -95,8 +95,8 @@ class VTable extends React.Component {
   componentDidMount() {
 
     let {props} = this;
-    let columns = props.columns;
-    let footerColumns = JSON.parse(JSON.stringify(columns));
+    let columns = JSON.parse(JSON.stringify(props.columns));
+    let footerColumns = JSON.parse(JSON.stringify(props.columns));
     // 复选框
     if (props.rowSelection) {
       columns.unshift({
@@ -121,7 +121,7 @@ class VTable extends React.Component {
         }
       });
       //
-      footerColumns = JSON.parse(JSON.stringify(columns));
+      footerColumns = JSON.parse(JSON.stringify(props.columns));
       footerColumns[0] = {width: 60};
     }
     this.setState({
