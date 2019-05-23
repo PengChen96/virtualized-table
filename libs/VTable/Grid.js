@@ -175,6 +175,16 @@ class Grid extends React.Component {
   // 同步左侧滚动条
   _syncScrollTop (scrollContainer, leftContainer) {
     leftContainer.scrollTop = scrollContainer.scrollTop;
+    // 禁用
+    if (leftContainer.scrollTop !== scrollContainer.scrollTop) {
+      this.setState({
+        pointerEvents: 'none'
+      });
+    } else {
+      this.setState({
+        pointerEvents: 'auto'
+      });
+    }
     // if (scrollContainer.scrollTop > leftContainer.scrollTop) {
     //   leftContainer.scrollTop += 10;
     //   this._syncScrollTop(scrollContainer, leftContainer);
@@ -328,7 +338,8 @@ class Grid extends React.Component {
 
   _mouseEnter(rowIndex) {
     // 当表头，不执行
-    if (this.props.type === 'header') {
+    let {type} = this.props;
+    if (this.props.type === 'header' || type === 'footer') {
       return;
     }
     // 添加hover
@@ -345,7 +356,8 @@ class Grid extends React.Component {
   }
   _mouseLeave(rowIndex) {
     // 当表头，不执行
-    if (this.props.type === 'header') {
+    let {type} = this.props;
+    if (type === 'header' || type === 'footer') {
       return;
     }
     // 移除hover
@@ -374,7 +386,8 @@ class Grid extends React.Component {
       estimatedRowHeight,
       visibleHeight,
       //
-      dataSource
+      dataSource,
+      pointerEvents
     } = this.state;
 
     return (
@@ -401,6 +414,7 @@ class Grid extends React.Component {
                       onMouseEnter={()=>this._mouseEnter(left_row_index)}
                       onMouseLeave={()=>this._mouseLeave(left_row_index)}
                       style={{
+                        pointerEvents: pointerEvents,
                         width: fixedLeftColumnsWidth,
                         minWidth: fixedLeftColumnsWidth,
                         height: estimatedRowHeight
@@ -440,6 +454,7 @@ class Grid extends React.Component {
                       onMouseEnter={()=>this._mouseEnter(rowIndex)}
                       onMouseLeave={()=>this._mouseLeave(rowIndex)}
                       style={{
+                        pointerEvents: pointerEvents,
                         height: estimatedRowHeight,
                         width: scrollColumnsWidth,
                         paddingLeft: startHorizontalOffset,
@@ -465,7 +480,7 @@ class Grid extends React.Component {
             dataSource.length < 1 &&
                 <div className="v-container-empty">
                   {
-                    this.props.emptyText || "暂无数据"
+                    this.props.emptyText || '暂无数据'
                   }
                 </div>
           }

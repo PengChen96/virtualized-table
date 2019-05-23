@@ -53,6 +53,7 @@ class VTable extends React.Component {
     let {state} = this;
     if (props.dataSource !== state.dataSource) {
       let columns = props.columns;
+      let footerColumns = JSON.parse(JSON.stringify(columns));
       // 复选框
       if (props.rowSelection) {
         columns.unshift({
@@ -76,11 +77,16 @@ class VTable extends React.Component {
             ];
           }
         });
+        //
+        footerColumns = JSON.parse(JSON.stringify(columns));
+        footerColumns[0] = {width: 60};
       }
       this.setState({
         columns,
         columnData: this.getColumnData(columns),
-        dataSource: props.dataSource
+        dataSource: props.dataSource,
+        footerColumns: footerColumns,
+        footerColumnData: props.footerColumnData
       });
     }
 
@@ -90,6 +96,7 @@ class VTable extends React.Component {
 
     let {props} = this;
     let columns = props.columns;
+    let footerColumns = JSON.parse(JSON.stringify(columns));
     // 复选框
     if (props.rowSelection) {
       columns.unshift({
@@ -113,11 +120,16 @@ class VTable extends React.Component {
           ];
         }
       });
+      //
+      footerColumns = JSON.parse(JSON.stringify(columns));
+      footerColumns[0] = {width: 60};
     }
     this.setState({
       columns,
       columnData: this.getColumnData(columns),
-      dataSource: props.dataSource
+      dataSource: props.dataSource,
+      footerColumns: footerColumns,
+      footerColumnData: props.footerColumnData
     });
 
   }
@@ -139,7 +151,9 @@ class VTable extends React.Component {
     const {
       columns,
       columnData,
-      dataSource
+      dataSource,
+      footerColumns = [],
+      footerColumnData = []
     } = this.state;
     let {
       className,
@@ -167,7 +181,6 @@ class VTable extends React.Component {
             dataSource={columnData}
             fixedLeftColumnCount={fixedLeftColumnCount}
             columnOffsetCount={columnOffsetCount}
-            rowSelection={this.props.rowSelection}
           />
         </div>
         <div className="v-table-content">
@@ -188,6 +201,22 @@ class VTable extends React.Component {
             rowActiveColor={rowActiveColor}
           />
         </div>
+        {
+          footerColumnData.length > 0 &&
+            <div className="v-table-footer">
+              <Grid
+                type="footer"
+                ref={h => this._footer = h}
+                title="title"
+                visibleWidth={visibleWidth}
+                visibleHeight={40}
+                columns={footerColumns}
+                dataSource={footerColumnData}
+                fixedLeftColumnCount={fixedLeftColumnCount}
+                columnOffsetCount={columnOffsetCount}
+              />
+            </div>
+        }
       </div>
     );
   }
@@ -195,6 +224,9 @@ class VTable extends React.Component {
   // 滚动
   onScroll(scrollLeft) {
     this._header._scrollContainer.scrollLeft = scrollLeft;
+    if (this._footer) {
+      this._footer._scrollContainer.scrollLeft = scrollLeft;
+    }
   }
   // 点击每个子项
   __onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) {
@@ -343,6 +375,8 @@ VTable.propTypes = {
   rowActiveKey: PropTypes.string,
   // 标记行的颜色
   rowActiveColor: PropTypes.string,
+  // 底部footer行数据
+  footerColumnData: PropTypes.array,
 
   //  API
   // 点击每个子项 Function(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)

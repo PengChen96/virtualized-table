@@ -24,6 +24,28 @@
     }
   }
 }
+.v-table-footer {
+  .v-grid-container {
+    background: #f4f6f9;
+    border-top: none;
+    .v-grid-left-columns-container {
+      overflow: hidden;
+      .v-grid-cell {
+        border-bottom: none !important;
+      }
+    }
+    .v-grid-main-container {
+      overflow-y: scroll;
+      overflow-x: hidden;
+      &::-webkit-scrollbar {
+        background: transparent;
+      }
+      .v-grid-cell {
+        border-bottom: none !important;
+      }
+    }
+  }
+}
 
 /* Grid*/
 .v-grid-container {

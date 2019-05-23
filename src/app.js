@@ -2,7 +2,7 @@
 import React from 'react';
 import {VTable} from '../libs/VTable';
 // import {Table} from '../libs/Table';
-import VTableCustomExample from './example/VTableCustomExample';
+// import VTableCustomExample from './example/VTableCustomExample';
 
 
 class App extends React.Component {
@@ -39,7 +39,7 @@ class App extends React.Component {
       this.setState({
         loading: false
       });
-    }, 1000)
+    }, 500);
 
   };
   onCheckedClick() {
@@ -100,6 +100,7 @@ class App extends React.Component {
   render() {
     const {list, loading} = this.state;
     // let columnData = [{ title0: '内容'}];
+    let columns = this.getColumns(25);
     return (
       <div className="App">
 
@@ -108,7 +109,7 @@ class App extends React.Component {
         <div onClick={() => this.getList(10000, '哈哈')}>getListVal</div>
         <VTable
           className="a"
-          columns={this.getColumns(25)}
+          columns={columns}
           dataSource={list}
           fixedLeftColumnCount={2}
           rowSelection={{a: true}}
@@ -122,9 +123,11 @@ class App extends React.Component {
           loading={loading}
           loadingText={<div>数据加载中...</div>}
           // rowRemoveText={<div>x</div>}
+          footerColumnData={[{id: '123',title0: '1212'}]}
         />
         {/*example*/}
-        <VTableCustomExample/>
+        {/*<VTableCustomExample/>*/}
+
         {/*<div className="v-table-header">*/}
         {/*<Table*/}
         {/*ref={h => this._header = h}*/}
