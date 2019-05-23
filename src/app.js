@@ -31,10 +31,10 @@ class App extends React.Component {
         title4: '内容' + i + val,
         title5: '内容' + i + val,
       });
-      this.setState({
-        list
-      });
     }
+    this.setState({
+      list
+    });
     setTimeout(() => {
       this.setState({
         loading: false
@@ -106,13 +106,13 @@ class App extends React.Component {
 
 
         <div onClick={() => this.getList(10000)}>getList</div>
-        <div onClick={() => this.getList(10000, '哈哈')}>getListVal</div>
+        <div onClick={() => this.getList(0, '哈哈')}>getListVal</div>
         <VTable
           className="a"
           columns={columns}
           dataSource={list}
           fixedLeftColumnCount={2}
-          rowSelection={{a: true}}
+          rowSelection={list.length > 0 ? true : false}
           rowKey="title0"
           onSelectAll={this.onSelectAll}
           onSelect={this.onSelect}

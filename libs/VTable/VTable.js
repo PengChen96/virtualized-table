@@ -52,7 +52,7 @@ class VTable extends React.Component {
 
     let {state} = this;
     if (props.dataSource !== state.dataSource) {
-      let columns = JSON.parse(JSON.stringify(props.columns));
+      let columns = props.columns;
       let footerColumns = JSON.parse(JSON.stringify(props.columns));
       // 复选框
       if (props.rowSelection) {
@@ -95,7 +95,7 @@ class VTable extends React.Component {
   componentDidMount() {
 
     let {props} = this;
-    let columns = JSON.parse(JSON.stringify(props.columns));
+    let columns = props.columns;
     let footerColumns = JSON.parse(JSON.stringify(props.columns));
     // 复选框
     if (props.rowSelection) {
