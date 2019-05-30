@@ -124,6 +124,7 @@ class App extends React.Component {
           loadingText={<div>数据加载中...</div>}
           // rowRemoveText={<div>x</div>}
           footerColumnData={[{id: '123',title0: '1212'}]}
+          rowRemoveVisible={false}
         />
         {/*example*/}
         {/*<VTableCustomExample/>*/}

@@ -46,6 +46,7 @@ onSelect | 勾选行 | func | Function(record, selected, selectedRows)
 rowKey | 行键 | string | index
 onRowRemove | 删除行 | func | Function(e, row)
 rowRemoveText | 删除行内容 | element | -
+rowRemoveVisible | 是否显示删除按钮 | bool | true
 className | .v-table样式 | string | -
 loading | 是否显示加载中 | bool | false
 loadingText | 加载中内容 | element | "数据加载中，请稍后.."

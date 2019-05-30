@@ -12,6 +12,7 @@ class VTable extends React.Component {
       columns: [],
       columnData: [{}],
       dataSource: [],
+      footerColumnData: [],
       // 选择的行
       selected: [],
       // 选择的行行号
@@ -51,7 +52,10 @@ class VTable extends React.Component {
   componentWillReceiveProps(props) {
 
     let {state} = this;
-    if (props.dataSource !== state.dataSource) {
+    let {rowRemoveVisible = true} = props;
+    if (props.dataSource !== state.dataSource ||
+      props.footerColumnData !== state.footerColumnData
+    ) {
       let columns = props.columns;
       let footerColumns = JSON.parse(JSON.stringify(props.columns));
       // 复选框
@@ -67,7 +71,7 @@ class VTable extends React.Component {
           },
           render: (value, row, rowIndex, realRowIndex) => {
             return [
-              row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row)}>
+              rowRemoveVisible && row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row)}>
                 {props.rowRemoveText || <div className="v-row-remove"/>}
               </div>,
               <div className="v-checkbox-container" key={1} onClick={(e) => this._select(e, row, realRowIndex)}>
@@ -95,6 +99,7 @@ class VTable extends React.Component {
   componentDidMount() {
 
     let {props} = this;
+    let {rowRemoveVisible = true} = props;
     let columns = props.columns;
     let footerColumns = JSON.parse(JSON.stringify(props.columns));
     // 复选框
@@ -110,7 +115,7 @@ class VTable extends React.Component {
         },
         render: (value, row, rowIndex, realRowIndex) => {
           return [
-            row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row)}>
+            rowRemoveVisible && row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row)}>
               {props.rowRemoveText || <div className="v-row-remove"/>}
             </div>,
             <div className="v-checkbox-container" key={1} onClick={(e) => this._select(e, row, realRowIndex)}>
@@ -388,7 +393,9 @@ VTable.propTypes = {
   // 删除行 Function(row)
   onRowRemove: PropTypes.func,
   // 删除行内容样式
-  rowRemoveText: PropTypes.element
+  rowRemoveText: PropTypes.element,
+  // 是否显示删除按钮
+  rowRemoveVisible: PropTypes.bool,
 
 };
 
