@@ -71,7 +71,7 @@ class VTable extends React.Component {
           },
           render: (value, row, rowIndex, realRowIndex) => {
             return [
-              rowRemoveVisible && row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row)}>
+              rowRemoveVisible && row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row, rowIndex, realRowIndex)}>
                 {props.rowRemoveText || <div className="v-row-remove"/>}
               </div>,
               <div className="v-checkbox-container" key={1} onClick={(e) => this._select(e, row, realRowIndex)}>
@@ -90,7 +90,9 @@ class VTable extends React.Component {
         columnData: this.getColumnData(columns),
         dataSource: props.dataSource,
         footerColumns: footerColumns,
-        footerColumnData: props.footerColumnData
+        footerColumnData: props.footerColumnData,
+        selected: [],
+        selectedRows: []
       });
     }
 
@@ -115,7 +117,7 @@ class VTable extends React.Component {
         },
         render: (value, row, rowIndex, realRowIndex) => {
           return [
-            rowRemoveVisible && row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row)}>
+            rowRemoveVisible && row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row, rowIndex, realRowIndex)}>
               {props.rowRemoveText || <div className="v-row-remove"/>}
             </div>,
             <div className="v-checkbox-container" key={1} onClick={(e) => this._select(e, row, realRowIndex)}>
@@ -134,7 +136,9 @@ class VTable extends React.Component {
       columnData: this.getColumnData(columns),
       dataSource: props.dataSource,
       footerColumns: footerColumns,
-      footerColumnData: props.footerColumnData
+      footerColumnData: props.footerColumnData,
+      selected: [],
+      selectedRows: []
     });
 
   }
@@ -242,12 +246,12 @@ class VTable extends React.Component {
     }
   }
   // 删除行
-  __onRowRemove(e, row) {
+  __onRowRemove(e, row, rowIndex, realRowIndex) {
 
     e.stopPropagation();
     const {onRowRemove} = this.props;
     if (typeof onRowRemove === 'function') {
-      onRowRemove(e, row);
+      onRowRemove(e, row, rowIndex, realRowIndex);
     }
   }
   // 用户手动选择/取消选择行的回调

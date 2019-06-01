@@ -44,7 +44,7 @@ onCellTap | 点击每个子项 | func | Function(value, row, rowIndex, realRowIn
 onSelectAll | 勾选全部 | func | Function(selected, selectedRows)
 onSelect | 勾选行 | func | Function(record, selected, selectedRows)
 rowKey | 行键 | string | index
-onRowRemove | 删除行 | func | Function(e, row)
+onRowRemove | 删除行 | func | Function(e, row, rowIndex, realRowIndex)
 rowRemoveText | 删除行内容 | element | -
 rowRemoveVisible | 是否显示删除按钮 | bool | true
 className | .v-table样式 | string | -
