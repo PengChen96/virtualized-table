@@ -168,6 +168,7 @@ class VTable extends React.Component {
       className,
       visibleWidth = 1200,
       visibleHeight = 400,
+      mainRowHeight = 40,
       fixedLeftColumnCount = 0,
       columnOffsetCount = 0,
       emptyText,
@@ -185,7 +186,8 @@ class VTable extends React.Component {
             ref={h => this._header = h}
             title="title"
             visibleWidth={visibleWidth}
-            visibleHeight={40}
+            visibleHeight={38}
+            estimatedRowHeight={38}
             columns={columns}
             dataSource={columnData}
             fixedLeftColumnCount={fixedLeftColumnCount}
@@ -197,6 +199,7 @@ class VTable extends React.Component {
             title="title"
             visibleWidth={visibleWidth}
             visibleHeight={visibleHeight}
+            estimatedRowHeight={mainRowHeight}
             columns={columns}
             dataSource={dataSource}
             fixedLeftColumnCount={fixedLeftColumnCount}
@@ -218,7 +221,8 @@ class VTable extends React.Component {
                 ref={h => this._footer = h}
                 title="title"
                 visibleWidth={visibleWidth}
-                visibleHeight={40}
+                visibleHeight={38}
+                estimatedRowHeight={38}
                 columns={footerColumns}
                 dataSource={footerColumnData}
                 fixedLeftColumnCount={fixedLeftColumnCount}
@@ -370,6 +374,8 @@ VTable.propTypes = {
   visibleWidth: PropTypes.number,
   // 可视区域高度
   visibleHeight: PropTypes.number,
+  // 主内容 预估的行高度
+  mainRowHeight: PropTypes.number,
   // 复选框
   rowSelection: PropTypes.object,
   // 空页面渲染

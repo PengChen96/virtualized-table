@@ -37,6 +37,7 @@ dataSource | 数据数字 | array | []
 fixedLeftColumnCount | 左边固定列 列数 | number | 0
 visibleWidth | 可视区域宽度 | number | 1200
 visibleHeight | 可视区域高度 | number | 400
+mainRowHeight | 表格主内容行高 | number | 40
 columnOffsetCount | 左右列偏移量 | number | 4
 emptyText | 空数据渲染 | element | -
 rowSelection | 勾选 | object | -

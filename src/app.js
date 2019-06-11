@@ -90,7 +90,7 @@ class App extends React.Component {
         title: '标题列' + i,
         width: 150,
         render: (value) => {
-          return <span>{value}值</span>;
+          return <span>{value}值 input</span>;
         }
       });
     }
@@ -119,6 +119,7 @@ class App extends React.Component {
           onCellTap={this.onCellTap}
           onRowRemove={this.onRowRemove}
           visibleHeight={600}
+          mainRowHeight={33}
           emptyText={<div>未查询到数据</div>}
           loading={loading}
           loadingText={<div>数据加载中...</div>}

@@ -22,7 +22,7 @@ class Grid extends React.Component {
       // 可视区域高度
       visibleHeight: props.visibleHeight || 400,
       // 一行的高度
-      estimatedRowHeight: 40,
+      estimatedRowHeight: props.estimatedRowHeight || 40,
       // 可渲染的元素个数
       rowVisibleCount: 10,
       // 上下偏移渲染个数
@@ -84,6 +84,7 @@ class Grid extends React.Component {
 
       return {
         visibleHeight: props.visibleHeight,
+        // estimatedRowHeight: props.estimatedRowHeight,
         //
         columns: props.columns,
         fixedLeftColumns,
@@ -129,6 +130,7 @@ class Grid extends React.Component {
 
       this.setState({
         visibleHeight: props.visibleHeight,
+        estimatedRowHeight: props.estimatedRowHeight,
         //
         columns: props.columns,
         fixedLeftColumns,
@@ -160,6 +162,7 @@ class Grid extends React.Component {
     let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, props.columns.length);
     let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth;
     this.setState({
+      estimatedRowHeight: props.estimatedRowHeight,
       visibleHeight,
       visibleWidth,
       fixedLeftColumns,
@@ -531,6 +534,8 @@ Grid.propTypes = {
   dataSource: PropTypes.array,
   // 可视区域宽度
   visibleWidth: PropTypes.number,
+  // 预估的行高度
+  estimatedRowHeight: PropTypes.number,
   // 可视区域高度
   visibleHeight: PropTypes.number,
   // 左右偏移量
