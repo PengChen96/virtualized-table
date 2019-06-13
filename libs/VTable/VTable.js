@@ -175,7 +175,9 @@ class VTable extends React.Component {
       loading,
       loadingText,
       rowActiveKey,
-      rowActiveColor
+      rowActiveColor,
+      // 禁止数据事件
+      pointerEventDisabled = false
     } = this.props;
 
     return (
@@ -192,6 +194,7 @@ class VTable extends React.Component {
             dataSource={columnData}
             fixedLeftColumnCount={fixedLeftColumnCount}
             columnOffsetCount={columnOffsetCount}
+            pointerEventDisabled={pointerEventDisabled}
           />
         </div>
         <div className="v-table-content">
@@ -211,6 +214,7 @@ class VTable extends React.Component {
             loadingText={loadingText}
             rowActiveKey={rowActiveKey}
             rowActiveColor={rowActiveColor}
+            pointerEventDisabled={pointerEventDisabled}
           />
         </div>
         {
@@ -227,6 +231,7 @@ class VTable extends React.Component {
                 dataSource={footerColumnData}
                 fixedLeftColumnCount={fixedLeftColumnCount}
                 columnOffsetCount={columnOffsetCount}
+                pointerEventDisabled={pointerEventDisabled}
               />
             </div>
         }
@@ -406,6 +411,8 @@ VTable.propTypes = {
   rowRemoveText: PropTypes.element,
   // 是否显示删除按钮
   rowRemoveVisible: PropTypes.bool,
+  // 禁止数据事件
+  pointerEventDisabled: PropTypes.bool
 
 };
 

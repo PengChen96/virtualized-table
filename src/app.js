@@ -126,6 +126,7 @@ class App extends React.Component {
           // rowRemoveText={<div>x</div>}
           footerColumnData={[{id: '123',title0: '1212'}]}
           rowRemoveVisible={false}
+          pointerEventDisabled={false}
         />
         {/*example*/}
         {/*<VTableCustomExample/>*/}

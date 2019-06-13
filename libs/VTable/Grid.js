@@ -58,7 +58,12 @@ class Grid extends React.Component {
       fixedLeftColumnsWidth: 0,
       // 主要滚动列
       scrollColumns: [],
-      scrollColumnsWidth: props.visibleWidth || 1200
+      scrollColumnsWidth: props.visibleWidth || 1200,
+
+      // 鼠标事件
+      pointerEvents: 'auto',
+      // 禁止鼠标事件
+      pointerEventDisabled: props.pointerEventDisabled || false
     };
   }
 
@@ -390,7 +395,8 @@ class Grid extends React.Component {
       visibleHeight,
       //
       dataSource,
-      pointerEvents
+      pointerEvents,
+      pointerEventDisabled
     } = this.state;
 
     return (
@@ -417,7 +423,7 @@ class Grid extends React.Component {
                       onMouseEnter={()=>this._mouseEnter(left_row_index)}
                       onMouseLeave={()=>this._mouseLeave(left_row_index)}
                       style={{
-                        pointerEvents: pointerEvents,
+                        pointerEvents: pointerEventDisabled ? 'none' : pointerEvents,
                         width: fixedLeftColumnsWidth,
                         minWidth: fixedLeftColumnsWidth,
                         height: estimatedRowHeight
@@ -457,7 +463,7 @@ class Grid extends React.Component {
                       onMouseEnter={()=>this._mouseEnter(rowIndex)}
                       onMouseLeave={()=>this._mouseLeave(rowIndex)}
                       style={{
-                        pointerEvents: pointerEvents,
+                        pointerEvents: pointerEventDisabled ? 'none' : pointerEvents,
                         height: estimatedRowHeight,
                         width: scrollColumnsWidth,
                         paddingLeft: startHorizontalOffset,
@@ -554,7 +560,9 @@ Grid.propTypes = {
   // 滚动
   onScroll: PropTypes.func,
   // 点击每个子项
-  onCellTap: PropTypes.func
+  onCellTap: PropTypes.func,
+  // 禁止数据事件
+  pointerEventDisabled: PropTypes.bool
 
 };
 

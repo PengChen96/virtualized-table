@@ -54,6 +54,7 @@ loadingText | 加载中内容 | element | "数据加载中，请稍后.."
 rowActiveKey | 标记行的键 | string | "active"
 rowActiveColor | 标记行的颜色 | string | "#fff1f0"
 footerColumnData | 固定底部行数据 | array | -
+pointerEventDisabled | 禁止鼠标事件 | bool | false
 
 #### columns
 参数 | 说明 | 类型 | 默认值 
