@@ -54,13 +54,15 @@ class VTable extends React.Component {
     let {state} = this;
     let {rowRemoveVisible = true} = props;
     if (props.dataSource !== state.dataSource ||
-      props.footerColumnData !== state.footerColumnData
+      props.footerColumnData !== state.footerColumnData ||
+      props.columns !== state.columns
     ) {
       let columns = props.columns;
       let footerColumns = JSON.parse(JSON.stringify(props.columns));
       // 复选框
-      if (props.rowSelection) {
+      if (props.rowSelection && columns[0] && columns[0].type !== 'checkBox') {
         columns.unshift({
+          type: 'checkBox',
           width: 60,
           style: {justifyContent: 'center'},
           headRender: (value, row, rowIndex, realRowIndex) => {
@@ -105,8 +107,9 @@ class VTable extends React.Component {
     let columns = props.columns;
     let footerColumns = JSON.parse(JSON.stringify(props.columns));
     // 复选框
-    if (props.rowSelection) {
+    if (props.rowSelection && columns[0] && columns[0].type !== 'checkBox') {
       columns.unshift({
+        type: 'checkBox',
         width: 60,
         style: {justifyContent: 'center'},
         headRender: (value, row, rowIndex, realRowIndex) => {
