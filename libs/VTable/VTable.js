@@ -54,8 +54,8 @@ class VTable extends React.Component {
     let {state} = this;
     let {rowRemoveVisible = true} = props;
     if (props.dataSource !== state.dataSource ||
-      props.footerColumnData !== state.footerColumnData ||
-      props.columns !== state.columns
+      props.footerColumnData !== state.footerColumnData
+      // props.columns !== state.columns
     ) {
       let columns = props.columns;
       let footerColumns = JSON.parse(JSON.stringify(props.columns));
