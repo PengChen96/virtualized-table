@@ -173,6 +173,7 @@ class VTable extends React.Component {
       visibleHeight = 400,
       mainRowHeight = 40,
       fixedLeftColumnCount = 0,
+      fixedRightColumnCount = 0,
       columnOffsetCount = 0,
       emptyText,
       loading,
@@ -196,6 +197,7 @@ class VTable extends React.Component {
             columns={columns}
             dataSource={columnData}
             fixedLeftColumnCount={fixedLeftColumnCount}
+            fixedRightColumnCount={fixedRightColumnCount}
             columnOffsetCount={columnOffsetCount}
             pointerEventDisabled={pointerEventDisabled}
           />
@@ -209,6 +211,7 @@ class VTable extends React.Component {
             columns={columns}
             dataSource={dataSource}
             fixedLeftColumnCount={fixedLeftColumnCount}
+            fixedRightColumnCount={fixedRightColumnCount}
             columnOffsetCount={columnOffsetCount}
             onScroll={this.onScroll.bind(this)}
             onCellTap={this.__onCellTap.bind(this)}
@@ -233,6 +236,7 @@ class VTable extends React.Component {
                 columns={footerColumns}
                 dataSource={footerColumnData}
                 fixedLeftColumnCount={fixedLeftColumnCount}
+                fixedRightColumnCount={fixedRightColumnCount}
                 columnOffsetCount={columnOffsetCount}
                 pointerEventDisabled={pointerEventDisabled}
               />
@@ -374,6 +378,8 @@ VTable.propTypes = {
   columns: PropTypes.array,
   // 左边固定列 列数
   fixedLeftColumnCount: PropTypes.number,
+  // 右边固定列 列数
+  fixedRightColumnCount: PropTypes.number,
   // 左右偏移量
   columnOffsetCount: PropTypes.number,
   // 源数据

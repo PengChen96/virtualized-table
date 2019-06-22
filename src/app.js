@@ -111,7 +111,9 @@ class App extends React.Component {
           className="a"
           columns={columns}
           dataSource={list}
+          columnOffsetCount={columns.length}
           fixedLeftColumnCount={2}
+          fixedRightColumnCount={1}
           rowSelection={list.length > 0 ? true : false}
           rowKey="title0"
           onSelectAll={this.onSelectAll}

@@ -56,6 +56,11 @@ class Grid extends React.Component {
       // 左边固定列
       fixedLeftColumns: [],
       fixedLeftColumnsWidth: 0,
+      // 右边固定列个数
+      fixedRightColumnCount: props.fixedRightColumnCount || 0,
+      // 右边固定列
+      fixedRightColumns: [],
+      fixedRightColumnsWidth: 0,
       // 主要滚动列
       scrollColumns: [],
       scrollColumnsWidth: props.visibleWidth || 1200,
@@ -77,8 +82,13 @@ class Grid extends React.Component {
       let visibleWidth = state.visibleWidth;
       let fixedLeftColumns = props.columns.slice(0, props.fixedLeftColumnCount);
       let fixedLeftColumnsWidth = calculateColumnsWidth(fixedLeftColumns);
-      let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, props.columns.length);
-      let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth;
+
+      let fixedRightColumnsStartIndex = props.columns.length - state.fixedRightColumnCount;
+      let fixedRightColumns = props.columns.slice(fixedRightColumnsStartIndex, props.columns.length);
+      let fixedRightColumnsWidth = calculateColumnsWidth(fixedRightColumns);
+
+      let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, fixedRightColumnsStartIndex);
+      let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth - fixedRightColumnsWidth;
       let columnVisibleCount = Math.ceil(scrollColumnsWidth / state.estimatedColumnWidth);
       let endColumnIndex = state.startColumnIndex + columnVisibleCount + state.columnOffsetCount * 2;
 
@@ -94,6 +104,8 @@ class Grid extends React.Component {
         columns: props.columns,
         fixedLeftColumns,
         fixedLeftColumnsWidth,
+        fixedRightColumns,
+        fixedRightColumnsWidth,
         scrollColumns,
         scrollColumnsWidth,
         fixedLeftColumnCount: props.fixedLeftColumnCount,
@@ -123,8 +135,13 @@ class Grid extends React.Component {
       let visibleWidth = this._masterContainer.clientWidth;
       let fixedLeftColumns = props.columns.slice(0, props.fixedLeftColumnCount);
       let fixedLeftColumnsWidth = calculateColumnsWidth(fixedLeftColumns);
-      let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, props.columns.length);
-      let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth;
+
+      let fixedRightColumnsStartIndex = props.columns.length - state.fixedRightColumnCount;
+      let fixedRightColumns = props.columns.slice(fixedRightColumnsStartIndex, props.columns.length);
+      let fixedRightColumnsWidth = calculateColumnsWidth(fixedRightColumns);
+
+      let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, fixedRightColumnsStartIndex);
+      let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth - fixedRightColumnsWidth;
       let columnVisibleCount = Math.ceil(scrollColumnsWidth / state.estimatedColumnWidth);
       let endColumnIndex = state.startColumnIndex + columnVisibleCount + state.columnOffsetCount * 2;
 
@@ -140,6 +157,8 @@ class Grid extends React.Component {
         columns: props.columns,
         fixedLeftColumns,
         fixedLeftColumnsWidth,
+        fixedRightColumns,
+        fixedRightColumnsWidth,
         scrollColumns,
         scrollColumnsWidth,
         fixedLeftColumnCount: props.fixedLeftColumnCount,
@@ -159,19 +178,27 @@ class Grid extends React.Component {
   }
 
   componentDidMount () {
+
     let {props} = this;
     let visibleHeight = this._masterContainer.clientHeight;
     let visibleWidth = this._masterContainer.clientWidth;
     let fixedLeftColumns = props.columns.slice(0, props.fixedLeftColumnCount);
     let fixedLeftColumnsWidth = calculateColumnsWidth(fixedLeftColumns);
+
+    let fixedRightColumnsStartIndex = props.columns.length - props.fixedRightColumnCount;
+    let fixedRightColumns = props.columns.slice(fixedRightColumnsStartIndex, props.columns.length);
+    let fixedRightColumnsWidth = calculateColumnsWidth(fixedRightColumns);
+
     let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, props.columns.length);
-    let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth;
+    let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth - fixedRightColumnsWidth;
     this.setState({
       estimatedRowHeight: props.estimatedRowHeight,
       visibleHeight,
       visibleWidth,
       fixedLeftColumns,
       fixedLeftColumnsWidth,
+      fixedRightColumns,
+      fixedRightColumnsWidth,
       scrollColumns,
       scrollColumnsWidth
     });
@@ -181,8 +208,9 @@ class Grid extends React.Component {
   }
 
   // 同步左侧滚动条
-  _syncScrollTop (scrollContainer, leftContainer) {
+  _syncScrollTop (scrollContainer, leftContainer, rightContainer) {
     leftContainer.scrollTop = scrollContainer.scrollTop;
+    rightContainer.scrollTop = scrollContainer.scrollTop;
     // 禁用
     if (leftContainer.scrollTop !== scrollContainer.scrollTop) {
       this.setState({
@@ -274,7 +302,7 @@ class Grid extends React.Component {
   // 滚动事件
   _onScrollEvent() {
 
-    this._syncScrollTop(this._scrollContainer, this._leftContainer);
+    this._syncScrollTop(this._scrollContainer, this._leftContainer, this._rightContainer);
     // 同步header滚动条
     this.__onScroll(this._scrollContainer.scrollLeft);
     // 垂直方向滚动
@@ -381,6 +409,8 @@ class Grid extends React.Component {
     const {
       fixedLeftColumns,
       fixedLeftColumnsWidth,
+      fixedRightColumns,
+      fixedRightColumnsWidth,
       scrollColumnsWidth,
       virtualColumns,
       startHorizontalOffset,
@@ -485,6 +515,44 @@ class Grid extends React.Component {
               }
             </div>
           </div>
+          {/* 右侧固定列*/}
+          <div className={`v-grid-left-columns-container ${scrollLeft > 0 && 'v-grid-fixed-right'}`}
+               ref={rc => this._rightContainer = rc}
+               style={{
+                 width: fixedRightColumnsWidth,
+                 minWidth: fixedRightColumnsWidth,
+                 height: visibleHeight
+               }}
+          >
+            <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
+              {
+                virtualData.map((right_row, right_row_index) => {
+                  return <div key={right_row_index}>
+                    <div
+                      className="v-grid-row"
+                      onMouseEnter={()=>this._mouseEnter(right_row_index)}
+                      onMouseLeave={()=>this._mouseLeave(right_row_index)}
+                      style={{
+                        pointerEvents: pointerEventDisabled ? 'none' : pointerEvents,
+                        width: fixedRightColumnsWidth,
+                        minWidth: fixedRightColumnsWidth,
+                        height: estimatedRowHeight
+                      }}>
+                      {
+                        fixedRightColumns.map((right_column, right_column_index) => {
+                          return <div key={right_column_index}>
+                            {
+                              this._cellRender(right_row, right_row_index, right_column, right_column_index)
+                            }
+                          </div>;
+                        })
+                      }
+                    </div>
+                  </div>;
+                })
+              }
+            </div>
+          </div>
           {
             dataSource.length < 1 &&
                 <div className="v-container-empty">
@@ -536,6 +604,8 @@ Grid.propTypes = {
   columns: PropTypes.array,
   // 左边固定列 列数
   fixedLeftColumnCount: PropTypes.number,
+  // 右边固定列 列数
+  fixedRightColumnCount: PropTypes.number,
   // 源数据
   dataSource: PropTypes.array,
   // 可视区域宽度
