@@ -11,7 +11,9 @@ class App extends React.Component {
     super();
     this.state = {
       list: [],
-      loading: false
+      loading: false,
+      // 参数设置
+      __rowSelection: false
     };
   }
 
@@ -42,35 +44,12 @@ class App extends React.Component {
     }, 500);
 
   };
-  onCheckedClick() {
-    console.log('11');
-    //let {list} = this.state;
-    //list.map(item => {
-    //  item.checked = true;
-    //  return item;
-    //});
-    //console.log(list);
-    //this.setState({
-    //  list
-    //});
-  }
+
   getColumns(num = 1) {
     let columns = [{
       key: 'id',
       title: '复选框',
       width: 100
-      // render: (value, row) => {
-      //
-      //   console.log(row);
-      //   return <div style={{position: 'relative'}}>
-      //     {
-      //       row && row.hover && <div className="v-close" onClick={this.onCheckedClick.bind(this)}/>
-      //     }
-      //     <input type="checkbox" checked={row.checked}/>
-      //     {/*{value}*/}
-      //   </div>;
-      //
-      // }
     }, {
       key: 'title0',
       title: '标题列',
@@ -97,16 +76,36 @@ class App extends React.Component {
     return columns;
   }
 
+  // 设置参数
+  switchSetting(key) {
+
+    this.setState({
+      [key]: !this.state[key]
+    });
+
+  };
+
   render() {
-    const {list, loading} = this.state;
+    const {
+      list,
+      loading,
+      __rowSelection
+    } = this.state;
     // let columnData = [{ title0: '内容'}];
     let columns = this.getColumns(25);
+    let footerColumnData = list[0] ? [list[0]] : [];
     return (
       <div className="App">
 
-
         <div onClick={() => this.getList(10000)}>getList</div>
         <div onClick={() => this.getList(0, '哈哈')}>getListVal</div>
+
+        <label>
+          <input type="checkbox" checked={__rowSelection} onClick={() => this.switchSetting('__rowSelection')}/>
+          rowSelection
+        </label>
+
+
         <VTable
           className="a"
           columns={columns}
@@ -114,7 +113,7 @@ class App extends React.Component {
           columnOffsetCount={columns.length}
           fixedLeftColumnCount={2}
           fixedRightColumnCount={1}
-          rowSelection={list.length > 0 ? true : false}
+          rowSelection={__rowSelection}
           rowKey="title0"
           onSelectAll={this.onSelectAll}
           onSelect={this.onSelect}
@@ -126,7 +125,7 @@ class App extends React.Component {
           loading={loading}
           loadingText={<div>数据加载中...</div>}
           // rowRemoveText={<div>x</div>}
-          footerColumnData={[{id: '123',title0: '1212'}]}
+          footerColumnData={footerColumnData}
           rowRemoveVisible={false}
           pointerEventDisabled={false}
         />
