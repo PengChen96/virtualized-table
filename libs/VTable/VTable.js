@@ -205,6 +205,7 @@ class VTable extends React.Component {
         <div className="v-table-content">
           <Grid
             title="title"
+            type="content"
             visibleWidth={visibleWidth}
             visibleHeight={visibleHeight}
             estimatedRowHeight={mainRowHeight}
@@ -239,6 +240,7 @@ class VTable extends React.Component {
                 fixedRightColumnCount={fixedRightColumnCount}
                 columnOffsetCount={columnOffsetCount}
                 pointerEventDisabled={pointerEventDisabled}
+                emptyText={' '}
               />
             </div>
         }

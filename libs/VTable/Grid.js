@@ -337,11 +337,14 @@ class Grid extends React.Component {
     let {
       rowActiveKey = 'active',
       rowActiveColor = '#fff1f0',
+      type = 'content'
     } = this.props;
 
+    let headerClassName = column.headerClassName ? column.headerClassName : column.className;
+    let className = type === 'header' ? headerClassName : column.className;
     return <div
       onClick={() => this.__onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)}
-      className={`v-grid-cell ${column.className || ''}`}
+      className={`v-grid-cell ${className || ''}`}
       style={{
         width: width,
         minWidth: width,
@@ -517,12 +520,12 @@ class Grid extends React.Component {
           </div>
           {/* 右侧固定列*/}
           <div className={`v-grid-left-columns-container ${scrollLeft > 0 && 'v-grid-fixed-right'}`}
-               ref={rc => this._rightContainer = rc}
-               style={{
-                 width: fixedRightColumnsWidth,
-                 minWidth: fixedRightColumnsWidth,
-                 height: visibleHeight
-               }}
+            ref={rc => this._rightContainer = rc}
+            style={{
+              width: fixedRightColumnsWidth,
+              minWidth: fixedRightColumnsWidth,
+              height: visibleHeight
+            }}
           >
             <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
               {
