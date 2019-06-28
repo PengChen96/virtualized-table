@@ -67,6 +67,7 @@ style | 样式 | object | -
 render | 数据渲染函数 | func | Function(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)
 headRender | 渲染表头函数 | func | Function(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)
 className | 单元格样式 | string | -
+headerClassName | 表头样式(不设置会默认className) | string | -
 
 ## License
 virtualized-table is available under the MIT License.
