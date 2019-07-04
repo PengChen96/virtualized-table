@@ -74,7 +74,9 @@ class Grid extends React.Component {
 
   static getDerivedStateFromProps(props, state) {
 
-    if (props.dataSource !== state.dataSource) {
+    if (props.dataSource !== state.dataSource ||
+      props.pointerEventDisabled !== state.pointerEventDisabled
+    ) {
       // 行
       let rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
       let endRowIndex = state.startRowIndex + rowVisibleCount + state.rowOffsetCount * 2;
@@ -98,8 +100,9 @@ class Grid extends React.Component {
       let endHorizontalOffset = calculateColumnsWidth(rightOffsetColumns);
 
       return {
+        pointerEventDisabled: props.pointerEventDisabled,
         visibleHeight: props.visibleHeight,
-        // estimatedRowHeight: props.estimatedRowHeight,
+        estimatedRowHeight: props.estimatedRowHeight,
         //
         columns: props.columns,
         fixedLeftColumns,
@@ -128,7 +131,9 @@ class Grid extends React.Component {
   componentWillReceiveProps(props) {
 
     let {state} = this;
-    if (props.dataSource !== state.dataSource) {
+    if (props.dataSource !== state.dataSource ||
+      props.pointerEventDisabled !== state.pointerEventDisabled
+    ) {
       let rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
       let endRowIndex = state.startRowIndex + rowVisibleCount + state.rowOffsetCount * 2;
       //
@@ -151,6 +156,7 @@ class Grid extends React.Component {
       let endHorizontalOffset = calculateColumnsWidth(rightOffsetColumns);
 
       this.setState({
+        pointerEventDisabled: props.pointerEventDisabled,
         visibleHeight: props.visibleHeight,
         estimatedRowHeight: props.estimatedRowHeight,
         //
@@ -171,7 +177,7 @@ class Grid extends React.Component {
         virtualData: props.dataSource.slice(state.startRowIndex, endRowIndex),
         startVerticalOffset: state.startRowIndex * state.estimatedRowHeight,
         endVerticalOffset: (props.dataSource.length - endRowIndex) * state.estimatedRowHeight,
-        rowVisibleCount
+        rowVisibleCount,
       });
     }
 
@@ -192,6 +198,7 @@ class Grid extends React.Component {
     let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, props.columns.length);
     let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth - fixedRightColumnsWidth;
     this.setState({
+      pointerEventDisabled: props.pointerEventDisabled,
       estimatedRowHeight: props.estimatedRowHeight,
       visibleHeight,
       visibleWidth,

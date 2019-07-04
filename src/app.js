@@ -3,6 +3,7 @@ import React from 'react';
 import {VTable} from '../libs/VTable';
 // import {Table} from '../libs/Table';
 // import VTableCustomExample from './example/VTableCustomExample';
+import './app.less';
 
 
 class App extends React.Component {
@@ -10,32 +11,49 @@ class App extends React.Component {
   constructor () {
     super();
     this.state = {
-      list: [],
+      dataSource: [],
+      footerColumnData: [],
       loading: false,
       // 参数设置
-      __rowSelection: false
+      __rowSelection: false,
+      __pointerEventDisabled: false
     };
   }
 
-  getList(num = 1,val = ''){
+  getColumns(num = 1) {
+    let columns = [{
+      key: 'id',
+      title: '复选框',
+      width: 100
+    }];
+    for (let i = 0; i < num; i++) {
+      columns.push({
+        key: 'title' + i,
+        title: '标题列' + i,
+        width: 150,
+        render: (value) => {
+          return <span>{value}</span>;
+        }
+      });
+    }
+    return columns;
+  }
+
+  getList(num = 1, colNum = 25) {
 
     this.setState({
       loading: true
     });
     let list = [];
     for (let i = 0; i < num; i++) {
-      list.push({
-        id: i,
-        title0: '内容' + i + val,
-        title1: '内容' + i + val,
-        title2: '内容' + i + val,
-        title3: '内容' + i + val,
-        title4: '内容' + i + val,
-        title5: '内容' + i + val,
-      });
+      let rowObj = {id: i};
+      for (let j = 0; j < colNum; j++) {
+        rowObj[`title${j}`] = `内容${j}`;
+      }
+      list.push(rowObj);
     }
     this.setState({
-      list
+      dataSource: list
     });
     setTimeout(() => {
       this.setState({
@@ -45,35 +63,16 @@ class App extends React.Component {
 
   };
 
-  getColumns(num = 1) {
-    let columns = [{
-      key: 'id',
-      title: '复选框',
-      width: 100
-    }, {
-      key: 'title0',
-      title: '标题列',
-      width: 150,
-    }, {
-      key: 'title0',
-      title: '标题列',
-      width: 150,
-    }, {
-      key: 'title0',
-      title: '标题列',
-      width: 150,
-    }];
-    for (let i = 0; i < num; i++) {
-      columns.push({
-        key: 'title' + i,
-        title: '标题列' + i,
-        width: 150,
-        render: (value) => {
-          return <span>{value}值 input</span>;
-        }
-      });
+  // 获取footer行内容
+  getFooterColumnData(colNum = 25) {
+
+    let rowObj = {id: '-1'};
+    for (let j = 0; j < colNum; j++) {
+      rowObj[`title${j}`] = `内容${j}`;
     }
-    return columns;
+    this.setState({
+      footerColumnData: [rowObj]
+    });
   }
 
   // 设置参数
@@ -87,29 +86,38 @@ class App extends React.Component {
 
   render() {
     const {
-      list,
+      dataSource,
+      footerColumnData,
       loading,
-      __rowSelection
+      __rowSelection,
+      __pointerEventDisabled
     } = this.state;
     // let columnData = [{ title0: '内容'}];
     let columns = this.getColumns(25);
-    let footerColumnData = list[0] ? [list[0]] : [];
     return (
       <div className="App">
 
-        <div onClick={() => this.getList(10000)}>getList</div>
-        <div onClick={() => this.getList(0, '哈哈')}>getListVal</div>
+        <div className="btn-container">
+          <span onClick={() => this.getList(10000)}>获取10000条数据</span>
+          <span onClick={() => this.getList(0)}>空数据</span>
+          <span onClick={() => this.getFooterColumnData(25)}>有底部数据</span>
+          <span onClick={() => this.setState({footerColumnData: []})}>无底部数据</span>
+        </div>
 
         <label>
           <input type="checkbox" checked={__rowSelection} onClick={() => this.switchSetting('__rowSelection')}/>
           rowSelection
+        </label>
+        <label>
+          <input type="checkbox" checked={__pointerEventDisabled} onClick={() => this.switchSetting('__pointerEventDisabled')}/>
+          pointerEventDisabled
         </label>
 
 
         <VTable
           className="a"
           columns={columns}
-          dataSource={list}
+          dataSource={dataSource}
           columnOffsetCount={columns.length}
           fixedLeftColumnCount={2}
           fixedRightColumnCount={1}
@@ -127,7 +135,7 @@ class App extends React.Component {
           // rowRemoveText={<div>x</div>}
           footerColumnData={footerColumnData}
           rowRemoveVisible={false}
-          pointerEventDisabled={false}
+          pointerEventDisabled={__pointerEventDisabled}
         />
         {/*example*/}
         {/*<VTableCustomExample/>*/}
