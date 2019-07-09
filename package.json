@@ -2,6 +2,13 @@
   "name": "virtualized-table",
   "version": "0.0.9",
   "description": "Large data volume table",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PengChen96/virtualized-table"
+  },
+  "bugs": {
+    "url": "https://github.com/PengChen96/virtualized-table/issues"
+  },
   "main": "dist/index.js",
   "files": [
     "dist"
