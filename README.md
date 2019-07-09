@@ -1,7 +1,7 @@
 
 <p align="center">
   <a href="#">
-    <img width="300" src="./logo.png">
+    <img width="300" src="https://raw.githubusercontent.com/PengChen96/virtualized-table/master/logo.png">
   </a>
   <h1 align="center" style="margin-top: 0px">virtualized-table</h1>
 </p>
