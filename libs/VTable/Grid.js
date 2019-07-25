@@ -49,8 +49,8 @@ class Grid extends React.Component {
       // padding偏移量(水平)
       startHorizontalOffset: 0,
       endHorizontalOffset: 0,
-      // 水平滚动距离
-      scrollLeft: 0,
+      // 水平滚动距离 TODO (这里设置1是为了保证滚动同步，为什么呢？？？暂不清楚)
+      scrollLeft: 1,
       // 左边固定列个数
       fixedLeftColumnCount: 0,
       // 左边固定列
@@ -297,7 +297,8 @@ class Grid extends React.Component {
     let virtualColumns = scrollColumns.slice(startColumnIndex, endColumnIndex);
 
     this.setState({
-      scrollLeft,
+      // TODO (这里设置1是为了保证滚动同步，为什么呢？？？暂不清楚)
+      scrollLeft: scrollLeft < 1 ? 1 : scrollLeft,
       startColumnIndex,
       endColumnIndex,
       startHorizontalOffset,
@@ -445,8 +446,8 @@ class Grid extends React.Component {
           ref={mc => this._masterContainer = mc}
         >
 
-          {/* 左侧固定列*/}
-          <div className={`v-grid-left-columns-container ${scrollLeft > 0 && 'v-grid-fixed-left'}`}
+          {/* 左侧固定列*/} {/*TODO (这里设置1是为了保证滚动同步，为什么呢？？？暂不清楚)*/}
+          <div className={`v-grid-left-columns-container ${scrollLeft > 1 ? 'v-grid-fixed-left' : 'v-for-sync-scroll-shadow'}`}
             ref={lc => this._leftContainer = lc}
             style={{
               width: fixedLeftColumnsWidth,
@@ -525,8 +526,8 @@ class Grid extends React.Component {
               }
             </div>
           </div>
-          {/* 右侧固定列*/}
-          <div className={`v-grid-left-columns-container ${scrollLeft > 0 && 'v-grid-fixed-right'}`}
+          {/* 右侧固定列*/} {/*TODO (这里设置1是为了保证滚动同步，为什么呢？？？暂不清楚)*/}
+          <div className={`v-grid-left-columns-container ${scrollLeft > 1 ? 'v-grid-fixed-right' : 'v-for-sync-scroll-shadow-right'}`}
             ref={rc => this._rightContainer = rc}
             style={{
               width: fixedRightColumnsWidth,
