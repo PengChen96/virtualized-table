@@ -76,7 +76,12 @@ class VTable extends React.Component {
               rowRemoveVisible && row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row, rowIndex, realRowIndex)}>
                 {props.rowRemoveText || <div className="v-row-remove"/>}
               </div>,
-              <div className="v-checkbox-container" key={1} onClick={(e) => this._select(e, row, realRowIndex)}>
+              <div
+                key={1}
+                className="v-checkbox-container"
+                onClick={(e) => this._select(e, row, realRowIndex)}
+                style={{cursor: row.selectionDisable ? "not-allowed" : ""}}
+              >
                 <input type="checkbox" checked={row.checked || false}/>
                 <div className="show-box" />
               </div>
@@ -123,7 +128,12 @@ class VTable extends React.Component {
             rowRemoveVisible && row && row.hover && <div key={0} onClick={(e) => this.__onRowRemove(e, row, rowIndex, realRowIndex)}>
               {props.rowRemoveText || <div className="v-row-remove"/>}
             </div>,
-            <div className="v-checkbox-container" key={1} onClick={(e) => this._select(e, row, realRowIndex)}>
+            <div
+              key={1}
+              className="v-checkbox-container"
+              onClick={(e) => this._select(e, row, realRowIndex)}
+              style={{cursor: row.selectionDisable ? "not-allowed" : ""}}
+            >
               <input type="checkbox" checked={row.checked || false}/>
               <div className="show-box" />
             </div>
@@ -321,17 +331,20 @@ class VTable extends React.Component {
         row.checked = true;
         // 这里需要改变源数据
         dataSource.map((item) => {
-          item.checked = true;
+          if (!item.selectionDisable) {
+            item.checked = true;
+          }
           return item;
         });
+        let selectedDataSource = _dataSource.filter((item) => !item.selectionDisable);
         this.setState({
           dataSource,
           // 这里不能改变源数据
-          selected: _dataSource,
-          selectedRows: _dataSource.map((item, index) => {return rowKey ? item[rowKey] : index;})
+          selected: selectedDataSource,
+          selectedRows: selectedDataSource.map((item, index) => {return rowKey ? item[rowKey] : index;})
         });
-        _selected = _dataSource;
-        _selectedRows = _dataSource.map((item, index) => {return rowKey ? item[rowKey] : index;});
+        _selected = selectedDataSource;
+        _selectedRows = selectedDataSource.map((item, index) => {return rowKey ? item[rowKey] : index;});
       }
       onSelectAll(_selected, _selectedRows);
     }
@@ -340,6 +353,9 @@ class VTable extends React.Component {
   // 用户手动选择/取消选择行的回调
   __onSelect(row, realRowIndex) {
 
+    if (row.selectionDisable) {
+      return;
+    }
     const {onSelect, rowKey} = this.props;
     const {selected, selectedRows, columnData, dataSource} = this.state;
     if (typeof onSelect === 'function') {

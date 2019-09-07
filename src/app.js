@@ -49,6 +49,9 @@ class App extends React.Component {
       let rowObj = {id: i};
       for (let j = 0; j < colNum; j++) {
         rowObj[`title${j}`] = `内容${j}`;
+        if (i < 5) {
+          rowObj.selectionDisable = true;
+        }
       }
       list.push(rowObj);
     }
