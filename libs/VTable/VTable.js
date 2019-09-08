@@ -59,6 +59,9 @@ class VTable extends React.Component {
     ) {
       let columns = props.columns;
       let footerColumns = JSON.parse(JSON.stringify(props.columns));
+      // 是否能勾选全选
+      let selectionDisableList = props.dataSource.filter((item) => item.selectionDisable);
+      let selectionAllDisable = selectionDisableList.length === props.dataSource.length;
       // 复选框
       if (props.rowSelection && columns[0] && columns[0].type !== 'checkBox') {
         columns.unshift({
@@ -66,7 +69,10 @@ class VTable extends React.Component {
           width: 60,
           style: {justifyContent: 'center'},
           headRender: (value, row, rowIndex, realRowIndex) => {
-            return <div className="v-checkbox-container" onClick={(e) => this._select(e, row, realRowIndex)}>
+            return <div
+              className={`v-checkbox-container ${selectionAllDisable ? 'v-checkbox-container-disabled' : ''}`}
+              onClick={(e) => this._select(e, row, realRowIndex)}
+            >
               <input type="checkbox" onChange={(e) => this._select(e, row, realRowIndex)} checked={row.checked || false}/>
               <div className="show-box" />
             </div>;
@@ -78,9 +84,8 @@ class VTable extends React.Component {
               </div>,
               <div
                 key={1}
-                className="v-checkbox-container"
+                className={`v-checkbox-container ${row.selectionDisable ? 'v-checkbox-container-disabled' : ''}`}
                 onClick={(e) => this._select(e, row, realRowIndex)}
-                style={{cursor: row.selectionDisable ? "not-allowed" : ""}}
               >
                 <input type="checkbox" checked={row.checked || false}/>
                 <div className="show-box" />
@@ -111,6 +116,9 @@ class VTable extends React.Component {
     let {rowRemoveVisible = true} = props;
     let columns = props.columns;
     let footerColumns = JSON.parse(JSON.stringify(props.columns));
+    // 是否能勾选全选
+    let selectionDisableList = props.dataSource.filter((item) => item.selectionDisable)
+    let selectionAllDisable = selectionDisableList.length === props.dataSource.length;
     // 复选框
     if (props.rowSelection && columns[0] && columns[0].type !== 'checkBox') {
       columns.unshift({
@@ -118,7 +126,10 @@ class VTable extends React.Component {
         width: 60,
         style: {justifyContent: 'center'},
         headRender: (value, row, rowIndex, realRowIndex) => {
-          return <div className="v-checkbox-container" onClick={(e) => this._select(e, row, realRowIndex)}>
+          return <div
+            className={`v-checkbox-container ${selectionAllDisable ? 'v-checkbox-container-disabled' : ''}`}
+            onClick={(e) => this._select(e, row, realRowIndex)}
+          >
             <input type="checkbox" checked={row.checked || false}/>
             <div className="show-box" />
           </div>;
@@ -130,9 +141,8 @@ class VTable extends React.Component {
             </div>,
             <div
               key={1}
-              className="v-checkbox-container"
+              className={`v-checkbox-container ${row.selectionDisable ? 'v-checkbox-container-disabled' : ''}`}
               onClick={(e) => this._select(e, row, realRowIndex)}
-              style={{cursor: row.selectionDisable ? "not-allowed" : ""}}
             >
               <input type="checkbox" checked={row.checked || false}/>
               <div className="show-box" />

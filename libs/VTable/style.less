@@ -203,4 +203,16 @@
     }
   }
 }
-
+.v-checkbox-container-disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  .show-box {
+    background: #eee;
+    &:hover {
+      border-color: #d1d3d8;
+    }
+    &:before {
+      border: solid transparent;
+    }
+  }
+}
