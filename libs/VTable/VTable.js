@@ -169,9 +169,12 @@ class VTable extends React.Component {
   // 获取表头
   getColumnData(columns) {
 
+    // let checkedList = this.props.dataSource.filter((item) => item.checked);
+    // let checkedAll = checkedList.length > 0 && checkedList.length === this.props.dataSource.length;
     let data = [{}];
     columns.forEach((item) => {
       data[0][item.key] = item.title;
+      // data[0]['checked'] = checkedAll;
     });
     // 表头复选框“全选”标志
     data[0].selection = 'all';
@@ -352,15 +355,26 @@ class VTable extends React.Component {
           }
           return item;
         });
-        let selectedDataSource = _dataSource.filter((item) => !item.selectionDisable);
+        let selectedDataSource = _dataSource.map((item) => {
+          if (item.selectionDisable) {
+            return undefined;
+          }
+          return item;
+        });
+        let selectedRows = selectedDataSource.map((item, index) => {
+          if (item) {
+            return rowKey ? item[rowKey] : index;
+          }
+          return item;
+        });
         this.setState({
           dataSource,
           // 这里不能改变源数据
           selected: selectedDataSource,
-          selectedRows: selectedDataSource.map((item, index) => {return rowKey ? item[rowKey] : index;})
+          selectedRows: selectedRows
         });
-        _selected = selectedDataSource;
-        _selectedRows = selectedDataSource.map((item, index) => {return rowKey ? item[rowKey] : index;});
+        _selected = selectedDataSource.filter(x => x);
+        _selectedRows = selectedRows.filter(x => x === 0 ? true : x);
       }
       onSelectAll(_selected, _selectedRows);
     }
