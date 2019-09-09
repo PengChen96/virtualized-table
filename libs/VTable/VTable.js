@@ -117,7 +117,7 @@ class VTable extends React.Component {
     let columns = props.columns;
     let footerColumns = JSON.parse(JSON.stringify(props.columns));
     // 是否能勾选全选
-    let selectionDisableList = props.dataSource.filter((item) => item.selectionDisable)
+    let selectionDisableList = props.dataSource.filter((item) => item.selectionDisable);
     let selectionAllDisable = selectionDisableList.length === props.dataSource.length;
     // 复选框
     if (props.rowSelection && columns[0] && columns[0].type !== 'checkBox') {
@@ -317,6 +317,12 @@ class VTable extends React.Component {
     const {dataSource} = this.state;
     if (typeof onSelectAll === 'function') {
 
+      // 是否能勾选全选
+      let selectionDisableList = dataSource.filter((item) => item.selectionDisable);
+      let selectionAllDisable = selectionDisableList.length === dataSource.length;
+      if (selectionAllDisable) {
+        return;
+      }
       // 深拷贝全部数据
       let _dataSource = JSON.parse(JSON.stringify(dataSource));
       // 选择的行
