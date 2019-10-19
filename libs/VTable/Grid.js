@@ -127,6 +127,14 @@ class Grid extends React.Component {
     return null;
 
   }
+  componentDidUpdate(prevProps){
+
+    // 为了查询数据后滚动条能到顶部
+    if (prevProps.dataSource.length !== this.state.dataSource.length) {
+      this._scrollContainer.scrollTop = 0;
+    }
+
+  }
 
   componentWillReceiveProps(props) {
 
