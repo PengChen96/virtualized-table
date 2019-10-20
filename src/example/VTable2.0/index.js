@@ -1,13 +1,12 @@
+/**
+ * Created by Administrator on 2019/10/20.
+ */
 
 import React from 'react';
-import {VTable} from '../libs/VTable';
-import VTable2 from './example/VTable2.0';
-// import {Table} from '../libs/Table';
-// import VTableCustomExample from './example/VTableCustomExample';
-import './app.less';
+import {VTable} from '../../../libs/VTable2.0';
 
 
-class App extends React.Component {
+class VTableCase extends React.Component {
 
   constructor () {
     super();
@@ -95,7 +94,7 @@ class App extends React.Component {
       loading,
       __rowSelection,
       __pointerEventDisabled
-    } = this.state;
+      } = this.state;
     // let columnData = [{ title0: '内容'}];
     let columns = this.getColumns(25);
     return (
@@ -141,31 +140,6 @@ class App extends React.Component {
           rowRemoveVisible={false}
           pointerEventDisabled={__pointerEventDisabled}
         />
-        {/*example*/}
-        {/*<VTableCustomExample/>*/}
-        <VTable2/>
-
-        {/*<div className="v-table-header">*/}
-        {/*<Table*/}
-        {/*ref={h => this._header = h}*/}
-        {/*title="title"*/}
-        {/*visibleWidth={800}*/}
-        {/*visibleHeight={40}*/}
-        {/*columns={this.getColumns(25)}*/}
-        {/*dataSource={columnData}*/}
-        {/*fixedLeftColumnCount={2}*/}
-        {/*/>*/}
-        {/*</div>*/}
-        {/*<Table*/}
-        {/*title="title"*/}
-        {/*visibleWidth={800}*/}
-        {/*visibleHeight={800}*/}
-        {/*columns={this.getColumns(25)}*/}
-        {/*dataSource={list}*/}
-        {/*fixedLeftColumnCount={2}*/}
-        {/*onScroll={this.onScroll.bind(this)}*/}
-        {/*onCellTap={this.onCellTap}*/}
-        {/*/>*/}
       </div>
     );
   }
@@ -195,4 +169,4 @@ class App extends React.Component {
 
 }
 
-export default App;
+export default VTableCase;
