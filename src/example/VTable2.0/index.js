@@ -94,7 +94,7 @@ class VTableCase extends React.Component {
       loading,
       __rowSelection,
       __pointerEventDisabled
-      } = this.state;
+    } = this.state;
     // let columnData = [{ title0: '内容'}];
     let columns = this.getColumns(25);
     return (
