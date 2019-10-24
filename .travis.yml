@@ -3,5 +3,3 @@ node_js:
   - "10"
 before_script:
   - npm install -g jest
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
