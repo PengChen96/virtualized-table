@@ -20,7 +20,7 @@
     "prod": "webpack --env.NODE_ENV=production --config ./config/webpack.config.js",
     "build": "webpack --config ./config/webpack.dev.config.js",
     "dev": "webpack-dev-server --devtool=source-map --host 0.0.0.0 --config ./config/webpack.dev.config.js",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "keywords": [
     "react",
