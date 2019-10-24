@@ -8,6 +8,8 @@
 
 [![npm version](https://badge.fury.io/js/virtualized-table.svg)](http://badge.fury.io/js/virtualized-table)
 [![NPM downloads](http://img.shields.io/npm/dm/virtualized-table.svg?style=flat-square)](https://www.npmjs.com/package/virtualized-table)  
+[![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/PengChen96/virtualized-table) 
+[![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/PengChen96/virtualized-table)   
 大数据量虚拟化表格组件
 
 ## Usage
