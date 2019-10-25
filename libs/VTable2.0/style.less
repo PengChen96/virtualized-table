@@ -1,218 +1,30 @@
 
 @borderColor: #e3e4e8;
 
-/* VTable*/
-.v-table-header {
-  .v-grid-container {
-    background: #f4f6f9;
-    border-bottom: none;
-    .v-grid-left-columns-container {
-      overflow: hidden;
-      .v-grid-cell {
-        border-bottom: none !important;
-      }
-    }
-    .v-grid-main-container {
-      overflow-y: scroll;
-      overflow-x: hidden;
-      &::-webkit-scrollbar {
-        background: transparent;
-      }
-      .v-grid-cell {
-        border-bottom: none !important;
-      }
-    }
-  }
-}
-.v-table-footer {
-  .v-grid-container {
-    background: #f4f6f9;
-    border-top: none;
-    .v-grid-left-columns-container {
-      overflow: hidden;
-      .v-grid-cell {
-        border-bottom: none !important;
-      }
-    }
-    .v-grid-main-container {
-      overflow-y: scroll;
-      overflow-x: hidden;
-      &::-webkit-scrollbar {
-        background: transparent;
-      }
-      .v-grid-cell {
-        border-bottom: none !important;
-      }
-    }
-  }
-}
-
-/* Grid*/
-.v-grid-container {
+.v-grid-container1 {
   position: relative;
-  display: flex;
+  overflow: auto;
   border: 1px solid @borderColor;
-
-  .v-grid-left-columns-container {
-    overflow-y: hidden;
-    overflow-x: scroll;
-    z-index: 1;
-    &::-webkit-scrollbar {
-      background: transparent;
-    }
-    .v-grid-row {
-      display: flex;
-      //&:hover {
-      //  background: #e6f7ff;
-      //}
-      .v-grid-cell {
-        overflow: hidden;
-        position: relative;
-        border-bottom: 1px solid @borderColor;
-        line-height: 16px;
-        display: flex;
-        align-items: center;
-        box-sizing: border-box;
-        //padding: 6px 12px;
-        word-break: break-all;
-      }
-    }
-  }
-
   .v-grid-main-container {
-
-    //width: 1200px;
-    //height: 400px;
-    overflow: auto;
-
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
     .v-grid-row {
       display: flex;
-      //&:hover {
-      //  background: #e6f7ff;
-      //}
-      .v-grid-cell {
-        overflow: hidden;
-        position: relative;
-        border-bottom: 1px solid @borderColor;
-        line-height: 16px;
-        display: flex;
-        align-items: center;
-        box-sizing: border-box;
-        //padding: 6px 12px;
-        word-break: break-all
-      }
     }
   }
-
-  .v-grid-fixed-left {
-    box-shadow: 6px 0 6px -4px rgba(0,0,0,0.15);
-  }
-  .v-grid-fixed-right {
-    box-shadow: -6px 0 6px -4px rgba(0,0,0,0.15);
-  }
-  //
-  .v-for-sync-scroll-shadow {
-    box-shadow: 6px 0 6px -4px transparent;
-  }
-  .v-for-sync-scroll-shadow-right {
-    box-shadow: -6px 0 6px -4px transparent;
-  }
-
-  .v-container-empty {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
+  .v-grid-left-columns-container {
+    overflow: hidden;
+    width: 200px;
     display: flex;
-    justify-content: center;
-    padding-top: 40px;
-    box-sizing: border-box;
-    color: #999;
-  }
-  .v-container-loading {
-    z-index: 1;
-    width: 100%;
-    height: 100%;
+    flex-wrap: wrap;
     position: absolute;
     top: 0;
     left: 0;
-    display: flex;
-    justify-content: center;
-    padding-top: 60px;
-    box-sizing: border-box;
-    opacity: 0.8;
-    background: #fafafa;
+    color: red;
+    .v-grid-row {
+      display: flex;
+    }
   }
 }
 
-// 行删除图标样式
-.v-row-remove {
-  position: absolute;
-  top: -20px;
-  left: -20px;
-  border: 20px solid;
-  border-color: red transparent transparent transparent;
-  transform: rotate(135deg);
-  cursor: pointer;
-  &:after {
-    content: "x";
-    position: absolute;
-    top: -20px;
-    left: -2px;
-    color: #fff;
-    transform: rotate(45deg);
-  }
-}
-// 复选框
-.v-checkbox-container {
-  position: relative;
-  cursor: pointer;
-  input {
-    cursor: pointer;
-  }
-  input:checked + .show-box {
-    &:before {
-      border: solid #ff8040; // 勾的颜色
-      border-width: 0 2px 2px 0; // 勾的宽度
-    }
-  }
-  .show-box {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 16px;
-    height: 16px;
-    border-radius: 2px;
-    border: 1px solid #d1d3d8;
-    background: white; // 这里取个巧，与下面颜色一样而已
-    &:hover {
-      border-color: #ff8040;
-    }
-
-    &:before { // 使用了 absolute 所以无所谓是 before 还是 after
-      content: ''; // 空白内容占位，当做盒模型处理，见下面
-      position: absolute;
-      top: 2px;
-      left: 6px;
-      width: 3px; // 勾的短边
-      height: 8px; // 勾的长边
-      border: solid #fff; // 勾的颜色
-      border-width: 0 2px 2px 0; // 勾的宽度
-      transform: rotate(45deg); // 定制宽高加上旋转可以伪装内部的白色勾
-    }
-  }
-}
-.v-checkbox-container-disabled {
-  cursor: not-allowed;
-  //pointer-events: none;
-  .show-box {
-    background: #eee;
-    &:hover {
-      border-color: #d1d3d8;
-    }
-    &:before {
-      border: solid transparent;
-    }
-  }
-}

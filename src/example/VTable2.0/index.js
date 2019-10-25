@@ -101,7 +101,7 @@ class VTableCase extends React.Component {
       <div className="App">
 
         <div className="btn-container">
-          <span onClick={() => this.getList(10000)}>获取10000条数据</span>
+          <span onClick={() => this.getList(50)}>获取10000条数据</span>
           <span onClick={() => this.getList(0)}>空数据</span>
           <span onClick={() => this.getFooterColumnData(25)}>有底部数据</span>
           <span onClick={() => this.setState({footerColumnData: []})}>无底部数据</span>

@@ -22,6 +22,7 @@ export default (props) => {
   return <>
     <Grid
       type={'11'}
+      {...props}
     />
   </>;
 
