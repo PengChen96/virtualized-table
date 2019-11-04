@@ -14,7 +14,7 @@ const Grid = (props) => {
     // 可视区域高度
     visibleHeight: props.visibleHeight || 400,
     // 一行的高度（预估）
-    estimatedRowHeight: props.estimatedRowHeight || 10,
+    estimatedRowHeight: props.estimatedRowHeight || 20,
     // 可渲染的元素个数
     rowVisibleCount: props.rowVisibleCount || 10,
     // 上下偏移渲染个数
@@ -32,14 +32,16 @@ const Grid = (props) => {
     startVerticalOffset: 0,
     endVerticalOffset: 0,
   });
+  let [key, setKey] = useState(0);
 
   useEffect(() => {
 
     let rowVisibleCount = Math.ceil(stateProps.visibleHeight / stateProps.estimatedRowHeight);
     let endRowIndex = grid.startRowIndex + rowVisibleCount + stateProps.rowOffsetCount * 2;
-    setGrid(Object.assign({
+    setGrid(Object.assign(grid, {
       virtualData: props.dataSource.slice(grid.startRowIndex, endRowIndex)
     }));
+    setKey(Math.random());
 
   }, [
     props.dataSource
@@ -79,6 +81,7 @@ const Grid = (props) => {
       endVerticalOffset,
       virtualData
     }));
+    setKey(Math.random());
   };
 
   const _cellRender = (row, rowIndex, column, columnIndex) => {
