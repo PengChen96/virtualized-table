@@ -15,7 +15,6 @@ export default (props) => {
   useEffect(() => {
 
     set(props);
-    console.log(state);
 
   }, []);
 

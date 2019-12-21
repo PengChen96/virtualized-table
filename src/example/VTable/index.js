@@ -1,9 +1,6 @@
-/**
- * Created by Administrator on 2019/10/20.
- */
 
 import React from 'react';
-import {VTable} from '../../../libs/VTable2.0';
+import {VTable} from '../../../libs/VTable';
 
 
 class VTableCase extends React.Component {
@@ -52,6 +49,9 @@ class VTableCase extends React.Component {
         if (i < 5) {
           rowObj.selectionDisable = true;
         }
+        // if (i === 6) {
+        //   rowObj.checked = true;
+        // }
       }
       list.push(rowObj);
     }
@@ -101,7 +101,7 @@ class VTableCase extends React.Component {
       <div className="App">
 
         <div className="btn-container">
-          <span onClick={() => this.getList(500)}>获取10000条数据</span>
+          <span onClick={() => this.getList(10000)}>获取10000条数据</span>
           <span onClick={() => this.getList(0)}>空数据</span>
           <span onClick={() => this.getFooterColumnData(25)}>有底部数据</span>
           <span onClick={() => this.setState({footerColumnData: []})}>无底部数据</span>
