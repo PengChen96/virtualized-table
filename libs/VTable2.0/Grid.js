@@ -32,16 +32,21 @@ const Grid = (props) => {
     startVerticalOffset: 0,
     endVerticalOffset: 0,
   });
-  let [key, setKey] = useState(0);
+
+  const updateGrid = (partialState) => {
+    setGrid(oldState => ({
+      ...oldState,
+      ...partialState
+    }));
+  };
 
   useEffect(() => {
 
     let rowVisibleCount = Math.ceil(stateProps.visibleHeight / stateProps.estimatedRowHeight);
     let endRowIndex = grid.startRowIndex + rowVisibleCount + stateProps.rowOffsetCount * 2;
-    setGrid(Object.assign(grid, {
+    updateGrid({
       virtualData: props.dataSource.slice(grid.startRowIndex, endRowIndex)
-    }));
-    setKey(Math.random());
+    });
 
   }, [
     props.dataSource
@@ -74,14 +79,13 @@ const Grid = (props) => {
     let endVerticalOffset = (dataSource.length - endRowIndex) * estimatedRowHeight;
     // 需要渲染显示的行数据
     let virtualData = dataSource.slice(startRowIndex, endRowIndex);
-    setGrid(Object.assign(grid, {
+    updateGrid({
       startRowIndex,
       endRowIndex,
       startVerticalOffset,
       endVerticalOffset,
       virtualData
-    }));
-    setKey(Math.random());
+    });
   };
 
   const _cellRender = (row, rowIndex, column, columnIndex) => {
