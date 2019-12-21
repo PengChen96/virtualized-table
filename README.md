@@ -29,7 +29,7 @@ $ npm install virtualized-table
       fixedLeftColumnCount={2}
     />
 ```
-[完整示例](https://github.com/PengChen96/virtualized-table/blob/develop/src/example/VTableCustomExample.js)
+[完整示例](https://github.com/PengChen96/virtualized-table/blob/master/src/example/VTable/index.js)
 
 ### API
 #### VTable
