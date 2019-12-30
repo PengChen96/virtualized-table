@@ -16,7 +16,7 @@ const Grid = (props) => {
     // 一行的高度（预估）
     estimatedRowHeight: props.estimatedRowHeight || 20,
     // 可渲染的元素个数
-    rowVisibleCount: props.rowVisibleCount || 10,
+    rowVisibleCount: props.rowVisibleCount || 30,
     // 上下偏移渲染个数
     rowOffsetCount: props.rowOffsetCount || 10,
   };
@@ -42,19 +42,20 @@ const Grid = (props) => {
 
   useEffect(() => {
 
-    let rowVisibleCount = Math.ceil(stateProps.visibleHeight / stateProps.estimatedRowHeight);
-    let endRowIndex = grid.startRowIndex + rowVisibleCount + stateProps.rowOffsetCount * 2;
-    updateGrid({
-      virtualData: props.dataSource.slice(grid.startRowIndex, endRowIndex)
-    });
-
+    // let rowVisibleCount = Math.ceil(stateProps.visibleHeight / stateProps.estimatedRowHeight);
+    // let rowVisibleCount = stateProps.rowVisibleCount;
+    // let endRowIndex = grid.startRowIndex + rowVisibleCount + stateProps.rowOffsetCount * 2;
+    // console.log(endRowIndex);
+    // updateGrid({
+    //   virtualData: props.dataSource.slice(grid.startRowIndex, endRowIndex)
+    // });
+    _onVerticalScroll();
   }, [
     props.dataSource
   ]);
 
   const _onScrollEvent = () => {
 
-    console.log(_scrollContainer.current.scrollTop);
     _onVerticalScroll();
 
   };
@@ -71,14 +72,17 @@ const Grid = (props) => {
     let scrollTopNum = Math.floor(scrollTop / estimatedRowHeight);
     // 获取要渲染的行开始坐标，最小坐标为0  rowOffsetCount: 行偏移量
     let startRowIndex = (scrollTopNum - rowOffsetCount) > 0 ? (scrollTopNum - rowOffsetCount) : 0;
+    let maxStartRowIndex = dataSource.length - (stateProps.rowVisibleCount + stateProps.rowOffsetCount * 2);
+    startRowIndex = startRowIndex > maxStartRowIndex ? maxStartRowIndex : startRowIndex;
     // 获取要渲染的行结尾坐标，最大坐标为dataSource长度  rowOffsetCount: 行偏移量
-    let endRowIndex = (rowVisibleCount + scrollTopNum + rowOffsetCount) > dataSource.length ? dataSource.length : (rowVisibleCount + scrollTopNum + rowOffsetCount);
+    let endRowIndex = (startRowIndex + rowVisibleCount + rowOffsetCount * 2) > dataSource.length ? dataSource.length : (startRowIndex + rowVisibleCount + rowOffsetCount * 2);
     // 上方未渲染数据的paddingTop值
     let startVerticalOffset = startRowIndex * estimatedRowHeight;
     // 上方未渲染数据的paddingBottom值
     let endVerticalOffset = (dataSource.length - endRowIndex) * estimatedRowHeight;
     // 需要渲染显示的行数据
     let virtualData = dataSource.slice(startRowIndex, endRowIndex);
+    // console.table({scrollTop, scrollTopNum, startRowIndex, endRowIndex});
     updateGrid({
       startRowIndex,
       endRowIndex,
