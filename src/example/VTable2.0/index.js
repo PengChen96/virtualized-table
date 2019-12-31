@@ -24,7 +24,8 @@ class VTableCase extends React.Component {
     let columns = [{
       key: 'id',
       title: '复选框',
-      width: 100
+      width: 100,
+      align: 'center'
     }];
     for (let i = 0; i < num; i++) {
       columns.push({
@@ -49,6 +50,7 @@ class VTableCase extends React.Component {
       let rowObj = {id: i};
       for (let j = 0; j < colNum; j++) {
         rowObj[`title${j}`] = `内容${j}`;
+        // rowObj[`title${j}`] = i % 10 === 0 ? '绝对是分开发的伤口恢复上课都会发生的看法和速度快水电费快递师傅看电视' : i;
         if (i < 5) {
           rowObj.selectionDisable = true;
         }

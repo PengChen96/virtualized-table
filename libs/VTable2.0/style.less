@@ -3,15 +3,40 @@
 @prefix: vt;
 //
 @borderColor: #e3e4e8;
+//
+@SW-1: 1px;
 
 .@{prefix}-grid-container {
   position: relative;
   overflow: auto;
-  border: 1px solid @borderColor;
+  border: @SW-1 solid @borderColor;
   display: flex;
   flex-wrap: wrap;
   .@{prefix}-grid-row {
     display: flex;
+    .@{prefix}-grid-cell {
+      display: flex;
+      align-items: center;
+      // 对齐方式
+      &.@{prefix}-align-left {
+        justify-content: flex-start;
+      }
+      &.@{prefix}-align-right {
+        justify-content: flex-end;
+      }
+      &.@{prefix}-align-center {
+        justify-content: center;
+      }
+      // 显示边框
+      &.@{prefix}-bordered {
+        box-sizing: border-box;
+        border-right: @SW-1 solid @borderColor;
+        border-bottom: @SW-1 solid @borderColor;
+        &:last-child {
+          border-right: none;
+        }
+      }
+    }
   }
 }
 

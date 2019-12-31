@@ -3,6 +3,12 @@ import React, {useEffect, useState, useRef} from 'react';
 import PropTypes from 'prop-types';
 import './style.less';
 
+const ALIGN_TYPE = {
+  left: 'vt-align-left',
+  right: 'vt-align-right',
+  center: 'vt-align-center',
+};
+
 const Grid = (props) => {
 
   const _scrollContainer = useRef(null);
@@ -14,20 +20,26 @@ const Grid = (props) => {
     // 可视区域高度
     visibleHeight: props.visibleHeight || 400,
     // 一行的高度（预估）
-    estimatedRowHeight: props.estimatedRowHeight || 20,
+    estimatedRowHeight: props.estimatedRowHeight || 40,
+    minRowHeight: props.minRowHeight || 40,
     // 可渲染的元素个数
     rowVisibleCount: props.rowVisibleCount || 30,
     // 上下偏移渲染个数
     rowOffsetCount: props.rowOffsetCount || 10,
+    // 是否显示边框
+    bordered: props.bordered || true
   };
   let [grid, setGrid] = useState({
     // 虚拟列
     virtualColumns: [],
     // 虚拟数据
     virtualData: [],
-    // 可视区坐标(rowIndex垂直)
+    // 可视区坐标（rowIndex垂直）
     startRowIndex: 0,
     endRowIndex: 0,
+    // 可视区坐标（columnIndex水平）
+    startColumnIndex: 0,
+    endColumnIndex: 0,
     // padding偏移量(垂直)
     startVerticalOffset: 0,
     endVerticalOffset: 0,
@@ -68,14 +80,17 @@ const Grid = (props) => {
       rowOffsetCount,
       rowVisibleCount
     } = stateProps;
+    // dom存在的行条数
+    let realRowsCount = rowVisibleCount + rowOffsetCount * 2;
     // 获取垂直滚动的条数
     let scrollTopNum = Math.floor(scrollTop / estimatedRowHeight);
     // 获取要渲染的行开始坐标，最小坐标为0  rowOffsetCount: 行偏移量
     let startRowIndex = (scrollTopNum - rowOffsetCount) > 0 ? (scrollTopNum - rowOffsetCount) : 0;
-    let maxStartRowIndex = dataSource.length - (stateProps.rowVisibleCount + stateProps.rowOffsetCount * 2);
+    let maxStartRowIndex = dataSource.length - realRowsCount;
+    maxStartRowIndex = maxStartRowIndex > 0 ? maxStartRowIndex : 0;
     startRowIndex = startRowIndex > maxStartRowIndex ? maxStartRowIndex : startRowIndex;
     // 获取要渲染的行结尾坐标，最大坐标为dataSource长度  rowOffsetCount: 行偏移量
-    let endRowIndex = (startRowIndex + rowVisibleCount + rowOffsetCount * 2) > dataSource.length ? dataSource.length : (startRowIndex + rowVisibleCount + rowOffsetCount * 2);
+    let endRowIndex = (startRowIndex + realRowsCount) > dataSource.length ? dataSource.length : (startRowIndex + realRowsCount);
     // 上方未渲染数据的paddingTop值
     let startVerticalOffset = startRowIndex * estimatedRowHeight;
     // 上方未渲染数据的paddingBottom值
@@ -92,17 +107,44 @@ const Grid = (props) => {
     });
   };
 
+  // 渲染单元格
   const _cellRender = (row, rowIndex, column, columnIndex) => {
 
+    let realRowIndex = rowIndex + grid.startRowIndex;
+    let realColumnIndex = columnIndex + grid.startColumnIndex;
     let value = row[column['key']];
     let width = column.width || 150;
-    return <div className="vt-grid-cell" style={{
-      width: width,
-      minWidth: width
-    }}>
+    // 是否显示边框
+    let bordered = stateProps.bordered ? 'vt-bordered' : '';
+    // 对齐方式 'left' | 'right' | 'center'
+    let align = ALIGN_TYPE[column.align] || 'vt-align-left';
+    return <div
+      className={`vt-grid-cell ${bordered} ${align}`}
+      onClick={() => __onCellTap(
+        value,
+        row, rowIndex, realRowIndex,
+        column, columnIndex, realColumnIndex
+      )}
+      style={{
+        width: width,
+        minWidth: width,
+        minHeight: stateProps.minRowHeight
+      }}
+    >
       {value}
     </div>;
 
+  };
+  // 点击单元格
+  const __onCellTap = (
+    value,
+    row, rowIndex, realRowIndex,
+    column, columnIndex, realColumnIndex
+  ) => {
+    console.log(realRowIndex, realColumnIndex);
+    if (typeof props.onCellTap === 'function') {
+      props.onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
+    }
   };
 
   return <>
@@ -120,11 +162,12 @@ const Grid = (props) => {
             return <div className="vt-grid-row" key={rowIndex}>
               {
                 props.columns.map((column, columnIndex) => {
-                  return <div key={columnIndex}>
-                    {
-                      _cellRender(row, rowIndex, column, columnIndex)
-                    }
-                  </div>;
+                  return _cellRender(row, rowIndex, column, columnIndex);
+                  // return <div key={columnIndex}>
+                  //   {
+                  //     _cellRender(row, rowIndex, column, columnIndex)
+                  //   }
+                  // </div>;
                 })
               }
             </div>;
