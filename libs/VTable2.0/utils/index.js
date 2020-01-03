@@ -1,3 +1,5 @@
 
 
-
+export {
+  calculateColumnsWidth
+} from './calculateColumnsWidth';

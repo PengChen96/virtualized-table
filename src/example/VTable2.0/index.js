@@ -24,7 +24,7 @@ class VTableCase extends React.Component {
     let columns = [{
       key: 'id',
       title: '复选框',
-      width: 100,
+      width: 150,
       align: 'center'
     }];
     for (let i = 0; i < num; i++) {
@@ -40,7 +40,7 @@ class VTableCase extends React.Component {
     return columns;
   }
 
-  getList(num = 1, colNum = 25) {
+  getList(num = 1, colNum = 250) {
 
     this.setState({
       loading: true
@@ -103,7 +103,10 @@ class VTableCase extends React.Component {
       <div className="App">
 
         <div className="btn-container">
-          <span onClick={() => this.getList(500)}>获取10000条数据</span>
+          <span onClick={() => this.getList(50)}>获取50条数据</span>
+          <span onClick={() => this.getList(500)}>获取500条数据</span>
+          <span onClick={() => this.getList(5000)}>获取5000条数据</span>
+          <span onClick={() => this.getList(50000)}>获取50000条数据</span>
           <span onClick={() => this.getList(0)}>空数据</span>
           <span onClick={() => this.getFooterColumnData(25)}>有底部数据</span>
           <span onClick={() => this.setState({footerColumnData: []})}>无底部数据</span>
@@ -123,7 +126,7 @@ class VTableCase extends React.Component {
           className="a"
           columns={columns}
           dataSource={dataSource}
-          columnOffsetCount={columns.length}
+          // columnOffsetCount={columns.length}
           fixedLeftColumnCount={2}
           fixedRightColumnCount={1}
           rowSelection={__rowSelection}

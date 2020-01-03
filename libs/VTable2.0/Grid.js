@@ -2,6 +2,7 @@
 import React, {useEffect, useState, useRef} from 'react';
 import PropTypes from 'prop-types';
 import './style.less';
+import {calculateColumnsWidth} from './utils';
 
 const ALIGN_TYPE = {
   left: 'vt-align-left',
@@ -17,6 +18,7 @@ const Grid = (props) => {
     columns: props.columns || [],
     // 源数据 #
     dataSource: props.dataSource || [],
+      
     // 可视区域高度
     visibleHeight: props.visibleHeight || 400,
     // 一行的高度（预估）
@@ -26,6 +28,17 @@ const Grid = (props) => {
     rowVisibleCount: props.rowVisibleCount || 30,
     // 上下偏移渲染个数
     rowOffsetCount: props.rowOffsetCount || 10,
+
+    // 可视区域宽度
+    visibleWidth: props.visibleWidth || 1200,
+    // 预估的每列宽度
+    estimatedColumnWidth: props.estimatedColumnWidth || 150,
+    // 可渲染个数（水平）
+    columnVisibleCount: props.columnVisibleCount || 8,
+    // 左右偏移渲染个数
+    columnOffsetCount: props.columnOffsetCount || 4,
+
+
     // 是否显示边框
     bordered: props.bordered || true
   };
@@ -43,6 +56,9 @@ const Grid = (props) => {
     // padding偏移量(垂直)
     startVerticalOffset: 0,
     endVerticalOffset: 0,
+    // padding偏移量(水平)
+    startHorizontalOffset: 0,
+    endHorizontalOffset: 0,
   });
 
   const updateGrid = (partialState) => {
@@ -62,13 +78,17 @@ const Grid = (props) => {
     //   virtualData: props.dataSource.slice(grid.startRowIndex, endRowIndex)
     // });
     _onVerticalScroll();
+    _onHorizontalScroll();
   }, [
     props.dataSource
   ]);
 
   const _onScrollEvent = () => {
 
+    //  垂直方向滚动
     _onVerticalScroll();
+    //水平方向滚动
+    _onHorizontalScroll();
 
   };
   // 垂直方向滚动
@@ -106,18 +126,55 @@ const Grid = (props) => {
       virtualData
     });
   };
-
+  // 水平方向滚动
+  const _onHorizontalScroll = () => {
+    const {scrollLeft} = _scrollContainer.current;
+    const {
+      columns,
+      estimatedColumnWidth,
+      columnOffsetCount,
+      columnVisibleCount
+    } = stateProps;
+    let scrollColumns = columns;
+    // dom存在的行条数
+    let realColumnsCount = columnVisibleCount + columnOffsetCount * 2;
+    // 获取水平滚动的条数
+    let scrollLeftNum = Math.floor(scrollLeft / estimatedColumnWidth);
+    // 获取要渲染的列开始坐标
+    let startColumnIndex = (scrollLeftNum - columnOffsetCount) > 0 ? (scrollLeftNum - columnOffsetCount) : 0;
+    let maxStartColumnIndex = scrollColumns.length - realColumnsCount;
+    maxStartColumnIndex = maxStartColumnIndex > 0 ? maxStartColumnIndex : 0;
+    startColumnIndex = startColumnIndex > maxStartColumnIndex ? maxStartColumnIndex : startColumnIndex;
+    // 获取要渲染的列结尾坐标
+    let endColumnIndex = (startColumnIndex + realColumnsCount) > scrollColumns.length ? scrollColumns.length : (startColumnIndex + realColumnsCount);
+    // 左边未渲染数据的paddingLeft值
+    let leftOffsetColumns = scrollColumns.slice(0, startColumnIndex);
+    let startHorizontalOffset = calculateColumnsWidth(leftOffsetColumns);
+    // 右边未渲染数据的paddingRight值
+    let rightOffsetColumns = scrollColumns.slice(endColumnIndex, scrollColumns.length);
+    let endHorizontalOffset = calculateColumnsWidth(rightOffsetColumns);
+    // 需要渲染显示的列数据
+    let virtualColumns = scrollColumns.slice(startColumnIndex, endColumnIndex);
+    console.table({scrollLeft, scrollLeftNum, startColumnIndex, endColumnIndex});
+    updateGrid({
+      startColumnIndex,
+      endColumnIndex,
+      startHorizontalOffset,
+      endHorizontalOffset,
+      virtualColumns
+    });
+  };
   // 渲染单元格
   const _cellRender = (row, rowIndex, column, columnIndex) => {
 
     let realRowIndex = rowIndex + grid.startRowIndex;
     let realColumnIndex = columnIndex + grid.startColumnIndex;
     let value = row[column['key']];
-    let width = column.width || 150;
+    let width = column.width || stateProps.estimatedColumnWidth;
     // 是否显示边框
     let bordered = stateProps.bordered ? 'vt-bordered' : '';
     // 对齐方式 'left' | 'right' | 'center'
-    let align = ALIGN_TYPE[column.align] || 'vt-align-left';
+    let align = ALIGN_TYPE[column.align] || ALIGN_TYPE.left;
     return <div
       className={`vt-grid-cell ${bordered} ${align}`}
       onClick={() => __onCellTap(
@@ -159,9 +216,18 @@ const Grid = (props) => {
       }}>
         {
           grid.virtualData.map((row, rowIndex) => {
-            return <div className="vt-grid-row" key={rowIndex}>
+            return <div
+              key={rowIndex}
+              className="vt-grid-row"
+              style={{
+                height: stateProps.estimatedRowHeight,
+                width: stateProps.visibleWidth,
+                paddingLeft: grid.startHorizontalOffset,
+                paddingRight: grid.endHorizontalOffset
+              }}
+            >
               {
-                props.columns.map((column, columnIndex) => {
+                grid.virtualColumns.map((column, columnIndex) => {
                   return _cellRender(row, rowIndex, column, columnIndex);
                   // return <div key={columnIndex}>
                   //   {
@@ -181,7 +247,9 @@ const Grid = (props) => {
 
 Grid.propTypes = {
   // 类型 header
-  type: PropTypes.string
+  type: PropTypes.string,
+  // 是否显示边框
+  bordered: PropTypes.bool
 };
 
 export default Grid;
