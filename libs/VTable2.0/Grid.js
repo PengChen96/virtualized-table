@@ -38,7 +38,6 @@ const Grid = (props) => {
     // 左右偏移渲染个数
     columnOffsetCount: props.columnOffsetCount || 4,
 
-
     // 是否显示边框
     bordered: props.bordered || true
   };
@@ -130,6 +129,7 @@ const Grid = (props) => {
   const _onHorizontalScroll = () => {
     const {scrollLeft} = _scrollContainer.current;
     const {
+      dataSource,
       columns,
       estimatedColumnWidth,
       columnOffsetCount,
@@ -149,13 +149,13 @@ const Grid = (props) => {
     let endColumnIndex = (startColumnIndex + realColumnsCount) > scrollColumns.length ? scrollColumns.length : (startColumnIndex + realColumnsCount);
     // 左边未渲染数据的paddingLeft值
     let leftOffsetColumns = scrollColumns.slice(0, startColumnIndex);
-    let startHorizontalOffset = calculateColumnsWidth(leftOffsetColumns);
+    let startHorizontalOffset = dataSource.length > 0 ? calculateColumnsWidth(leftOffsetColumns) : 0;
     // 右边未渲染数据的paddingRight值
     let rightOffsetColumns = scrollColumns.slice(endColumnIndex, scrollColumns.length);
-    let endHorizontalOffset = calculateColumnsWidth(rightOffsetColumns);
+    let endHorizontalOffset = dataSource.length > 0 ? calculateColumnsWidth(rightOffsetColumns) : 0;
     // 需要渲染显示的列数据
     let virtualColumns = scrollColumns.slice(startColumnIndex, endColumnIndex);
-    console.table({scrollLeft, scrollLeftNum, startColumnIndex, endColumnIndex});
+    // console.table({scrollLeft, scrollLeftNum, startColumnIndex, endColumnIndex});
     updateGrid({
       startColumnIndex,
       endColumnIndex,
@@ -212,7 +212,9 @@ const Grid = (props) => {
     >
       <div style={{
         paddingTop: grid.startVerticalOffset,
-        paddingBottom: grid.endVerticalOffset
+        paddingBottom: grid.endVerticalOffset,
+        paddingLeft: grid.startHorizontalOffset,
+        paddingRight: grid.endHorizontalOffset
       }}>
         {
           grid.virtualData.map((row, rowIndex) => {
@@ -221,9 +223,7 @@ const Grid = (props) => {
               className="vt-grid-row"
               style={{
                 height: stateProps.estimatedRowHeight,
-                width: stateProps.visibleWidth,
-                paddingLeft: grid.startHorizontalOffset,
-                paddingRight: grid.endHorizontalOffset
+                //width: stateProps.visibleWidth
               }}
             >
               {

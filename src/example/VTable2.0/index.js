@@ -104,6 +104,7 @@ class VTableCase extends React.Component {
 
         <div className="btn-container">
           <span onClick={() => this.getList(50)}>获取50条数据</span>
+          <span onClick={() => this.getList(100)}>获取100条数据</span>
           <span onClick={() => this.getList(500)}>获取500条数据</span>
           <span onClick={() => this.getList(5000)}>获取5000条数据</span>
           <span onClick={() => this.getList(50000)}>获取50000条数据</span>
@@ -135,7 +136,7 @@ class VTableCase extends React.Component {
           onSelect={this.onSelect}
           onCellTap={this.onCellTap}
           onRowRemove={this.onRowRemove}
-          visibleHeight={600}
+          visibleHeight={400}
           mainRowHeight={33}
           emptyText={<div>未查询到数据</div>}
           loading={loading}
