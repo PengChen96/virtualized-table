@@ -36,7 +36,7 @@ const Grid = (props) => {
     // 可渲染个数（水平）
     columnVisibleCount: props.columnVisibleCount || 8,
     // 左右偏移渲染个数
-    columnOffsetCount: props.columnOffsetCount || 4,
+    columnOffsetCount: props.columnOffsetCount || 6,
 
     // 是否显示边框
     bordered: props.bordered || true
@@ -222,7 +222,7 @@ const Grid = (props) => {
               key={rowIndex}
               className="vt-grid-row"
               style={{
-                height: stateProps.estimatedRowHeight,
+                // height: stateProps.estimatedRowHeight,
                 //width: stateProps.visibleWidth
               }}
             >
