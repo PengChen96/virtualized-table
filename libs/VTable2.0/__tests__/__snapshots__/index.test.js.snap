@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Grid 渲染Grid正常 1`] = `
+exports[`Grid render 渲染Grid正常 1`] = `
 initialize {
   "0": Object {
     "attribs": Object {
@@ -201,7 +201,7 @@ initialize {
 }
 `;
 
-exports[`Grid 渲染正常 1`] = `
+exports[`Grid render 渲染正常 1`] = `
 initialize {
   "0": Object {
     "attribs": Object {

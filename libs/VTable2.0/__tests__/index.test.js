@@ -3,7 +3,7 @@ import { mount, render } from 'enzyme';
 import Grid from '../Grid';
 
 
-describe('Grid', () => {
+describe('Grid render', () => {
 
   test('渲染正常', () => {
     const wrapper = render(
@@ -57,6 +57,28 @@ describe('Grid', () => {
       />,
     );
     expect(wrapper.render()).toMatchSnapshot();
+  });
+
+});
+
+// 函数
+describe('Grid Func', () => {
+
+  test('点击单元格cell', () => {
+    let cellTap = jest.fn();
+    let wrapper = mount(
+      <Grid
+        columns={[{
+          key: 'id',
+          title: '编号',
+          width: 150
+        }]}
+        dataSource={[{id: 1}]}
+        onCellTap={cellTap}
+      />
+    );
+    wrapper.find('.vt-grid-cell').simulate('click');
+    expect(cellTap).toBeCalled();
   });
 
 });
