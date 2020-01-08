@@ -176,6 +176,7 @@ const Grid = (props) => {
     // 对齐方式 'left' | 'right' | 'center'
     let align = ALIGN_TYPE[column.align] || ALIGN_TYPE.left;
     return <div
+      key={realColumnIndex}
       className={`vt-grid-cell ${bordered} ${align}`}
       onClick={() => __onCellTap(
         value,

@@ -5,14 +5,14 @@ import Grid from '../Grid';
 
 describe('Grid', () => {
 
-  it('渲染正常', () => {
+  test('渲染正常', () => {
     const wrapper = render(
       <Grid/>
     );
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('渲染Grid正常', () => {
+  test('渲染Grid正常', () => {
     //
     let columns = (num = 1) => {
       let columns = [{

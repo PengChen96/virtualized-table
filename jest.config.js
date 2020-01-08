@@ -5,9 +5,11 @@ module.exports = {
   rootDir: resolve(__dirname, 'libs'),
   // babel转义白名单，默认不转义node_modules，改为[]后会转义
   'transformIgnorePatterns': [],
+  // 需要收集覆盖率的文件
   'collectCoverageFrom': [
     'collapse/*.{js,jsx,tsx}',
-    'pagination/*.{js,jsx,tsx}'
+    '<rootDir>/__tests__/sum.js',
+    '<rootDir>/VTable2.0/Grid.js'
   ],
   // 指定需要进行单元测试的文件匹配规则
   testMatch: [
