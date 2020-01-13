@@ -39,7 +39,7 @@ const Grid = (props) => {
     columnOffsetCount: props.columnOffsetCount || 6,
 
     // 是否显示边框
-    bordered: props.bordered || true
+    bordered: props.bordered || false
   };
   let [grid, setGrid] = useState({
     // 虚拟列
@@ -84,9 +84,9 @@ const Grid = (props) => {
 
   const _onScrollEvent = () => {
 
-    //  垂直方向滚动
+    // 垂直方向滚动
     _onVerticalScroll();
-    //水平方向滚动
+    // 水平方向滚动
     _onHorizontalScroll();
 
   };
