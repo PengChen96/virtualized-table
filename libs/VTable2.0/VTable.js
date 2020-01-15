@@ -1,6 +1,6 @@
 
 import React, {useEffect, useState} from 'react';
-import Grid from './Grid';
+import MultiGrid from './MultiGrid';
 
 export default (props) => {
 
@@ -19,7 +19,7 @@ export default (props) => {
   }, []);
 
   return <>
-    <Grid
+    <MultiGrid
       type={'11'}
       {...props}
     />

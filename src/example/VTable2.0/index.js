@@ -15,6 +15,7 @@ class VTableCase extends React.Component {
       footerColumnData: [],
       loading: false,
       // 参数设置
+      __bordered: true,
       __rowSelection: false,
       __pointerEventDisabled: false
     };
@@ -94,13 +95,14 @@ class VTableCase extends React.Component {
       dataSource,
       footerColumnData,
       loading,
+      __bordered,
       __rowSelection,
       __pointerEventDisabled
     } = this.state;
     // let columnData = [{ title0: '内容'}];
     let columns = this.getColumns(25);
     return (
-      <div className="App">
+      <div>
 
         <div className="btn-container">
           <span onClick={() => this.getList(50)}>获取50条数据</span>
@@ -121,9 +123,15 @@ class VTableCase extends React.Component {
           <input type="checkbox" checked={__pointerEventDisabled} onClick={() => this.switchSetting('__pointerEventDisabled')}/>
           pointerEventDisabled
         </label>
-
+        <label>
+          <input type="checkbox" checked={__bordered} onClick={() => this.switchSetting('__bordered')}/>
+          bordered
+        </label>
 
         <VTable
+          // new
+          bordered={__bordered}
+          //
           className="a"
           columns={columns}
           dataSource={dataSource}
