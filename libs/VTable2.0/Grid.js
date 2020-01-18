@@ -1,7 +1,7 @@
 
 import React, {useEffect, useState, useRef} from 'react';
 import PropTypes from 'prop-types';
-import './style.less';
+import './styles/grid.less';
 import {calculateColumnsWidth} from './utils';
 
 const ALIGN_TYPE = {
@@ -76,8 +76,8 @@ const Grid = (props) => {
     // updateGrid({
     //   virtualData: props.dataSource.slice(grid.startRowIndex, endRowIndex)
     // });
-    _onVerticalScroll();
-    _onHorizontalScroll();
+    _onScrollEvent();
+    
   }, [
     props.dataSource
   ]);
@@ -175,6 +175,8 @@ const Grid = (props) => {
     let bordered = stateProps.bordered ? 'vt-bordered' : '';
     // 对齐方式 'left' | 'right' | 'center'
     let align = ALIGN_TYPE[column.align] || ALIGN_TYPE.left;
+    // 省略号
+    let ellipsis = column.ellipsis ? 'vt-ellipsis' : '';
     return <div
       key={realColumnIndex}
       className={`vt-grid-cell ${bordered} ${align}`}
@@ -189,7 +191,8 @@ const Grid = (props) => {
         minHeight: stateProps.minRowHeight
       }}
     >
-      {value}
+      {/* 因flex布局下省略号不生效 故加一层div*/}
+      <div className={`${ellipsis}`}>{value}</div>
     </div>;
 
   };

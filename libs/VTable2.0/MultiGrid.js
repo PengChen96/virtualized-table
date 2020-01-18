@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import Grid from './Grid';
 import PropTypes from 'prop-types';
+import './styles/multi-grid.less';
 
 const MultiGrid =  (props) => {
 

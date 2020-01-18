@@ -33,6 +33,7 @@ class VTableCase extends React.Component {
         key: 'title' + i,
         title: '标题列' + i,
         width: 150,
+        // ellipsis: true,
         render: (value) => {
           return <span>{value}</span>;
         }

@@ -1,6 +1,5 @@
 
-// 前缀
-@prefix: vt;
+@import "./variables.less";
 //
 @borderColor: #e3e4e8;
 //
@@ -36,10 +35,12 @@
           border-right: none;
         }
       }
+      // 省略号
+      .@{prefix}-ellipsis {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
-}
-
-.@{prefix}-multi-grid-container {
-  display: flex;
 }
