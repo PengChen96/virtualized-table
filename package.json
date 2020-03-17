@@ -20,7 +20,8 @@
     "prod": "webpack --env.NODE_ENV=production --config ./config/webpack.config.js",
     "build": "webpack --config ./config/webpack.dev.config.js",
     "dev": "webpack-dev-server --devtool=source-map --host 0.0.0.0 --config ./config/webpack.dev.config.js",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "keywords": [
     "react",
@@ -41,6 +42,7 @@
     "@babel/core": "7.2.2",
     "@babel/preset-env": "7.2.3",
     "@babel/preset-react": "7.0.0",
+    "@storybook/react": "^5.3.17",
     "babel-eslint": "^10.0.3",
     "babel-loader": "8.0.5",
     "css-loader": "^2.1.1",
