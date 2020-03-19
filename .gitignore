@@ -24,4 +24,4 @@ yarn-error.log*
 
 .idea
 
-rollup.main.js
+rollup.config.js

@@ -1,11 +1,12 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import markdown from '../libs/VTable2.0/README.md';
+import VTable2 from '../src/example/VTable2.0/index';
 
 storiesOf('VTable', module)
   .addDecorator(storyFn => <div style={{ textAlign: 'center' }}>{storyFn()}</div>)
   .add('default', () => (
-    <span>😀 😎 👍 💯</span>
+    <span>😀 😎 👍 💯<VTable2/></span>
   ),{
     notes: {markdown}   // 将会渲染 markdown 内容
   });
