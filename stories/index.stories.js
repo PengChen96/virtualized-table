@@ -26,6 +26,9 @@ storiesOf('Grid', module)
   .add('emoji', () => (  // 这里是另一个 story
     <span role="img" aria-label="so cool">😀 😎 👍 💯</span>
   ), {
-    notes: {markdown}
+    notes: {
+      Introduction: markdown,
+      DesignNotes: markdown
+    }
   });
 

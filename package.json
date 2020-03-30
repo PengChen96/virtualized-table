@@ -43,6 +43,7 @@
     "@babel/core": "7.2.2",
     "@babel/preset-env": "7.2.3",
     "@babel/preset-react": "7.0.0",
+    "@storybook/addon-notes": "^5.3.17",
     "@storybook/react": "^5.3.17",
     "babel-eslint": "^10.0.3",
     "babel-loader": "8.0.5",
