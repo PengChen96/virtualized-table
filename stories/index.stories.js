@@ -1,9 +1,19 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import markdown from '../libs/VTable2.0/README.md';
+import VTable from '../src/example/VTable/index';
+import VTableMD from '../README.md';
 import VTable2 from '../src/example/VTable2.0/index';
+import markdown from '../libs/VTable2.0/README.md';
 
-storiesOf('VTable', module)
+storiesOf('VTable1.0|VTable', module)
+  .addDecorator(storyFn => <div style={{ textAlign: 'center' }}>{storyFn()}</div>)
+  .add('default', () => (
+    <span>😀 😎 👍 💯<VTable/></span>
+  ),{
+    notes: {VTableMD}   // 将会渲染 markdown 内容
+  });
+
+storiesOf('VTable2.0|VTable', module)
   .addDecorator(storyFn => <div style={{ textAlign: 'center' }}>{storyFn()}</div>)
   .add('default', () => (
     <span>😀 😎 👍 💯<VTable2/></span>
@@ -11,7 +21,7 @@ storiesOf('VTable', module)
     notes: {markdown}   // 将会渲染 markdown 内容
   });
 
-storiesOf('MultiGrid', module)
+storiesOf('VTable2.0|MultiGrid', module)
   .addDecorator(storyFn => <div style={{ textAlign: 'center' }}>{storyFn()}</div>)
   .add('default', () => (
     <span>😀 😎 👍 💯</span>
@@ -19,7 +29,7 @@ storiesOf('MultiGrid', module)
     notes: {markdown}   // 将会渲染 markdown 内容
   });
 
-storiesOf('Grid', module)
+storiesOf('VTable2.0|Grid', module)
   .add('default', () => (  // 一个 add 表示添加一个 story
     <span>Hello Button</span>
   ))
