@@ -22,6 +22,23 @@ class VTableCase extends React.Component {
       key: 'id',
       title: '复选框',
       width: 100
+    }, {
+      key: 'merge',
+      title: '合并',
+      width: 300,
+      subColumns: [{
+        key: 'merge_col1',
+        title: '列1',
+        width: 100
+      }, {
+        key: 'merge_col2',
+        title: '列2',
+        width: 100
+      }, {
+        key: 'merge_col3',
+        title: '列3',
+        width: 100
+      }]
     }];
     for (let i = 0; i < num; i++) {
       columns.push({
@@ -43,7 +60,12 @@ class VTableCase extends React.Component {
     });
     let list = [];
     for (let i = 0; i < num; i++) {
-      let rowObj = {id: i};
+      let rowObj = {
+        id: i,
+        merge_col1: '列1',
+        merge_col2: '列2',
+        merge_col3: '列3'
+      };
       for (let j = 0; j < colNum; j++) {
         rowObj[`title${j}`] = `内容${j}`;
         if (i < 5) {
@@ -124,7 +146,7 @@ class VTableCase extends React.Component {
           columns={columns}
           dataSource={dataSource}
           columnOffsetCount={columns.length}
-          fixedLeftColumnCount={2}
+          fixedLeftColumnCount={1}
           fixedRightColumnCount={1}
           rowSelection={__rowSelection}
           rowKey="title0"

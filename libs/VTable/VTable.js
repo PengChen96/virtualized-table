@@ -16,7 +16,9 @@ class VTable extends React.Component {
       // 选择的行
       selected: [],
       // 选择的行行号
-      selectedRows: []
+      selectedRows: [],
+      // 是否有多级表头
+      hasSubColumn: false
     };
   }
 
@@ -98,7 +100,7 @@ class VTable extends React.Component {
         footerColumns[0] = {width: 60};
       }
       this.setState({
-        columns,
+        columns: this.getColumns(columns),
         columnData: this.getColumnData(columns),
         dataSource: props.dataSource,
         footerColumns: footerColumns,
@@ -155,7 +157,7 @@ class VTable extends React.Component {
       footerColumns[0] = {width: 60};
     }
     this.setState({
-      columns,
+      columns: this.getColumns(columns),
       columnData: this.getColumnData(columns),
       dataSource: props.dataSource,
       footerColumns: footerColumns,
@@ -166,15 +168,46 @@ class VTable extends React.Component {
 
   }
 
+  getColumns(originColumns) {
+    let columns = [];
+    originColumns.forEach((item) => {
+      let column = [item];
+      if (item.subColumns && item.subColumns.length > 0) {
+        column = item.subColumns;
+      }
+      columns = [...columns, ...column];
+    });
+    return columns;
+  }
   // 获取表头
   getColumnData(columns) {
 
     // let checkedList = this.props.dataSource.filter((item) => item.checked);
     // let checkedAll = checkedList.length > 0 && checkedList.length === this.props.dataSource.length;
-    let data = [{}];
+    let hasSubColumn = columns.filter((item) => item.subColumns);
+    let height = hasSubColumn.length > 0 ? 25 : 38;
+    let mergeHeight = hasSubColumn.length > 0 ? 50 : 38;
+    this.setState({
+      hasSubColumn: hasSubColumn.length > 0
+    });
+    let data = [{}, {}];
     columns.forEach((item) => {
-      data[0][item.key] = item.title;
       // data[0]['checked'] = checkedAll;
+      if (item.subColumns && item.subColumns.length > 0) {
+        data[1] = data[1] || {};
+        item.subColumns.forEach((sub, index) => {
+          data[1][sub.key] = `${sub.title}@${sub.width}@${height}`;
+          if (index === 0) {
+            // 这里的宽度可以换成子项的宽度之和
+            data[0][sub.key] = `${item.title}@${item.width}@${height}`;
+          } else {
+            data[0][sub.key] = `${item.title}@0@${sub.width}`;
+          }
+        });
+      } else {
+        data[0][item.key] = `${item.title}@${item.width}@${mergeHeight}`;
+      }
+      data[1][item.key] = `${item.title}@${item.width}@0`;
     });
     // 表头复选框“全选”标志
     data[0].selection = 'all';
@@ -188,7 +221,8 @@ class VTable extends React.Component {
       columnData,
       dataSource,
       footerColumns = [],
-      footerColumnData = []
+      footerColumnData = [],
+      hasSubColumn
     } = this.state;
     let {
       className,
@@ -215,8 +249,8 @@ class VTable extends React.Component {
             ref={h => this._header = h}
             title="title"
             visibleWidth={visibleWidth}
-            visibleHeight={38}
-            estimatedRowHeight={38}
+            visibleHeight={hasSubColumn ? 50 : 38}
+            estimatedRowHeight={hasSubColumn ? 25 : 38}
             columns={columns}
             dataSource={columnData}
             fixedLeftColumnCount={fixedLeftColumnCount}

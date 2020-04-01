@@ -350,21 +350,26 @@ class Grid extends React.Component {
     let realColumnIndex = columnIndex + this.state.startColumnIndex;
     let value = row[column['key']];
     let width = column.width || 150;
+    let height = this.state.estimatedRowHeight;
     let {
       rowActiveKey = 'active',
       rowActiveColor = '#fff1f0',
       type = 'content'
     } = this.props;
-
     let headerClassName = column.headerClassName ? column.headerClassName : column.className;
     let className = type === 'header' ? headerClassName : column.className;
+    if (type === 'header') {
+      let valueArr = value && value.split('@');
+      width = Number(valueArr[1]);
+      height = Number(valueArr[2]);
+    }
     return <div
       onClick={() => this.__onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)}
       className={`v-grid-cell ${className || ''}`}
       style={{
         width: width,
         minWidth: width,
-        height: this.state.estimatedRowHeight,
+        height: height,
         // 勾选或hover颜色
         background: row[rowActiveKey] ? rowActiveColor : ((row.checked || row.hover) ? '#fff9e1' : ''),
         ...column.style
