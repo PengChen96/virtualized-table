@@ -201,7 +201,7 @@ class VTable extends React.Component {
             // 这里的宽度可以换成子项的宽度之和
             data[0][sub.key] = `${item.title}@${item.width}@${height}`;
           } else {
-            data[0][sub.key] = `${item.title}@0@${sub.width}`;
+            data[0][sub.key] = `${item.title}@0@${height}`;
           }
         });
       } else {
