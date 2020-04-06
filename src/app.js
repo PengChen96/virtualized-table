@@ -5,7 +5,6 @@ import VTable2 from './example/VTable2.0';
 // import VTableCustomExample from './example/VTableCustomExample';
 import './app.less';
 
-
 class App extends React.Component {
 
   constructor () {

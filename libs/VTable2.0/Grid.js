@@ -214,7 +214,7 @@ const Grid = (props) => {
   };
 
   return <>
-    <div className="vt-grid-container"
+    <div className={`vt-grid-container ${props.className}`}
       ref={_scrollContainer}
       onScrollCapture={() => _onScrollEvent()}
       style={{height: stateProps.visibleHeight}}
@@ -249,6 +249,11 @@ const Grid = (props) => {
           })
         }
       </div>
+      {
+        props.loading && <div className="vt-grid-loading">
+          {props.loadingText || '数据加载中，请稍后..'}
+        </div>
+      }
     </div>
   </>;
 
