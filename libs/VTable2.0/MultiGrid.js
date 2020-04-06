@@ -25,6 +25,7 @@ const MultiGrid =  (props) => {
       <Grid
         type={'1'}
         {...props}
+        //visibleWidth={300}
       />
       <Grid
         type={'2'}

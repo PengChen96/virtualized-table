@@ -171,12 +171,16 @@ const Grid = (props) => {
     let realColumnIndex = columnIndex + grid.startColumnIndex;
     let value = row[column['key']];
     let width = column.width || stateProps.estimatedColumnWidth;
+    // TODO 宽度
+    width = width * (column.colSpan || 1);
+    let display = column.colSpan === 0 ? "none" : "flex";
     // 是否显示边框
     let bordered = stateProps.bordered ? 'vt-bordered' : '';
     // 对齐方式 'left' | 'right' | 'center'
     let align = ALIGN_TYPE[column.align] || ALIGN_TYPE.left;
     // 省略号
     let ellipsis = column.ellipsis ? 'vt-ellipsis' : '';
+    //
     return <div
       key={realColumnIndex}
       className={`vt-grid-cell ${bordered} ${align}`}
@@ -188,7 +192,8 @@ const Grid = (props) => {
       style={{
         width: width,
         minWidth: width,
-        minHeight: stateProps.minRowHeight
+        minHeight: stateProps.minRowHeight,
+        display: display
       }}
     >
       {/* 因flex布局下省略号不生效 故加一层div*/}
@@ -227,7 +232,7 @@ const Grid = (props) => {
               className="vt-grid-row"
               style={{
                 // height: stateProps.estimatedRowHeight,
-                //width: stateProps.visibleWidth
+                width: stateProps.visibleWidth
               }}
             >
               {

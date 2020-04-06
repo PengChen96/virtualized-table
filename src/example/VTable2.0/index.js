@@ -27,6 +27,18 @@ class VTableCase extends React.Component {
       title: '复选框',
       width: 150,
       align: 'center'
+    }, {
+      key: 'mergeColumn',
+      title: '合并列',
+      width: 150,
+      align: 'center',
+      colSpan: 2
+    }, {
+      key: 'mergeColumn',
+      title: '合并列',
+      width: 150,
+      align: 'center',
+      colSpan: 0
     }];
     for (let i = 0; i < num; i++) {
       columns.push({
@@ -49,10 +61,13 @@ class VTableCase extends React.Component {
     });
     let list = [];
     for (let i = 0; i < num; i++) {
-      let rowObj = {id: i};
+      let rowObj = {
+        id: i,
+        mergeColumn: '合并列'
+      };
       for (let j = 0; j < colNum; j++) {
         rowObj[`title${j}`] = `内容${j}`;
-        // rowObj[`title${j}`] = i % 10 === 0 ? '绝对是分开发的伤口恢复上课都会发生的看法和速度快水电费快递师傅看电视' : i;
+        // rowObj[`title${j}`] = i % 10 === 0 ? '绝对是分开发的口复上课都会发生的看法和速度快水电费快递师傅看电视' : i;
         if (i < 5) {
           rowObj.selectionDisable = true;
         }
