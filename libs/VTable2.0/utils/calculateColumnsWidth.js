@@ -4,7 +4,13 @@ export const calculateColumnsWidth = (columns = []) => {
 
   let width = 0;
   columns.forEach((item) => {
-    width += item.width;
+    if (item.colSpan > 1) {
+      width += item.width * item.colSpan;
+    } else if (item.colSpan === 0) {
+      width += 0;
+    } else {
+      width += item.width;
+    }
   });
 
   return width;

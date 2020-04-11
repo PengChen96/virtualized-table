@@ -155,6 +155,7 @@ const Grid = (props) => {
     let endHorizontalOffset = dataSource.length > 0 ? calculateColumnsWidth(rightOffsetColumns) : 0;
     // 需要渲染显示的列数据
     let virtualColumns = scrollColumns.slice(startColumnIndex, endColumnIndex);
+    // console.log(leftOffsetColumns, startHorizontalOffset, rightOffsetColumns, endHorizontalOffset, virtualColumns, calculateColumnsWidth(virtualColumns));
     // console.table({scrollLeft, scrollLeftNum, startColumnIndex, endColumnIndex});
     updateGrid({
       startColumnIndex,
@@ -171,9 +172,13 @@ const Grid = (props) => {
     let realColumnIndex = columnIndex + grid.startColumnIndex;
     let value = row[column['key']];
     let width = column.width || stateProps.estimatedColumnWidth;
-    // TODO 宽度
-    width = width * (column.colSpan || 1);
-    let display = column.colSpan === 0 ? 'none' : 'flex';
+
+    // colSpan目前方案是传方法确定哪一行需要列合并
+    let colSpan = column.colSpan ? column.colSpan(realRowIndex) : 1;
+    // TODO 宽度 要计算而不是直接乘
+    width = width * colSpan;
+    let display = colSpan === 0 ? 'none' : 'flex';
+
     // 是否显示边框
     let bordered = stateProps.bordered ? 'vt-bordered' : '';
     // 对齐方式 'left' | 'right' | 'center'
@@ -213,7 +218,7 @@ const Grid = (props) => {
     }
   };
 
-  return <div style={{position: 'relative'}}>
+  return <>
     <div className={`vt-grid-container ${props.className}`}
       ref={_scrollContainer}
       onScrollCapture={() => _onScrollEvent()}
@@ -232,7 +237,7 @@ const Grid = (props) => {
               className="vt-grid-row"
               style={{
                 // height: stateProps.estimatedRowHeight,
-                width: stateProps.visibleWidth
+                // width: stateProps.visibleWidth
               }}
             >
               {
@@ -250,12 +255,7 @@ const Grid = (props) => {
         }
       </div>
     </div>
-    {
-      props.loading && <div className="vt-grid-loading">
-        {props.loadingText || '数据加载中，请稍后..'}
-      </div>
-    }
-  </div>;
+  </>;
 
 };
 
@@ -267,11 +267,7 @@ Grid.propTypes = {
   // 是否显示边框
   bordered: PropTypes.bool,
   // 点击每个子项的方法
-  onCellTap: PropTypes.func,
-  // 是否显示加载中
-  loading: PropTypes.bool,
-  // 加载中内容
-  loadingText: PropTypes.element
+  onCellTap: PropTypes.func
 };
 
 export default Grid;

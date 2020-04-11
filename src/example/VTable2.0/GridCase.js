@@ -5,9 +5,6 @@
 import React from 'react';
 import {Grid} from '../../../libs/VTable2.0';
 import {
-  Button,
-  Input,
-  InputNumber,
   Select,
   Switch
 } from '../../components';
@@ -42,13 +39,37 @@ class GridCase extends React.Component {
       title: '合并列',
       width: 150,
       align: 'center',
-      colSpan: 2
+      colSpan: (rowIndex) => {
+        let val = 1;
+        if (rowIndex === 40) {
+          val = 3;
+        }
+        return val;
+      }
     }, {
       key: 'mergeColumn',
       title: '合并列',
       width: 150,
       align: 'center',
-      colSpan: 0
+      colSpan: (rowIndex) => {
+        let val = 1;
+        if (rowIndex === 40) {
+          val = 0;
+        }
+        return val;
+      }
+    }, {
+      key: 'mergeColumn',
+      title: '合并列',
+      width: 150,
+      align: 'center',
+      colSpan: (rowIndex) => {
+        let val = 1;
+        if (rowIndex === 40) {
+          val = 0;
+        }
+        return val;
+      }
     }];
     for (let i = 0; i < num; i++) {
       columns.push({
@@ -109,7 +130,7 @@ class GridCase extends React.Component {
       dataSource,
       __bordered,
       __loading,
-      } = this.state;
+    } = this.state;
     // let columnData = [{ title0: '内容'}];
     let columns = this.getColumns(25);
     return (
