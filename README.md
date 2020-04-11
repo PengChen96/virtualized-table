@@ -36,7 +36,7 @@ $ npm install virtualized-table
 参数 | 说明 | 类型 | 默认值 
 ---|---|---|---
 columns | 表格列 | array | []
-dataSource | 数据数字 | array | []
+dataSource | 表格数据 | array | []
 fixedLeftColumnCount | 左边固定列 列数 | number | 0
 fixedRightColumnCount | 右边固定列 列数 | number | 0
 visibleWidth | 可视区域宽度 | number | 1200

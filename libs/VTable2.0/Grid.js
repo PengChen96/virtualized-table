@@ -173,7 +173,7 @@ const Grid = (props) => {
     let width = column.width || stateProps.estimatedColumnWidth;
     // TODO 宽度
     width = width * (column.colSpan || 1);
-    let display = column.colSpan === 0 ? "none" : "flex";
+    let display = column.colSpan === 0 ? 'none' : 'flex';
     // 是否显示边框
     let bordered = stateProps.bordered ? 'vt-bordered' : '';
     // 对齐方式 'left' | 'right' | 'center'
@@ -213,7 +213,7 @@ const Grid = (props) => {
     }
   };
 
-  return <>
+  return <div style={{position: 'relative'}}>
     <div className={`vt-grid-container ${props.className}`}
       ref={_scrollContainer}
       onScrollCapture={() => _onScrollEvent()}
@@ -249,21 +249,29 @@ const Grid = (props) => {
           })
         }
       </div>
-      {
-        props.loading && <div className="vt-grid-loading">
-          {props.loadingText || '数据加载中，请稍后..'}
-        </div>
-      }
     </div>
-  </>;
+    {
+      props.loading && <div className="vt-grid-loading">
+        {props.loadingText || '数据加载中，请稍后..'}
+      </div>
+    }
+  </div>;
 
 };
 
 Grid.propTypes = {
+  // .vt-grid-container 样式
+  className: PropTypes.string,
   // 类型 header
   type: PropTypes.string,
   // 是否显示边框
-  bordered: PropTypes.bool
+  bordered: PropTypes.bool,
+  // 点击每个子项的方法
+  onCellTap: PropTypes.func,
+  // 是否显示加载中
+  loading: PropTypes.bool,
+  // 加载中内容
+  loadingText: PropTypes.element
 };
 
 export default Grid;
