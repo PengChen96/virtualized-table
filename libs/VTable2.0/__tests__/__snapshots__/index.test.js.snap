@@ -16,7 +16,6 @@ initialize {
           Object {
             "attribs": Object {
               "class": "vt-grid-row",
-              "style": "width: 1200px;",
             },
             "children": Array [
               Object {
@@ -18848,11 +18847,9 @@ initialize {
             "type": "tag",
             "x-attribsNamespace": Object {
               "class": undefined,
-              "style": undefined,
             },
             "x-attribsPrefix": Object {
               "class": undefined,
-              "style": undefined,
             },
           },
         ],

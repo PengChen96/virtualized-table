@@ -41,7 +41,7 @@ class GridCase extends React.Component {
       align: 'center',
       colSpan: (rowIndex) => {
         let val = 1;
-        if (rowIndex === 40) {
+        if (rowIndex === 10) {
           val = 3;
         }
         return val;
@@ -53,7 +53,7 @@ class GridCase extends React.Component {
       align: 'center',
       colSpan: (rowIndex) => {
         let val = 1;
-        if (rowIndex === 40) {
+        if (rowIndex === 10) {
           val = 0;
         }
         return val;
@@ -65,7 +65,7 @@ class GridCase extends React.Component {
       align: 'center',
       colSpan: (rowIndex) => {
         let val = 1;
-        if (rowIndex === 40) {
+        if (rowIndex === 10) {
           val = 0;
         }
         return val;
@@ -85,11 +85,8 @@ class GridCase extends React.Component {
     return columns;
   }
 
-  getList(num = 1, colNum = 250) {
-
-    this.setState({
-      __loading: true
-    });
+  getList(num = 1, colNum = 25) {
+    
     let list = [];
     for (let i = 0; i < num; i++) {
       let rowObj = {
@@ -108,11 +105,6 @@ class GridCase extends React.Component {
     this.setState({
       dataSource: list
     });
-    setTimeout(() => {
-      this.setState({
-        __loading: false
-      });
-    }, 500);
 
   };
 
@@ -129,7 +121,6 @@ class GridCase extends React.Component {
     const {
       dataSource,
       __bordered,
-      __loading,
     } = this.state;
     // let columnData = [{ title0: '内容'}];
     let columns = this.getColumns(25);
@@ -151,10 +142,6 @@ class GridCase extends React.Component {
             <span>边框(bordered)：</span>
             <Switch checked={__bordered} onChange={() => this.switchSetting('__bordered')} />
           </label>
-          <label style={{paddingLeft: 16}}>
-            <span>加载中(loading)：</span>
-            <Switch checked={__loading} onChange={() => this.switchSetting('__loading')} />
-          </label>
         </div>
         <br/>
         <Grid
@@ -166,8 +153,6 @@ class GridCase extends React.Component {
           dataSource={dataSource}
           // 边框
           bordered={__bordered}
-          // loading
-          loading={__loading}
           loadingText={<div>数据加载中...</div>}
           //
           fixedLeftColumnCount={2}
