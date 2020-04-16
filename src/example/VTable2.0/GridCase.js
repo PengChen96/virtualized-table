@@ -145,7 +145,7 @@ class GridCase extends React.Component {
         </div>
         <br/>
         <Grid
-          // 表格样式类名
+        // 表格样式类名
           className="my-custom-class"
           // 列
           columns={columns}
@@ -153,7 +153,6 @@ class GridCase extends React.Component {
           dataSource={dataSource}
           // 边框
           bordered={__bordered}
-          loadingText={<div>数据加载中...</div>}
           //
           fixedLeftColumnCount={2}
           fixedRightColumnCount={1}
