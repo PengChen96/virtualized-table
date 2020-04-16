@@ -218,6 +218,44 @@ const Grid = (props) => {
     }
   };
 
+  // 默认行
+  const defaultGridRow = (row, rowIndex) => {
+    return <div
+      key={rowIndex}
+      className="vt-grid-row"
+      style={{
+        // height: stateProps.estimatedRowHeight,
+        // width: stateProps.visibleWidth
+      }}
+    >
+      {
+        grid.virtualColumns.map((column, columnIndex) => {
+          return _cellRender(row, rowIndex, column, columnIndex);
+        })
+      }
+    </div>;
+  };
+
+  // 渲染行
+  const _gridRowRender = (row, rowIndex) => {
+
+    let gridRow = <>{defaultGridRow(row, rowIndex)}</>;
+    // 覆盖默认的 GridRow 元素
+    if (props.components && props.components.row) {
+      let realRowIndex = rowIndex + grid.startRowIndex;
+      // {index, moveRow}
+      let rowProps = typeof props.onRow === 'function' ? props.onRow(row, realRowIndex) : {};
+      gridRow = <props.components.row
+        key={realRowIndex}
+        {...rowProps}
+      >
+        {defaultGridRow(row, rowIndex)}
+      </props.components.row>;
+    }
+    return gridRow;
+
+  };
+
   return <>
     <div className={`vt-grid-container ${props.className}`}
       ref={_scrollContainer}
@@ -232,25 +270,8 @@ const Grid = (props) => {
       }}>
         {
           grid.virtualData.map((row, rowIndex) => {
-            return <div
-              key={rowIndex}
-              className="vt-grid-row"
-              style={{
-                // height: stateProps.estimatedRowHeight,
-                // width: stateProps.visibleWidth
-              }}
-            >
-              {
-                grid.virtualColumns.map((column, columnIndex) => {
-                  return _cellRender(row, rowIndex, column, columnIndex);
-                  // return <div key={columnIndex}>
-                  //   {
-                  //     _cellRender(row, rowIndex, column, columnIndex)
-                  //   }
-                  // </div>;
-                })
-              }
-            </div>;
+            // 行渲染
+            return _gridRowRender(row, rowIndex);
           })
         }
       </div>

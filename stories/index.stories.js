@@ -5,9 +5,13 @@ import VTableMD from '../README.md';
 // 2.0
 import VTable2 from '../src/example/VTable2.0/index';
 import markdown from '../libs/VTable2.0/README.md';
+//　
 import GridCase from '../src/example/VTable2.0/GridCase';
-import Dnd from '../src/example/VTable2.0/dnd';
 import GridMD from '../libs/VTable2.0/Grid_README.md';
+import Dnd from '../src/example/VTable2.0/dnd';
+import GridDragSorting from '../src/example/VTable2.0/Grid/drag-sorting';
+import GridDragSortingMD from '../src/example/VTable2.0/Grid/drag-sorting.md';
+
 
 storiesOf('VTable1.0|VTable', module)
   .addDecorator(storyFn => <div style={{ textAlign: 'center' }}>{storyFn()}</div>)
@@ -36,9 +40,14 @@ storiesOf('VTable2.0|MultiGrid', module)
 storiesOf('VTable2.0|Grid', module)
   .addDecorator(storyFn => <div style={{ padding: 16 }}>{storyFn()}</div>)
   .add('default', () => (  // 一个 add 表示添加一个 story
-    <GridCase id={1} isDragging={true} connectDragSource={['13']}/>
+    <GridCase/>
   ),{
     notes: {GridMD}   // 将会渲染 markdown 内容
+  })
+  .add('drag-sorting', () => (
+    <GridDragSorting/>
+  ),{
+    notes: {GridDragSortingMD}
   })
   .add('emoji', () => (  // 这里是另一个 story
     <Dnd/>
