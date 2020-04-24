@@ -6,4 +6,9 @@ before_script:
 after_success:
     - sleep 5
     - bash <(curl -s https://codecov.io/bash)
-    - npm run deploystorybook -- --ci
+deploy:
+  provider: script
+  script: npm run deploy-storybook --ci
+  skip_cleanup: true
+  on:
+    branch: master
