@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/PengChen96/virtualized-table"
+    "url": "git+https://github.com/PengChen96/virtualized-table.git"
   },
   "bugs": {
     "url": "https://github.com/PengChen96/virtualized-table/issues"
@@ -23,7 +23,8 @@
     "test": "jest --coverage",
     "update": "jest -u",
     "storybook": "start-storybook -p 9001",
-    "buildstorybook": "build-storybook -c .storybook -o .out"
+    "buildstorybook": "build-storybook -c .storybook -o .out",
+    "deploystorybook": "storybook-to-ghpages"
   },
   "keywords": [
     "react",
@@ -41,12 +42,13 @@
     "react-dom": "16.9.0"
   },
   "devDependencies": {
-    "antd": "^4.1.1",
     "@babel/core": "7.2.2",
     "@babel/preset-env": "7.2.3",
     "@babel/preset-react": "7.0.0",
     "@storybook/addon-notes": "^5.3.17",
     "@storybook/react": "^5.3.17",
+    "@storybook/storybook-deployer": "^2.8.5",
+    "antd": "^4.1.1",
     "babel-eslint": "^10.0.3",
     "babel-loader": "8.0.5",
     "css-loader": "^2.1.1",
