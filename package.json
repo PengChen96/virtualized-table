@@ -24,7 +24,7 @@
     "update": "jest -u",
     "storybook": "start-storybook -p 9001",
     "buildstorybook": "build-storybook -c .storybook -o .out",
-    "deploystorybook": "storybook-to-ghpages --existing-output-dir=.out"
+    "deploystorybook": "storybook-to-ghpages --existing-output-dir=.out --branch=gh-pages"
   },
   "keywords": [
     "react",
