@@ -360,6 +360,7 @@ class Grid extends React.Component {
     let className = type === 'header' ? headerClassName : column.className;
     if (type === 'header') {
       let valueArr = value && value.split('@');
+      value = valueArr[0];
       width = Number(valueArr[1]);
       height = Number(valueArr[2]);
     }
@@ -385,13 +386,13 @@ class Grid extends React.Component {
 
       return column.headRender ? column.headRender(
         value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex
-      ) : row[column['key']];
+      ) : value;
 
     } else {
 
       return column.render ? column.render(
         value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex
-      ) : row[column['key']];
+      ) : value;
 
     }
   }
