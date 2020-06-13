@@ -184,7 +184,7 @@ class VTable extends React.Component {
 
     // let checkedList = this.props.dataSource.filter((item) => item.checked);
     // let checkedAll = checkedList.length > 0 && checkedList.length === this.props.dataSource.length;
-    let hasSubColumn = columns.filter((item) => item.subColumns);
+    let hasSubColumn = columns.filter((item) => item.subColumns && item.subColumns[0]);
     let height = hasSubColumn.length > 0 ? 25 : 38;
     let mergeHeight = hasSubColumn.length > 0 ? 50 : 38;
     this.setState({

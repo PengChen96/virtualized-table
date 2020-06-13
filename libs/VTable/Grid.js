@@ -370,6 +370,7 @@ class Grid extends React.Component {
       style={{
         width: width,
         minWidth: width,
+        display: String(width) === "0" ? "none": undefined,
         height: height,
         // 勾选或hover颜色
         background: row[rowActiveKey] ? rowActiveColor : ((row.checked || row.hover) ? '#fff9e1' : ''),
