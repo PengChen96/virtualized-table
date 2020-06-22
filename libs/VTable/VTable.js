@@ -96,7 +96,8 @@ class VTable extends React.Component {
           }
         });
         //
-        footerColumns = JSON.parse(JSON.stringify(props.columns));
+        let _columns = JSON.parse(JSON.stringify(props.columns));
+        footerColumns = this.getColumns(_columns);
         footerColumns[0] = {width: 60};
       }
       this.setState({
@@ -153,7 +154,8 @@ class VTable extends React.Component {
         }
       });
       //
-      footerColumns = JSON.parse(JSON.stringify(props.columns));
+      let _columns = JSON.parse(JSON.stringify(props.columns));
+      footerColumns = this.getColumns(_columns);
       footerColumns[0] = {width: 60};
     }
     this.setState({
@@ -242,7 +244,7 @@ class VTable extends React.Component {
     } = this.props;
 
     return (
-      <div className={`v-table ${className}`}>
+      <div className={`v-table ${className || ''}`}>
         <div className="v-table-header">
           <Grid
             type="header"
@@ -262,6 +264,7 @@ class VTable extends React.Component {
         <div className="v-table-content">
           <Grid
             title="title"
+            ref={h => this._content = h}
             type="content"
             visibleWidth={visibleWidth}
             visibleHeight={visibleHeight}
