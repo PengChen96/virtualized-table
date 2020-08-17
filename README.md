@@ -9,7 +9,7 @@
 [![npm version](https://badge.fury.io/js/virtualized-table.svg)](http://badge.fury.io/js/virtualized-table)
 [![Build Status](https://travis-ci.org/PengChen96/virtualized-table.svg?branch=master)](https://travis-ci.org/PengChen96/virtualized-table)
 [![codecov](https://codecov.io/gh/PengChen96/virtualized-table/branch/master/graph/badge.svg)](https://codecov.io/gh/PengChen96/virtualized-table)
-[![NPM downloads](http://img.shields.io/npm/dm/virtualized-table.svg?style=flat-square)](https://www.npmjs.com/package/virtualized-table)    
+[![NPM downloads](http://img.shields.io/npm/dm/virtualized-table.svg?style=flat-square)](https://www.npmjs.com/package/virtualized-table)
 大数据量虚拟化表格组件
 
 ## Usage
@@ -33,7 +33,7 @@ $ npm install virtualized-table
 
 ### API
 #### VTable
-参数 | 说明 | 类型 | 默认值 
+参数 | 说明 | 类型 | 默认值
 ---|---|---|---
 columns | 表格列 | array | []
 dataSource | 表格数据 | array | []
@@ -61,7 +61,7 @@ footerColumnData | 固定底部行数据 | array | -
 pointerEventDisabled | 禁止鼠标事件 | bool | false
 
 #### columns
-参数 | 说明 | 类型 | 默认值 
+参数 | 说明 | 类型 | 默认值
 ---|---|---|---
 key | 键 | string | -
 title | 列头显示文字 | string | -
@@ -71,6 +71,7 @@ render | 数据渲染函数 | func | Function(value, row, rowIndex, realRowIndex
 headRender | 渲染表头函数 | func | Function(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)
 className | 单元格样式 | string | -
 headerClassName | 表头样式(不设置会默认className) | string | -
+subColumns | 二级表头(属性跟columns一致) | array | -
 
 ## License
 virtualized-table is available under the MIT License.
