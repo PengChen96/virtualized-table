@@ -251,8 +251,8 @@ class VTable extends React.Component {
             ref={h => this._header = h}
             title="title"
             visibleWidth={visibleWidth}
-            visibleHeight={hasSubColumn ? 50 : 38}
-            estimatedRowHeight={hasSubColumn ? 25 : 38}
+            visibleHeight={hasSubColumn ? 50 : 36}
+            estimatedRowHeight={hasSubColumn ? 25 : 36}
             columns={columns}
             dataSource={columnData}
             fixedLeftColumnCount={fixedLeftColumnCount}
@@ -292,8 +292,8 @@ class VTable extends React.Component {
                 ref={h => this._footer = h}
                 title="title"
                 visibleWidth={visibleWidth}
-                visibleHeight={38}
-                estimatedRowHeight={38}
+                visibleHeight={36}
+                estimatedRowHeight={36}
                 columns={footerColumns}
                 dataSource={footerColumnData}
                 fixedLeftColumnCount={fixedLeftColumnCount}
