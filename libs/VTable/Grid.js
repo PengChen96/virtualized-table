@@ -75,7 +75,8 @@ class Grid extends React.Component {
   static getDerivedStateFromProps(props, state) {
 
     if (props.dataSource !== state.dataSource ||
-      props.pointerEventDisabled !== state.pointerEventDisabled
+      props.pointerEventDisabled !== state.pointerEventDisabled ||
+      props.visibleWidth !== state.visibleWidth
     ) {
       // 行
       let rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
@@ -102,6 +103,7 @@ class Grid extends React.Component {
       return {
         pointerEventDisabled: props.pointerEventDisabled,
         visibleHeight: props.visibleHeight,
+        visibleWidth: props.visibleWidth,
         estimatedRowHeight: props.estimatedRowHeight,
         //
         columns: props.columns,
@@ -140,7 +142,8 @@ class Grid extends React.Component {
 
     let {state} = this;
     if (props.dataSource !== state.dataSource ||
-      props.pointerEventDisabled !== state.pointerEventDisabled
+      props.pointerEventDisabled !== state.pointerEventDisabled ||
+      props.visibleWidth !== state.visibleWidth
     ) {
       let rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
       let endRowIndex = state.startRowIndex + rowVisibleCount + state.rowOffsetCount * 2;
@@ -166,6 +169,7 @@ class Grid extends React.Component {
       this.setState({
         pointerEventDisabled: props.pointerEventDisabled,
         visibleHeight: props.visibleHeight,
+        visibleWidth: props.visibleWidth,
         estimatedRowHeight: props.estimatedRowHeight,
         //
         columns: props.columns,
@@ -373,7 +377,7 @@ class Grid extends React.Component {
         display: String(width) === "0" ? "none": undefined,
         height: height,
         // 勾选或hover颜色
-        background: row[rowActiveKey] ? rowActiveColor : ((row.checked || row.hover) ? '#fff9e1' : ''),
+        background: row[rowActiveKey] ? rowActiveColor : ((row.checked || row.hover) ? '#ebf5ff' : ''),
         ...column.style
       }}
     >
@@ -455,6 +459,7 @@ class Grid extends React.Component {
       pointerEventDisabled
     } = this.state;
 
+    // let width = fixedLeftColumnsWidth + fixedRightColumnsWidth + scrollColumnsWidth;
     return (
       <div>
         <div className="v-grid-container"
