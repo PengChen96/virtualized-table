@@ -154,7 +154,7 @@ class VTableCase extends React.Component {
           onSelect={this.onSelect}
           onCellTap={this.onCellTap}
           onRowRemove={this.onRowRemove}
-          visibleHeight={600}
+          visibleHeight={400}
           mainRowHeight={33}
           emptyText={<div>未查询到数据</div>}
           loading={loading}

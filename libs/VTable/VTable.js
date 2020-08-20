@@ -115,7 +115,7 @@ class VTable extends React.Component {
     if (props.visibleWidth !== state.visibleWidth) {
       this.setState({
         visibleWidth: props.visibleWidth
-      })
+      });
     }
 
   }
@@ -186,7 +186,7 @@ class VTable extends React.Component {
     let {offsetWidth} = this._content._masterContainer;
     this.setState({
       visibleWidth: offsetWidth
-    })
+    });
   };
 
   getColumns(originColumns) {
