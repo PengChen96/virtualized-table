@@ -142,51 +142,18 @@ class Grid extends React.Component {
     if (props.dataSource !== state.dataSource ||
       props.pointerEventDisabled !== state.pointerEventDisabled
     ) {
-      let rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
-      let endRowIndex = state.startRowIndex + rowVisibleCount + state.rowOffsetCount * 2;
-      //
-      let visibleWidth = this._masterContainer.clientWidth;
-      let fixedLeftColumns = props.columns.slice(0, props.fixedLeftColumnCount);
-      let fixedLeftColumnsWidth = calculateColumnsWidth(fixedLeftColumns);
-
-      let fixedRightColumnsStartIndex = props.columns.length - state.fixedRightColumnCount;
-      let fixedRightColumns = props.columns.slice(fixedRightColumnsStartIndex, props.columns.length);
-      let fixedRightColumnsWidth = calculateColumnsWidth(fixedRightColumns);
-
-      let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, fixedRightColumnsStartIndex);
-      let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth - fixedRightColumnsWidth;
-      let columnVisibleCount = Math.ceil(scrollColumnsWidth / state.estimatedColumnWidth);
-      let endColumnIndex = state.startColumnIndex + columnVisibleCount + state.columnOffsetCount * 2;
-
-      let leftOffsetColumns = scrollColumns.slice(0, state.startColumnIndex);
-      let startHorizontalOffset = calculateColumnsWidth(leftOffsetColumns);
-      let rightOffsetColumns = scrollColumns.slice(endColumnIndex, scrollColumns.length);
-      let endHorizontalOffset = calculateColumnsWidth(rightOffsetColumns);
 
       this.setState({
+        ...this.getTableConfig(props, state),
         pointerEventDisabled: props.pointerEventDisabled,
         visibleHeight: props.visibleHeight,
         estimatedRowHeight: props.estimatedRowHeight,
         //
         columns: props.columns,
-        fixedLeftColumns,
-        fixedLeftColumnsWidth,
-        fixedRightColumns,
-        fixedRightColumnsWidth,
-        scrollColumns,
-        scrollColumnsWidth,
         fixedLeftColumnCount: props.fixedLeftColumnCount,
-        virtualColumns: scrollColumns.slice(state.startColumnIndex, endColumnIndex),
-        startHorizontalOffset,
-        endHorizontalOffset,
-        columnVisibleCount,
-        // //
         dataSource: props.dataSource,
-        virtualData: props.dataSource.slice(state.startRowIndex, endRowIndex),
-        startVerticalOffset: state.startRowIndex * state.estimatedRowHeight,
-        endVerticalOffset: (props.dataSource.length - endRowIndex) * state.estimatedRowHeight,
-        rowVisibleCount,
       });
+
     }
 
   }
@@ -227,14 +194,17 @@ class Grid extends React.Component {
   resizeListener () {
 
     if (this._masterContainer) {
+
       let {clientWidth} = this._masterContainer;
       this.setState({
         visibleWidth: clientWidth
       }, () => {
+
         let {props, state} = this;
         this.setState(this.getTableConfig(props, state));
 
       });
+
     }
 
   };
