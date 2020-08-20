@@ -75,8 +75,7 @@ class Grid extends React.Component {
   static getDerivedStateFromProps(props, state) {
 
     if (props.dataSource !== state.dataSource ||
-      props.pointerEventDisabled !== state.pointerEventDisabled ||
-      props.visibleWidth !== state.visibleWidth
+      props.pointerEventDisabled !== state.pointerEventDisabled
     ) {
       // 行
       let rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
@@ -103,7 +102,6 @@ class Grid extends React.Component {
       return {
         pointerEventDisabled: props.pointerEventDisabled,
         visibleHeight: props.visibleHeight,
-        visibleWidth: props.visibleWidth,
         estimatedRowHeight: props.estimatedRowHeight,
         //
         columns: props.columns,
@@ -142,8 +140,7 @@ class Grid extends React.Component {
 
     let {state} = this;
     if (props.dataSource !== state.dataSource ||
-      props.pointerEventDisabled !== state.pointerEventDisabled ||
-      props.visibleWidth !== state.visibleWidth
+      props.pointerEventDisabled !== state.pointerEventDisabled
     ) {
       let rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
       let endRowIndex = state.startRowIndex + rowVisibleCount + state.rowOffsetCount * 2;
@@ -169,7 +166,6 @@ class Grid extends React.Component {
       this.setState({
         pointerEventDisabled: props.pointerEventDisabled,
         visibleHeight: props.visibleHeight,
-        visibleWidth: props.visibleWidth,
         estimatedRowHeight: props.estimatedRowHeight,
         //
         columns: props.columns,
@@ -221,11 +217,69 @@ class Grid extends React.Component {
       scrollColumns,
       scrollColumnsWidth
     });
-    // this._scrollContainer.addEventListener('scroll', () => {
-    //   this._syncScrollTop(this._scrollContainer, this._leftContainer);
-    // });
-  }
+    //
+    window.addEventListener('resize', () => this.resizeListener());
 
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', () => this.resizeListener());
+  }
+  resizeListener () {
+
+    if (this._masterContainer) {
+      let {clientWidth} = this._masterContainer;
+      this.setState({
+        visibleWidth: clientWidth
+      }, () => {
+        let {props, state} = this;
+        this.setState(this.getTableConfig(props, state));
+
+      });
+    }
+
+  };
+  // 获取表格参数
+  getTableConfig(props, state) {
+
+    let rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
+    let endRowIndex = state.startRowIndex + rowVisibleCount + state.rowOffsetCount * 2;
+    //
+    let visibleWidth = state.visibleWidth;
+    let fixedLeftColumns = props.columns.slice(0, props.fixedLeftColumnCount);
+    let fixedLeftColumnsWidth = calculateColumnsWidth(fixedLeftColumns);
+
+    let fixedRightColumnsStartIndex = props.columns.length - state.fixedRightColumnCount;
+    let fixedRightColumns = props.columns.slice(fixedRightColumnsStartIndex, props.columns.length);
+    let fixedRightColumnsWidth = calculateColumnsWidth(fixedRightColumns);
+
+    let scrollColumns = props.columns.slice(props.fixedLeftColumnCount, fixedRightColumnsStartIndex);
+    let scrollColumnsWidth = visibleWidth - fixedLeftColumnsWidth - fixedRightColumnsWidth;
+    let columnVisibleCount = Math.ceil(scrollColumnsWidth / state.estimatedColumnWidth);
+    let endColumnIndex = state.startColumnIndex + columnVisibleCount + state.columnOffsetCount * 2;
+
+    let leftOffsetColumns = scrollColumns.slice(0, state.startColumnIndex);
+    let startHorizontalOffset = calculateColumnsWidth(leftOffsetColumns);
+    let rightOffsetColumns = scrollColumns.slice(endColumnIndex, scrollColumns.length);
+    let endHorizontalOffset = calculateColumnsWidth(rightOffsetColumns);
+
+    return {
+      fixedLeftColumns,
+      fixedLeftColumnsWidth,
+      fixedRightColumns,
+      fixedRightColumnsWidth,
+      scrollColumns,
+      scrollColumnsWidth,
+      virtualColumns: scrollColumns.slice(state.startColumnIndex, endColumnIndex),
+      startHorizontalOffset,
+      endHorizontalOffset,
+      columnVisibleCount,
+      virtualData: props.dataSource.slice(state.startRowIndex, endRowIndex),
+      startVerticalOffset: state.startRowIndex * state.estimatedRowHeight,
+      endVerticalOffset: (props.dataSource.length - endRowIndex) * state.estimatedRowHeight,
+      rowVisibleCount,
+    };
+
+  };
   // 同步左侧滚动条
   _syncScrollTop (container) {
     const { scrollTop } =  container;
@@ -370,7 +424,7 @@ class Grid extends React.Component {
       style={{
         width: width,
         minWidth: width,
-        display: String(width) === "0" ? "none": undefined,
+        display: String(width) === '0' ? 'none' : undefined,
         height: height,
         // 勾选或hover颜色
         background: row[rowActiveKey] ? rowActiveColor : ((row.checked || row.hover) ? '#ebf5ff' : ''),
@@ -476,7 +530,6 @@ class Grid extends React.Component {
           {/* 左侧固定列*/} {/*TODO (这里设置1是为了保证滚动同步，为什么呢？？？暂不清楚)*/}
           <div className={`v-grid-left-columns-container ${scrollLeft > 1 ? 'v-grid-fixed-left' : 'v-for-sync-scroll-shadow'}`}
             ref={lc => this._leftContainer = lc}
-            // onScrollCapture={(e) => this._syncScrollTop.call(this, e.target)}
             style={{
               width: fixedLeftColumnsWidth,
               minWidth: fixedLeftColumnsWidth,
@@ -557,7 +610,6 @@ class Grid extends React.Component {
           {/* 右侧固定列*/} {/*TODO (这里设置1是为了保证滚动同步，为什么呢？？？暂不清楚)*/}
           <div  className={`v-grid-right-columns-container ${scrollLeft > 1 ? 'v-grid-fixed-right' : 'v-for-sync-scroll-shadow-right'}`}
             ref={rc => this._rightContainer = rc}
-            // onScrollCapture={(e) => this._syncScrollTop.call(this, e.target)}
             style={{
               width: fixedRightColumnsWidth,
               minWidth: fixedRightColumnsWidth,
@@ -632,7 +684,6 @@ class Grid extends React.Component {
     }
 
   }
-
 
 }
 

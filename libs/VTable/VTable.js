@@ -5,10 +5,9 @@ import PropTypes from 'prop-types';
 
 class VTable extends React.Component {
 
-  constructor (props) {
+  constructor () {
     super();
     this.state = {
-      visibleWidth: props.visibleWidth || 1200,
       list: [],
       columns: [],
       columnData: [{}],
@@ -24,36 +23,8 @@ class VTable extends React.Component {
     };
   }
 
-  //static getDerivedStateFromProps(props, state) {
-  //
-  //  if (props.dataSource !== state.dataSource) {
-  //    let columns = props.columns;
-  //    // 复选框
-  //    if (props.rowSelection) {
-  //      columns.unshift({
-  //        key: 'selection',
-  //        title: 'all',
-  //        width: 60,
-  //        render: (value, row) => {
-  //          //console.log(value, row, '复选框');
-  //          return <div>
-  //            <input type="checkbox" onChange={() => this._select(row)} checked={row.checked || false}/>
-  //          </div>;
-  //        }
-  //      });
-  //    }
-  //    console.log(columns,'----');
-  //    return {
-  //      columns,
-  //      //columnData: this.getColumnData(columns),
-  //      dataSource: props.dataSource
-  //    };
-  //  }
-  //  return null;
-  //
-  //}
-
   componentWillReceiveProps(props) {
+
     let {state} = this;
     let {rowRemoveVisible = true} = props;
     if (props.dataSource !== state.dataSource ||
@@ -110,11 +81,6 @@ class VTable extends React.Component {
         selected: [],
         selectedRows: []
       });
-    }
-    if (props.visibleWidth !== state.visibleWidth) {
-      this.setState({
-        visibleWidth: props.visibleWidth
-      })
     }
 
   }
@@ -173,21 +139,8 @@ class VTable extends React.Component {
       selected: [],
       selectedRows: []
     });
-    window.addEventListener('resize', () => this.resizeListener());
 
   }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', () => this.resizeListener());
-  }
-
-  resizeListener () {
-    if(!this._content) return false;
-    let {offsetWidth} = this._content._masterContainer;
-    this.setState({
-      visibleWidth: offsetWidth
-    })
-  };
 
   getColumns(originColumns) {
     let columns = [];
@@ -256,13 +209,13 @@ class VTable extends React.Component {
       dataSource,
       footerColumns = [],
       footerColumnData = [],
-      hasSubColumn,
-      visibleWidth = 1200
+      hasSubColumn
     } = this.state;
     let {
       onMouseEnter,
       onMouseLeave,
       className,
+      visibleWidth = 1200,
       visibleHeight = 400,
       mainRowHeight = 40,
       fixedLeftColumnCount = 0,

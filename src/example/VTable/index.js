@@ -50,8 +50,6 @@ class VTableCase extends React.Component {
         }
       });
     }
-    console.log("columns : ", columns);
-
     return columns;
   }
 
@@ -79,7 +77,6 @@ class VTableCase extends React.Component {
       }
       list.push(rowObj);
     }
-    console.log("dataSource : ", list);
     this.setState({
       dataSource: list
     });
@@ -157,7 +154,7 @@ class VTableCase extends React.Component {
           onSelect={this.onSelect}
           onCellTap={this.onCellTap}
           onRowRemove={this.onRowRemove}
-          visibleHeight={600}
+          visibleHeight={400}
           mainRowHeight={33}
           emptyText={<div>未查询到数据</div>}
           loading={loading}

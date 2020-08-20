@@ -1,7 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import VTable from '../src/example/VTable/index';
-import SiTable from '../src/example/si-vtable/index';
 import VTableMD from '../README.md';
 // 2.0
 import VTable2 from '../src/example/VTable2.0/index';
@@ -20,10 +19,7 @@ storiesOf('VTable1.0|VTable', module)
     <span>😀 😎 👍 💯<VTable/></span>
   ),{
     notes: {VTableMD}   // 将会渲染 markdown 内容
-  })
-  .add('社保表格', () => (
-    <SiTable/>
-  ));
+  });
 
 storiesOf('VTable2.0|VTable', module)
   .addDecorator(storyFn => <div style={{ textAlign: 'center' }}>{storyFn()}</div>)

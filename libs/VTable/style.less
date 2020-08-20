@@ -16,14 +16,14 @@
     .v-grid-main-container {
       overflow-y: hidden;
       overflow-x: hidden;
+      // TODO 滚动条错位问题 后期想办法修复
+      margin-right: 6px;
       &.v-grid-empty-main-container{
         overflow-x: auto;
         &::-webkit-scrollbar {
           display: none;
         }
       }
-      // TODO 滚动条错位问题 后期想办法修复
-      margin-right: 6px;
       &::-webkit-scrollbar {
         background: transparent;
       }
@@ -63,7 +63,7 @@
   display: flex;
   border: 1px solid @borderColor;
 
-  .v-grid-left-columns-container, 
+  .v-grid-left-columns-container,
   .v-grid-right-columns-container{
     overflow-y: hidden;
     overflow-x: scroll;
