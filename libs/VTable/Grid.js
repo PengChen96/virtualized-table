@@ -398,7 +398,7 @@ class Grid extends React.Component {
     }
   }
 
-  _mouseEnter(rowIndex) {
+  _mouseEnter(rowIndex, rowData) {
     // 当表头，不执行
     let {type} = this.props;
     if (this.props.type === 'header' || type === 'footer') {
@@ -412,11 +412,17 @@ class Grid extends React.Component {
         row.hover = true;
       }
     });
+
     this.setState({
       virtualData
     });
+    // 鼠标浮动到某个行上
+    const {onMouseEnter} = this.props;
+    if (typeof onMouseEnter === 'function') {
+      onMouseEnter(rowData, rowIndex,);
+    }
   }
-  _mouseLeave(rowIndex) {
+  _mouseLeave(rowIndex, rowData) {
     // 当表头，不执行
     let {type} = this.props;
     if (type === 'header' || type === 'footer') {
@@ -428,6 +434,11 @@ class Grid extends React.Component {
     this.setState({
       virtualData
     });
+    // 鼠标浮动到某个行上
+    const {onMouseLeave} = this.props;
+    if (typeof onMouseLeave === 'function') {
+      onMouseLeave(rowData, rowIndex,);
+    }
   }
 
   render() {
@@ -478,8 +489,8 @@ class Grid extends React.Component {
                   return <div key={left_row_index}>
                     <div
                       className="v-grid-row"
-                      onMouseEnter={()=>this._mouseEnter(left_row_index)}
-                      onMouseLeave={()=>this._mouseLeave(left_row_index)}
+                      onMouseEnter={()=>this._mouseEnter(left_row_index, left_row)}
+                      onMouseLeave={()=>this._mouseLeave(left_row_index, left_row)}
                       style={{
                         pointerEvents: pointerEventDisabled ? 'none' : pointerEvents,
                         width: fixedLeftColumnsWidth,
@@ -502,7 +513,7 @@ class Grid extends React.Component {
             </div>
           </div>
           {/* 表格主内容*/}
-          <div className="v-grid-main-container"
+          <div className={`v-grid-main-container ${this.props.emptyContainer ? 'v-grid-empty-main-container' : ''}` }
             ref={sc => this._scrollContainer = sc}
             onScrollCapture={this._onScrollEvent.bind(this)}
             style={{
@@ -518,8 +529,8 @@ class Grid extends React.Component {
                   return <div key={rowIndex}>
                     <div
                       className="v-grid-row"
-                      onMouseEnter={()=>this._mouseEnter(rowIndex)}
-                      onMouseLeave={()=>this._mouseLeave(rowIndex)}
+                      onMouseEnter={()=>this._mouseEnter(rowIndex, row)}
+                      onMouseLeave={()=>this._mouseLeave(rowIndex, row)}
                       style={{
                         pointerEvents: pointerEventDisabled ? 'none' : pointerEvents,
                         height: estimatedRowHeight,
@@ -559,8 +570,8 @@ class Grid extends React.Component {
                   return <div key={right_row_index}>
                     <div
                       className="v-grid-row"
-                      onMouseEnter={()=>this._mouseEnter(right_row_index)}
-                      onMouseLeave={()=>this._mouseLeave(right_row_index)}
+                      onMouseEnter={()=>this._mouseEnter(right_row_index, right_row)}
+                      onMouseLeave={()=>this._mouseLeave(right_row_index, right_row)}
                       style={{
                         pointerEvents: pointerEventDisabled ? 'none' : pointerEvents,
                         width: fixedRightColumnsWidth,
@@ -622,6 +633,7 @@ class Grid extends React.Component {
 
   }
 
+
 }
 
 Grid.propTypes = {
@@ -637,6 +649,8 @@ Grid.propTypes = {
   fixedRightColumnCount: PropTypes.number,
   // 源数据
   dataSource: PropTypes.array,
+  // 内容区域的数据是否为空
+  emptyContainer: PropTypes.bool,
   // 可视区域宽度
   visibleWidth: PropTypes.number,
   // 预估的行高度

@@ -16,6 +16,12 @@
     .v-grid-main-container {
       overflow-y: hidden;
       overflow-x: hidden;
+      &.v-grid-empty-main-container{
+        overflow-x: auto;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
       &::-webkit-scrollbar {
         background: transparent;
       }

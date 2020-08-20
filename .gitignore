@@ -24,4 +24,6 @@ yarn-error.log*
 
 .idea
 
+/src/example/si-vtable
 rollup.config.js
+

@@ -182,6 +182,7 @@ class VTable extends React.Component {
   }
 
   resizeListener () {
+    if(!this._content) return false;
     let {offsetWidth} = this._content._masterContainer;
     this.setState({
       visibleWidth: offsetWidth
@@ -219,9 +220,14 @@ class VTable extends React.Component {
         item.subColumns.forEach((sub) => {
             if(typeof sub.width === 'number') childSumWidth += sub.width;
         })
-        // 父元素的宽度大于实际设置的宽度，则以大值为准
+        // 父元素的宽度大于实际设置的宽度，则以大值,否则平均最大值
         if(!item.width || item.width < childSumWidth){
           item.width = childSumWidth;
+        }else {
+          const average = Number(((item.width - childSumWidth)/item.subColumns.length).toFixed(5));
+          item.subColumns.forEach(col => {
+            col.width = col.width ? Number(col.width) + average : average;
+          })
         }
         item.subColumns.forEach((sub, index) => {
           data[1][sub.key] = `${sub.title}@${sub.width}@${height}`;
@@ -254,6 +260,8 @@ class VTable extends React.Component {
       visibleWidth = 1200
     } = this.state;
     let {
+      onMouseEnter,
+      onMouseLeave,
       className,
       visibleHeight = 400,
       mainRowHeight = 40,
@@ -281,6 +289,7 @@ class VTable extends React.Component {
             estimatedRowHeight={hasSubColumn ? 25 : 36}
             columns={columns}
             dataSource={columnData}
+            emptyContainer={!dataSource.length}
             fixedLeftColumnCount={fixedLeftColumnCount}
             fixedRightColumnCount={fixedRightColumnCount}
             columnOffsetCount={columnOffsetCount}
@@ -302,6 +311,8 @@ class VTable extends React.Component {
             columnOffsetCount={columnOffsetCount}
             onScroll={this.onScroll.bind(this)}
             onCellTap={this.__onCellTap.bind(this)}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
             emptyText={emptyText}
             loading={loading}
             loadingText={loadingText}
