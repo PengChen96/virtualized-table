@@ -5,13 +5,15 @@ import PropTypes from 'prop-types';
 
 class VTable extends React.Component {
 
-  constructor () {
+  constructor (props) {
     super();
     this.state = {
+      visibleWidth: props.visibleWidth || 1200,
       list: [],
       columns: [],
       columnData: [{}],
       dataSource: [],
+      footerColumns: [],
       footerColumnData: [],
       // 选择的行
       selected: [],
@@ -74,7 +76,7 @@ class VTable extends React.Component {
               className={`v-checkbox-container ${selectionAllDisable ? 'v-checkbox-container-disabled' : ''}`}
               onClick={(e) => this._select(e, row, realRowIndex)}
             >
-              <input type="checkbox" onChange={(e) => this._select(e, row, realRowIndex)} checked={row.checked || false}/>
+              <input type="checkbox" onChange={(e) => this._select(e, row, realRowIndex)} checked={row.checked || false} style={{margin: 0}}/>
               <div className="show-box" />
             </div>;
           },
@@ -88,7 +90,7 @@ class VTable extends React.Component {
                 className={`v-checkbox-container ${row.selectionDisable ? 'v-checkbox-container-disabled' : ''}`}
                 onClick={(e) => this._select(e, row, realRowIndex)}
               >
-                <input type="checkbox" checked={row.checked || false}/>
+                <input type="checkbox" checked={row.checked || false} style={{margin: 0}}/>
                 <div className="show-box" />
               </div>
             ];
@@ -108,6 +110,11 @@ class VTable extends React.Component {
         selected: [],
         selectedRows: []
       });
+    }
+    if (props.visibleWidth !== state.visibleWidth) {
+      this.setState({
+        visibleWidth: props.visibleWidth
+      })
     }
 
   }
@@ -166,8 +173,20 @@ class VTable extends React.Component {
       selected: [],
       selectedRows: []
     });
+    window.addEventListener('resize', () => this.resizeListener());
 
   }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', () => this.resizeListener());
+  }
+
+  resizeListener () {
+    let {offsetWidth} = this._content._masterContainer;
+    this.setState({
+      visibleWidth: offsetWidth
+    })
+  };
 
   getColumns(originColumns) {
     let columns = [];
@@ -231,11 +250,11 @@ class VTable extends React.Component {
       dataSource,
       footerColumns = [],
       footerColumnData = [],
-      hasSubColumn
+      hasSubColumn,
+      visibleWidth = 1200
     } = this.state;
     let {
       className,
-      visibleWidth = 1200,
       visibleHeight = 400,
       mainRowHeight = 40,
       fixedLeftColumnCount = 0,
@@ -258,8 +277,8 @@ class VTable extends React.Component {
             ref={h => this._header = h}
             title="title"
             visibleWidth={visibleWidth}
-            visibleHeight={hasSubColumn ? 50 : 38}
-            estimatedRowHeight={hasSubColumn ? 25 : 38}
+            visibleHeight={hasSubColumn ? 50 : 36}
+            estimatedRowHeight={hasSubColumn ? 25 : 36}
             columns={columns}
             dataSource={columnData}
             fixedLeftColumnCount={fixedLeftColumnCount}
@@ -299,8 +318,8 @@ class VTable extends React.Component {
                 ref={h => this._footer = h}
                 title="title"
                 visibleWidth={visibleWidth}
-                visibleHeight={38}
-                estimatedRowHeight={38}
+                visibleHeight={36}
+                estimatedRowHeight={36}
                 columns={footerColumns}
                 dataSource={footerColumnData}
                 fixedLeftColumnCount={fixedLeftColumnCount}
