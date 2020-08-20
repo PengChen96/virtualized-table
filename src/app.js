@@ -1,8 +1,8 @@
 
 import React from 'react';
 // import VTable from './example/VTable';
-import VTable2 from './example/VTable2.0';
-// import VTableCustomExample from './example/VTableCustomExample';
+// import VTable2 from './example/VTable2.0';
+import VTableCustomExample from './example/VTableCustomExample';
 import './app.less';
 
 class App extends React.Component {
@@ -19,10 +19,10 @@ class App extends React.Component {
 
         {/*<VTable/>*/}
 
-        <VTable2/>
+        {/* <VTable2/> */}
 
         {/*example*/}
-        {/*<VTableCustomExample/>*/}
+        <VTableCustomExample/>
 
       </div>
     );

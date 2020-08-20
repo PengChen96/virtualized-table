@@ -24,12 +24,12 @@ class VTableCase extends React.Component {
       width: 100
     }, {
       key: 'merge',
-      title: '合并',
-      width: 300,
+      title: '合并1',
+      // width: 300,
       subColumns: [{
         key: 'merge_col1',
         title: '列1',
-        width: 100
+        width: 110
       }, {
         key: 'merge_col2',
         title: '列2',
@@ -50,6 +50,8 @@ class VTableCase extends React.Component {
         }
       });
     }
+    console.log("columns : ", columns);
+
     return columns;
   }
 
@@ -77,6 +79,7 @@ class VTableCase extends React.Component {
       }
       list.push(rowObj);
     }
+    console.log("dataSource : ", list);
     this.setState({
       dataSource: list
     });

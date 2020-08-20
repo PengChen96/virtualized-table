@@ -223,11 +223,14 @@ class Grid extends React.Component {
   }
 
   // 同步左侧滚动条
-  _syncScrollTop (scrollContainer, leftContainer, rightContainer) {
-    leftContainer.scrollTop = scrollContainer.scrollTop;
-    rightContainer.scrollTop = scrollContainer.scrollTop;
+  _syncScrollTop (container) {
+    const { scrollTop } =  container;
+    [this._scrollContainer, this._leftContainer, this._rightContainer].forEach(containerItem => {
+      if(containerItem.scrollTop !== scrollTop) containerItem.scrollTop = scrollTop
+    });
+
     // 禁用
-    if (leftContainer.scrollTop !== scrollContainer.scrollTop) {
+    if (this._leftContainer.scrollTop !== this._scrollContainer.scrollTop) {
       this.setState({
         pointerEvents: 'none'
       });
@@ -236,12 +239,6 @@ class Grid extends React.Component {
         pointerEvents: 'auto'
       });
     }
-    // if (scrollContainer.scrollTop > leftContainer.scrollTop) {
-    //   leftContainer.scrollTop += 10;
-    //   this._syncScrollTop(scrollContainer, leftContainer);
-    // } else {
-    //   leftContainer.scrollTop = scrollContainer.scrollTop;
-    // }
   }
 
   // 垂直方向滚动
@@ -316,9 +313,8 @@ class Grid extends React.Component {
   }
 
   // 滚动事件
-  _onScrollEvent() {
-
-    this._syncScrollTop(this._scrollContainer, this._leftContainer, this._rightContainer);
+  _onScrollEvent(e) {
+    this._syncScrollTop(e.target);
     // 同步header滚动条
     this.__onScroll(this._scrollContainer.scrollLeft);
     // 垂直方向滚动
@@ -464,6 +460,7 @@ class Grid extends React.Component {
           {/* 左侧固定列*/} {/*TODO (这里设置1是为了保证滚动同步，为什么呢？？？暂不清楚)*/}
           <div className={`v-grid-left-columns-container ${scrollLeft > 1 ? 'v-grid-fixed-left' : 'v-for-sync-scroll-shadow'}`}
             ref={lc => this._leftContainer = lc}
+            // onScrollCapture={(e) => this._syncScrollTop.call(this, e.target)}
             style={{
               width: fixedLeftColumnsWidth,
               minWidth: fixedLeftColumnsWidth,
@@ -542,8 +539,9 @@ class Grid extends React.Component {
             </div>
           </div>
           {/* 右侧固定列*/} {/*TODO (这里设置1是为了保证滚动同步，为什么呢？？？暂不清楚)*/}
-          <div className={`v-grid-left-columns-container ${scrollLeft > 1 ? 'v-grid-fixed-right' : 'v-for-sync-scroll-shadow-right'}`}
+          <div  className={`v-grid-right-columns-container ${scrollLeft > 1 ? 'v-grid-fixed-right' : 'v-for-sync-scroll-shadow-right'}`}
             ref={rc => this._rightContainer = rc}
+            // onScrollCapture={(e) => this._syncScrollTop.call(this, e.target)}
             style={{
               width: fixedRightColumnsWidth,
               minWidth: fixedRightColumnsWidth,

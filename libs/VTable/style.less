@@ -6,7 +6,8 @@
   .v-grid-container {
     background: #f4f6f9;
     border-bottom: none;
-    .v-grid-left-columns-container {
+    .v-grid-left-columns-container,
+    .v-grid-right-columns-container {
       overflow: hidden;
       .v-grid-cell {
         border-bottom: none !important;
@@ -28,7 +29,8 @@
   .v-grid-container {
     background: #f4f6f9;
     border-top: none;
-    .v-grid-left-columns-container {
+    .v-grid-left-columns-container,
+    .v-grid-right-columns-container {
       overflow: hidden;
       .v-grid-cell {
         border-bottom: none !important;
@@ -53,12 +55,14 @@
   display: flex;
   border: 1px solid @borderColor;
 
-  .v-grid-left-columns-container {
+  .v-grid-left-columns-container, 
+  .v-grid-right-columns-container{
     overflow-y: hidden;
     overflow-x: scroll;
     z-index: 1;
     &::-webkit-scrollbar {
-      background: transparent;
+      // display: none;
+      color: transparent;
     }
     .v-grid-row {
       display: flex;

@@ -52,7 +52,6 @@ class VTable extends React.Component {
   //}
 
   componentWillReceiveProps(props) {
-
     let {state} = this;
     let {rowRemoveVisible = true} = props;
     if (props.dataSource !== state.dataSource ||
@@ -197,6 +196,14 @@ class VTable extends React.Component {
       // data[0]['checked'] = checkedAll;
       if (item.subColumns && item.subColumns.length > 0) {
         data[1] = data[1] || {};
+        let childSumWidth = 0;
+        item.subColumns.forEach((sub) => {
+            if(typeof sub.width === 'number') childSumWidth += sub.width;
+        })
+        // 父元素的宽度大于实际设置的宽度，则以大值为准
+        if(!item.width || item.width < childSumWidth){
+          item.width = childSumWidth;
+        }
         item.subColumns.forEach((sub, index) => {
           data[1][sub.key] = `${sub.title}@${sub.width}@${height}`;
           if (index === 0) {
