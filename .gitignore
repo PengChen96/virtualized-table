@@ -27,3 +27,4 @@ yarn-error.log*
 /src/example/si-vtable
 rollup.config.js
 
+/.vscode/
