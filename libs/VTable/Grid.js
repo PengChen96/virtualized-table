@@ -131,7 +131,6 @@ class Grid extends React.Component {
     if (prevProps.dataSource.length !== this.state.dataSource.length) {
       this._scrollContainer.scrollTop = 0;
     }
-
   }
 
   componentWillReceiveProps(props) {
@@ -184,7 +183,9 @@ class Grid extends React.Component {
     });
     //
     window.addEventListener('resize', () => this.resizeListener());
-
+    if(props.type === 'content'){
+      props.bubbleContainer(this._scrollContainer);
+    }
   }
   componentWillUnmount() {
     window.removeEventListener('resize', () => this.resizeListener());
@@ -336,6 +337,10 @@ class Grid extends React.Component {
       endHorizontalOffset,
       virtualColumns
     });
+    // 处理content和header横向滚动存在错位的问题
+    if(this.props.type === 'header' && this.props.contentContainer){
+      this._scrollContainer.style.marginRight = (this.props.contentContainer.offsetWidth - this.props.contentContainer.clientWidth) +'px';
+    }
   }
 
   // 滚动事件

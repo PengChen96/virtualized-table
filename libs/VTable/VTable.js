@@ -19,7 +19,11 @@ class VTable extends React.Component {
       // 选择的行行号
       selectedRows: [],
       // 是否有多级表头
-      hasSubColumn: false
+      hasSubColumn: false,
+      // 是否全选
+      allSelected: false,
+      // scrollBar宽度
+      scrollContent: null,
     };
   }
 
@@ -29,10 +33,10 @@ class VTable extends React.Component {
     let {rowRemoveVisible = true} = props;
     if (props.dataSource !== state.dataSource ||
       props.footerColumnData !== state.footerColumnData
-      // props.columns !== state.columns
+      || props.columns !== state.columns
     ) {
       let columns = props.columns;
-      let footerColumns = JSON.parse(JSON.stringify(props.columns));
+      let footerColumns = this.getColumns(JSON.parse(JSON.stringify(props.columns)));
       // 是否能勾选全选
       let selectionDisableList = props.dataSource.filter((item) => item.selectionDisable);
       let selectionAllDisable = selectionDisableList.length === props.dataSource.length;
@@ -47,7 +51,7 @@ class VTable extends React.Component {
               className={`v-checkbox-container ${selectionAllDisable ? 'v-checkbox-container-disabled' : ''}`}
               onClick={(e) => this._select(e, row, realRowIndex)}
             >
-              <input type="checkbox" onChange={(e) => this._select(e, row, realRowIndex)} checked={row.checked || false} style={{margin: 0}}/>
+              <input type="checkbox" onChange={(e) => this._select(e, row, realRowIndex)} checked={this.state.allSelected} style={{margin: 0}}/>
               <div className="show-box" />
             </div>;
           },
@@ -72,15 +76,29 @@ class VTable extends React.Component {
         footerColumns = this.getColumns(_columns);
         footerColumns[0] = {width: 60};
       }
+
       this.setState({
         columns: this.getColumns(columns),
         columnData: this.getColumnData(columns),
         dataSource: props.dataSource,
         footerColumns: footerColumns,
         footerColumnData: props.footerColumnData,
-        selected: [],
-        selectedRows: []
       });
+      if(!props.rowSelection) return;
+      if(typeof props.rowSelection === 'object'){
+        if(props.rowSelection.selectionReset) {
+          this.setState({
+            selected: [],
+            selectedRows: [],
+            allSelected: false
+          })
+        }
+      }else {
+        this.setState({
+          selected: [],
+          selectedRows: []
+        })
+      }
     }
 
   }
@@ -90,7 +108,7 @@ class VTable extends React.Component {
     let {props} = this;
     let {rowRemoveVisible = true} = props;
     let columns = props.columns;
-    let footerColumns = JSON.parse(JSON.stringify(props.columns));
+    let footerColumns = this.getColumns(JSON.parse(JSON.stringify(props.columns)));
     // 是否能勾选全选
     let selectionDisableList = props.dataSource.filter((item) => item.selectionDisable);
     let selectionAllDisable = selectionDisableList.length === props.dataSource.length;
@@ -105,7 +123,7 @@ class VTable extends React.Component {
             className={`v-checkbox-container ${selectionAllDisable ? 'v-checkbox-container-disabled' : ''}`}
             onClick={(e) => this._select(e, row, realRowIndex)}
           >
-            <input type="checkbox" checked={row.checked || false}/>
+            <input type="checkbox" checked={this.state.allSelected}/>
             <div className="show-box" />
           </div>;
         },
@@ -130,6 +148,7 @@ class VTable extends React.Component {
       footerColumns = this.getColumns(_columns);
       footerColumns[0] = {width: 60};
     }
+
     this.setState({
       columns: this.getColumns(columns),
       columnData: this.getColumnData(columns),
@@ -154,7 +173,7 @@ class VTable extends React.Component {
     return columns;
   }
   // 获取表头
-  getColumnData(columns) {
+  getColumnData(columns, checked = false) {
 
     // let checkedList = this.props.dataSource.filter((item) => item.checked);
     // let checkedAll = checkedList.length > 0 && checkedList.length === this.props.dataSource.length;
@@ -186,7 +205,7 @@ class VTable extends React.Component {
           data[1][sub.key] = `${sub.title}@${sub.width}@${height}`;
           if (index === 0) {
             // 这里的宽度可以换成子项的宽度之和
-            data[0][sub.key] = `${item.title}@${item.width}@${height}`;
+            data[0][sub.key] = `${item.title}@${item.width}@${height}@merge-column-cell`;
           } else {
             data[0][sub.key] = `${item.title}@0@${height}`;
           }
@@ -198,6 +217,7 @@ class VTable extends React.Component {
     });
     // 表头复选框“全选”标志
     data[0].selection = 'all';
+    data[0].checked = checked;
     return data;
 
   }
@@ -247,6 +267,7 @@ class VTable extends React.Component {
             fixedRightColumnCount={fixedRightColumnCount}
             columnOffsetCount={columnOffsetCount}
             pointerEventDisabled={pointerEventDisabled}
+            contentContainer={this.state.scrollContent}
           />
         </div>
         <div className="v-table-content">
@@ -271,6 +292,7 @@ class VTable extends React.Component {
             loadingText={loadingText}
             rowActiveKey={rowActiveKey}
             rowActiveColor={rowActiveColor}
+            bubbleContainer={(conatainer) => this.setState({scrollContent: conatainer })}
             pointerEventDisabled={pointerEventDisabled}
           />
         </div>
@@ -344,9 +366,8 @@ class VTable extends React.Component {
   __onSelectAll(row) {
 
     const {onSelectAll, rowKey} = this.props;
-    const {dataSource} = this.state;
+    const {dataSource, allSelected } = this.state;
     if (typeof onSelectAll === 'function') {
-
       // 是否能勾选全选
       let selectionDisableList = dataSource.filter((item) => item.selectionDisable);
       let selectionAllDisable = selectionDisableList.length === dataSource.length;
@@ -360,8 +381,7 @@ class VTable extends React.Component {
       // 选择的行行号
       let _selectedRows = [];
       // 当前全选 要不全选
-      if (row.checked) {
-        row.checked = false;
+      if (allSelected) {
         dataSource.map((item) => {
           item.checked = false;
           return item;
@@ -374,7 +394,6 @@ class VTable extends React.Component {
       }
       // 当前不全选 要全选
       else {
-        row.checked = true;
         // 这里需要改变源数据
         dataSource.map((item) => {
           if (!item.selectionDisable) {
@@ -403,10 +422,12 @@ class VTable extends React.Component {
         _selected = selectedDataSource.filter(x => x);
         _selectedRows = selectedRows.filter(x => x === 0 ? true : x);
       }
+      this.setState({ allSelected: !allSelected})
       onSelectAll(_selected, _selectedRows);
     }
 
   }
+  
   // 用户手动选择/取消选择行的回调
   __onSelect(row, realRowIndex) {
 
@@ -414,9 +435,8 @@ class VTable extends React.Component {
       return;
     }
     const {onSelect, rowKey} = this.props;
-    const {selected, selectedRows, columnData, dataSource} = this.state;
+    const {selected, selectedRows, dataSource} = this.state;
     if (typeof onSelect === 'function') {
-
       if (row.checked) {
         row.checked = false;
         selected[realRowIndex] = undefined;
@@ -430,13 +450,8 @@ class VTable extends React.Component {
       let _selected = selected.filter(x => x);
       let _selectedRows = selectedRows.filter(x => x === 0 ? true : x);
       // 是否已经全部勾选
-      if (_selected.length === dataSource.length) {
-        columnData[0].checked = true;
-      } else {
-        columnData[0].checked = false;
-      }
       this.setState({
-        columnData
+        allSelected: _selected.length === dataSource.length
       });
       onSelect(row, _selected, _selectedRows);
 

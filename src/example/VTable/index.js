@@ -146,7 +146,7 @@ class VTableCase extends React.Component {
           columns={columns}
           dataSource={dataSource}
           columnOffsetCount={columns.length}
-          fixedLeftColumnCount={1}
+          fixedLeftColumnCount={2}
           fixedRightColumnCount={1}
           rowSelection={__rowSelection}
           rowKey="title0"
