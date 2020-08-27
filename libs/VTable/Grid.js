@@ -252,7 +252,7 @@ class Grid extends React.Component {
   _syncScrollTop (container) {
     const { scrollTop } =  container;
     [this._scrollContainer, this._leftContainer, this._rightContainer].forEach(containerItem => {
-      if(containerItem.scrollTop !== scrollTop) containerItem.scrollTop = scrollTop
+      if(containerItem.scrollTop !== scrollTop) containerItem.scrollTop = scrollTop;
     });
 
     // 禁用
