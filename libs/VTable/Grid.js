@@ -73,7 +73,6 @@ class Grid extends React.Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-
     if (props.dataSource !== state.dataSource ||
       props.pointerEventDisabled !== state.pointerEventDisabled
     ) {
@@ -98,7 +97,6 @@ class Grid extends React.Component {
       let startHorizontalOffset = calculateColumnsWidth(leftOffsetColumns);
       let rightOffsetColumns = scrollColumns.slice(endColumnIndex, scrollColumns.length);
       let endHorizontalOffset = calculateColumnsWidth(rightOffsetColumns);
-
       return {
         pointerEventDisabled: props.pointerEventDisabled,
         visibleHeight: props.visibleHeight,
@@ -375,6 +373,7 @@ class Grid extends React.Component {
     let value = row[column['key']];
     let width = column.width || 150;
     let height = this.state.estimatedRowHeight;
+    let mergeClass = '';
     let {
       rowActiveKey = 'active',
       rowActiveColor = '#fff1f0',
@@ -387,10 +386,11 @@ class Grid extends React.Component {
       value = valueArr[0];
       width = Number(valueArr[1]);
       height = Number(valueArr[2]);
+      mergeClass = valueArr[3] ? valueArr[3] : '';
     }
     return <div
       onClick={() => this.__onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)}
-      className={`v-grid-cell ${className || ''}`}
+      className={`v-grid-cell ${className || ''} ${mergeClass}`}
       style={{
         width: width,
         minWidth: width,
