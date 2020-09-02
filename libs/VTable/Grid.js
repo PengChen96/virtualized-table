@@ -85,7 +85,7 @@ class Grid extends React.Component {
       let fixedLeftColumns = props.columns.slice(0, props.fixedLeftColumnCount);
       let fixedLeftColumnsWidth = calculateColumnsWidth(fixedLeftColumns);
 
-      let fixedRightColumnsStartIndex = props.columns.length - state.fixedRightColumnCount;
+      let fixedRightColumnsStartIndex = props.columns.length - props.fixedRightColumnCount;
       let fixedRightColumns = props.columns.slice(fixedRightColumnsStartIndex, props.columns.length);
       let fixedRightColumnsWidth = calculateColumnsWidth(fixedRightColumns);
 
@@ -129,9 +129,18 @@ class Grid extends React.Component {
   }
   componentDidUpdate(prevProps){
 
-    // 为了查询数据后滚动条能到顶部
+    // 为了查询数据后没有滚动条
     if (prevProps.dataSource.length !== this.state.dataSource.length) {
-      this._scrollContainer.scrollTop = 0;
+
+      let {dataSource, estimatedRowHeight} = this.state;
+      let totalHeight = dataSource.length * estimatedRowHeight;
+      if (totalHeight > this._scrollContainer.scrollTop) {
+        this._scrollContainer.scrollTop += 1;
+        this._scrollContainer.scrollTop -= 1;
+      } else {
+        this._scrollContainer.scrollTop = totalHeight;
+      }
+
     }
 
   }
@@ -218,7 +227,7 @@ class Grid extends React.Component {
     let fixedLeftColumns = props.columns.slice(0, props.fixedLeftColumnCount);
     let fixedLeftColumnsWidth = calculateColumnsWidth(fixedLeftColumns);
 
-    let fixedRightColumnsStartIndex = props.columns.length - state.fixedRightColumnCount;
+    let fixedRightColumnsStartIndex = props.columns.length - props.fixedRightColumnCount;
     let fixedRightColumns = props.columns.slice(fixedRightColumnsStartIndex, props.columns.length);
     let fixedRightColumnsWidth = calculateColumnsWidth(fixedRightColumns);
 
@@ -490,7 +499,8 @@ class Grid extends React.Component {
       pointerEventDisabled
     } = this.state;
 
-    // let width = fixedLeftColumnsWidth + fixedRightColumnsWidth + scrollColumnsWidth;
+    const {scrollBarWidth} = this.props;
+
     return (
       <div>
         <div className="v-grid-container"
@@ -543,7 +553,8 @@ class Grid extends React.Component {
               width: scrollColumnsWidth,
               height: visibleHeight,
               // 设置最小高度[visibleHeight计算会少滚动条的高度]
-              minHeight: estimatedRowHeight
+              minHeight: estimatedRowHeight,
+              marginRight: this.props.type!=='content' ? scrollBarWidth : 0
             }}
           >
             <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
@@ -551,13 +562,13 @@ class Grid extends React.Component {
                 virtualData.map((row, rowIndex) => {
                   return <div key={rowIndex}>
                     <div
-                      className="v-grid-row"
+                      className={`v-grid-row ${row.hover ? 'v-grid-row-hover' : ''}`}
                       onMouseEnter={()=>this._mouseEnter(rowIndex, row)}
                       onMouseLeave={()=>this._mouseLeave(rowIndex, row)}
                       style={{
                         pointerEvents: pointerEventDisabled ? 'none' : pointerEvents,
                         height: estimatedRowHeight,
-                        width: scrollColumnsWidth,
+                        width: scrollColumnsWidth - scrollBarWidth,
                         paddingLeft: startHorizontalOffset,
                         paddingRight: endHorizontalOffset
                       }}
@@ -616,7 +627,7 @@ class Grid extends React.Component {
             </div>
           </div>
           {
-            dataSource.length < 1 &&
+            !this.props.loading && dataSource.length < 1 &&
                 <div className="v-container-empty">
                   {
                     this.props.emptyText || '暂无数据'
