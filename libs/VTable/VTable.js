@@ -191,16 +191,16 @@ class VTable extends React.Component {
         data[1] = data[1] || {};
         let childSumWidth = 0;
         item.subColumns.forEach((sub) => {
-            if(typeof sub.width === 'number') childSumWidth += sub.width;
-        })
+          if(typeof sub.width === 'number') childSumWidth += sub.width;
+        });
         // 父元素的宽度大于实际设置的宽度，则以大值,否则平均最大值
         if(!item.width || item.width < childSumWidth){
           item.width = childSumWidth;
         }else {
-          const average = Number(((item.width - childSumWidth)/item.subColumns.length).toFixed(5));
+          const average = Number(((item.width - childSumWidth) / item.subColumns.length).toFixed(5));
           item.subColumns.forEach(col => {
             col.width = col.width ? Number(col.width) + average : average;
-          })
+          });
         }
         item.subColumns.forEach((sub, index) => {
           data[1][sub.key] = `${sub.title}@${sub.width}@${height}`;

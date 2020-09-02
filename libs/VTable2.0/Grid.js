@@ -3,7 +3,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import PropTypes from 'prop-types';
 import './styles/grid.less';
 import {calculateColumnsWidth} from './utils';
-import {sameType} from "../common/utils";
+import {sameType} from '../common/utils';
 
 const ALIGN_TYPE = {
   left: 'vt-align-left',
@@ -175,7 +175,7 @@ const Grid = (props) => {
     let width = column.width || stateProps.estimatedColumnWidth;
 
     // colSpan目前方案是传方法确定哪一行需要列合并
-    let colSpan = sameType(column.colSpan, "Function") ? column.colSpan(realRowIndex) : 1;
+    let colSpan = sameType(column.colSpan, 'Function') ? column.colSpan(realRowIndex) : 1;
     // TODO 宽度 要计算而不是直接乘
     width = width * colSpan;
     let display = colSpan === 0 ? 'none' : 'flex';

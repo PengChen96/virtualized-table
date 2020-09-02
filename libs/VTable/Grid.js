@@ -263,7 +263,7 @@ class Grid extends React.Component {
   _syncScrollTop (container) {
     const { scrollTop } =  container;
     [this._scrollContainer, this._leftContainer, this._rightContainer].forEach(containerItem => {
-      if(containerItem.scrollTop !== scrollTop) containerItem.scrollTop = scrollTop
+      if(containerItem.scrollTop !== scrollTop) containerItem.scrollTop = scrollTop;
     });
 
     // 禁用
@@ -384,6 +384,7 @@ class Grid extends React.Component {
     let value = row[column['key']];
     let width = column.width || 150;
     let height = this.state.estimatedRowHeight;
+    let mergeClass = '';
     let {
       rowActiveKey = 'active',
       rowActiveColor = '#fff1f0',
@@ -396,10 +397,11 @@ class Grid extends React.Component {
       value = valueArr[0];
       width = Number(valueArr[1]);
       height = Number(valueArr[2]);
+      mergeClass = valueArr[3] ? valueArr[3] : '';
     }
     return <div
       onClick={() => this.__onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex)}
-      className={`v-grid-cell ${className || ''}`}
+      className={`v-grid-cell ${className || ''} ${mergeClass}`}
       style={{
         width: width,
         minWidth: width,
