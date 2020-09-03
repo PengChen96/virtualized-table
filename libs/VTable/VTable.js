@@ -158,7 +158,6 @@ class VTable extends React.Component {
     document.body.appendChild(odiv);//把div添加到body中
     let scrollbarWidth = odiv.offsetWidth - odiv.clientWidth;//相减
     odiv.remove();//移除创建的div
-    console.log(scrollbarWidth);
     return scrollbarWidth;//返回滚动条宽度
   }
   //
