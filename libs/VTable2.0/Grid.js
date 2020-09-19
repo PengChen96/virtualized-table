@@ -2,7 +2,7 @@
 import React, {useEffect, useState, useRef} from 'react';
 import PropTypes from 'prop-types';
 import './styles/grid.less';
-import {calculateColumnsWidth} from './utils';
+import {getColumnsWidth} from './utils';
 import {sameType} from '../common/utils';
 
 const ALIGN_TYPE = {
@@ -28,7 +28,7 @@ const Grid = (props) => {
     // 可渲染的元素个数
     rowVisibleCount: props.rowVisibleCount || 30,
     // 上下偏移渲染个数
-    rowOffsetCount: props.rowOffsetCount || 10,
+    rowOffsetCount: props.rowOffsetCount || 20,
 
     // 可视区域宽度
     visibleWidth: props.visibleWidth || 1200,
@@ -78,6 +78,7 @@ const Grid = (props) => {
     //   virtualData: props.dataSource.slice(grid.startRowIndex, endRowIndex)
     // });
     _onScrollEvent();
+    console.log('dataSource change');
 
   }, [
     props.dataSource
@@ -150,13 +151,13 @@ const Grid = (props) => {
     let endColumnIndex = (startColumnIndex + realColumnsCount) > scrollColumns.length ? scrollColumns.length : (startColumnIndex + realColumnsCount);
     // 左边未渲染数据的paddingLeft值
     let leftOffsetColumns = scrollColumns.slice(0, startColumnIndex);
-    let startHorizontalOffset = dataSource.length > 0 ? calculateColumnsWidth(leftOffsetColumns) : 0;
+    let startHorizontalOffset = dataSource.length > 0 ? getColumnsWidth(leftOffsetColumns) : 0;
     // 右边未渲染数据的paddingRight值
     let rightOffsetColumns = scrollColumns.slice(endColumnIndex, scrollColumns.length);
-    let endHorizontalOffset = dataSource.length > 0 ? calculateColumnsWidth(rightOffsetColumns) : 0;
+    let endHorizontalOffset = dataSource.length > 0 ? getColumnsWidth(rightOffsetColumns) : 0;
     // 需要渲染显示的列数据
     let virtualColumns = scrollColumns.slice(startColumnIndex, endColumnIndex);
-    // console.log(leftOffsetColumns, startHorizontalOffset, rightOffsetColumns, endHorizontalOffset, virtualColumns, calculateColumnsWidth(virtualColumns));
+    // console.log(leftOffsetColumns, startHorizontalOffset, rightOffsetColumns, endHorizontalOffset, virtualColumns, getColumnsWidth(virtualColumns));
     // console.table({scrollLeft, scrollLeftNum, startColumnIndex, endColumnIndex});
     updateGrid({
       startColumnIndex,
@@ -169,6 +170,8 @@ const Grid = (props) => {
   // 渲染单元格
   const _cellRender = (row, rowIndex, column, columnIndex) => {
 
+    const {columns} = stateProps;
+
     let realRowIndex = rowIndex + grid.startRowIndex;
     let realColumnIndex = columnIndex + grid.startColumnIndex;
     let value = row[column['key']];
@@ -176,9 +179,22 @@ const Grid = (props) => {
 
     // colSpan目前方案是传方法确定哪一行需要列合并
     let colSpan = sameType(column.colSpan, 'Function') ? column.colSpan(realRowIndex) : 1;
-    // TODO 宽度 要计算而不是直接乘
-    width = width * colSpan;
+    let rowMergeColumns = columns.slice(realColumnIndex, realColumnIndex + colSpan);
+    if (rowMergeColumns.length > 1) {
+      width = getColumnsWidth(rowMergeColumns);
+      // console.log(rowMergeColumns, realColumnIndex, realColumnIndex + colSpan);
+    }
+    // 改行设置colSpan=0，直接隐藏，就不设置width=0了； 不隐藏设置width=0，会显示border和value，有问题
     let display = colSpan === 0 ? 'none' : 'flex';
+    // TODO 如果虚拟列的第一列是合并导致隐藏的，需要让它占个位置，不然这行会错位
+    // let vFirstColSpan = grid.virtualColumns[0] && grid.virtualColumns[0].colSpan;
+    // if (vFirstColSpan && sameType(vFirstColSpan, 'Function') && vFirstColSpan(realRowIndex) === 0) {
+    //   console.log('第一列是display none的');
+    //   grid.virtualColumns.forEach((vColumn, index) => {
+    //     let vColSpan = sameType(vColumn.colSpan, 'Function') ? vColumn.colSpan(realRowIndex) : 1;
+    //   });
+    //   // display = columnIndex === 0 && colSpan === 0 ? 'flex' : display;
+    // }
 
     // 是否显示边框
     let bordered = stateProps.bordered ? 'vt-bordered' : '';

@@ -1,5 +1,5 @@
 
 
 export {
-  calculateColumnsWidth
-} from './calculateColumnsWidth';
+  getColumnsWidth
+} from './columns';
