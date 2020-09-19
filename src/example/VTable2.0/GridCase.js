@@ -41,7 +41,7 @@ class GridCase extends React.Component {
       align: 'center',
       colSpan: (rowIndex) => {
         let val = 1;
-        if (rowIndex === 10) {
+        if (rowIndex === 4) {
           val = 3;
         }
         return val;
@@ -53,7 +53,7 @@ class GridCase extends React.Component {
       align: 'center',
       colSpan: (rowIndex) => {
         let val = 1;
-        if (rowIndex === 10) {
+        if (rowIndex === 4) {
           val = 0;
         }
         return val;
@@ -65,7 +65,7 @@ class GridCase extends React.Component {
       align: 'center',
       colSpan: (rowIndex) => {
         let val = 1;
-        if (rowIndex === 10) {
+        if (rowIndex === 4) {
           val = 0;
         }
         return val;
@@ -86,7 +86,7 @@ class GridCase extends React.Component {
   }
 
   getList(num = 1, colNum = 25) {
-    
+
     let list = [];
     for (let i = 0; i < num; i++) {
       let rowObj = {
@@ -161,7 +161,7 @@ class GridCase extends React.Component {
           onCellTap={this.onCellTap}
           onRowRemove={this.onRowRemove}
           visibleHeight={400}
-          mainRowHeight={33}
+          minRowHeight={40}
           emptyText={<div>未查询到数据</div>}
         />
       </>
