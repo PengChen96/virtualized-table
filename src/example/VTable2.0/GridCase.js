@@ -82,6 +82,54 @@ class GridCase extends React.Component {
         }
       });
     }
+    // 尾部合并列
+    columns.push({
+      key: 'mergeColumn',
+      title: '合并列',
+      width: 150,
+      align: 'center',
+      colSpan: (rowIndex) => {
+        let val = 1;
+        if (rowIndex === 4) {
+          val = 3;
+        }
+        return val;
+      }
+    });
+    columns.push({
+      key: 'mergeColumn',
+      title: '合并列',
+      width: 100,
+      align: 'center',
+      colSpan: (rowIndex) => {
+        let val = 1;
+        if (rowIndex === 4) {
+          val = 0;
+        }
+        return val;
+      }
+    });
+    columns.push({
+      key: 'mergeColumn',
+      title: '合并列',
+      width: 100,
+      align: 'center',
+      colSpan: (rowIndex) => {
+        let val = 1;
+        if (rowIndex === 4) {
+          val = 0;
+        }
+        return val;
+      }
+    });
+    // 额外列
+    columns.push({
+      key: `title${num}`,
+      dataIndex: `title${num}`,
+      title: '额外列',
+      width: 150,
+      align: 'right'
+    });
     return columns;
   }
 
@@ -100,6 +148,7 @@ class GridCase extends React.Component {
           rowObj.selectionDisable = true;
         }
       }
+      rowObj[`title${colNum}`] = '额外加的最后一列';
       list.push(rowObj);
     }
     this.setState({

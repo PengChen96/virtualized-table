@@ -174,7 +174,7 @@ const Grid = (props) => {
 
     let realRowIndex = rowIndex + grid.startRowIndex;
     let realColumnIndex = columnIndex + grid.startColumnIndex;
-    let value = row[column['key']];
+    let value = row[column['key'] || column['dataIndex']];
     let width = column.width || stateProps.estimatedColumnWidth;
 
     // colSpan目前方案是传方法确定哪一行需要列合并
@@ -186,15 +186,24 @@ const Grid = (props) => {
     }
     // 改行设置colSpan=0，直接隐藏，就不设置width=0了； 不隐藏设置width=0，会显示border和value，有问题
     let display = colSpan === 0 ? 'none' : 'flex';
-    // TODO 如果虚拟列的第一列是合并导致隐藏的，需要让它占个位置，不然这行会错位
-    // let vFirstColSpan = grid.virtualColumns[0] && grid.virtualColumns[0].colSpan;
-    // if (vFirstColSpan && sameType(vFirstColSpan, 'Function') && vFirstColSpan(realRowIndex) === 0) {
-    //   console.log('第一列是display none的');
-    //   grid.virtualColumns.forEach((vColumn, index) => {
-    //     let vColSpan = sameType(vColumn.colSpan, 'Function') ? vColumn.colSpan(realRowIndex) : 1;
-    //   });
-    //   // display = columnIndex === 0 && colSpan === 0 ? 'flex' : display;
-    // }
+    // 如果虚拟列的第一列是合并导致隐藏的，需要让它占个位置，不然这行会错位
+    // 如果是尾部列不用考虑这个问题
+    let vFirstColSpan = grid.virtualColumns[0] && grid.virtualColumns[0].colSpan;
+    if (vFirstColSpan && sameType(vFirstColSpan, 'Function') && vFirstColSpan(realRowIndex) === 0) {
+      // console.log('virtualColumns的第一列是display none的');
+      // 截取第一列到当前列
+      let startVirtualColumns = grid.virtualColumns.slice(0, columnIndex + 1);
+      // console.log(startVirtualColumns, 0, columnIndex + 1, value, realColumnIndex);
+      // 过滤出第一列到当前列display none的列
+      let svHiddenColumns = startVirtualColumns.filter((svColumn) => {
+        let svColSpan = sameType(svColumn.colSpan, 'Function') ? svColumn.colSpan(realRowIndex) : 1;
+        return svColSpan === 0;
+      });
+      // 这两个columns相等，说明第一列到当前列全是隐藏到列
+      if (startVirtualColumns.length === svHiddenColumns.length) {
+        display = 'flex';
+      }
+    }
 
     // 是否显示边框
     let bordered = stateProps.bordered ? 'vt-bordered' : '';

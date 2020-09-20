@@ -13,6 +13,9 @@ onRow | 设置行属性 | Function(record, index) | -
 #### columns
 参数 | 说明 | 类型 | 默认值
 ---|---|---|---
-align | 设置单元格对齐方式 | string | 'left'，'right'，'center'
+align | 设置列的对齐方式 | string | 'left'，'right'，'center'
+colSpan | 列合并 @return Number  | func | Function(rowIndex)
+dataIndex | 列数据在数据项中对应的路径，暂不支持通过数组查询嵌套路径 | string | -
 ellipsis | 是否显示省略号 | boolean | false
-colSpan | 列合并 | func | Function(rowIndex)
+key | 列数据的键值 | string | -
+
