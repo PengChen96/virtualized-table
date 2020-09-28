@@ -5,10 +5,35 @@ import Grid from '../Grid';
 // 列
 let columns = (num = 25) => {
   let columns = [{
-    key: 'id',
+    // key: 'id',
+    dataIndex: 'id',
     title: '复选框',
     width: 150,
     align: 'center'
+  }, {
+    key: 'mergeColumn',
+    title: '合并列',
+    width: 150,
+    align: 'center',
+    colSpan: (rowIndex) => {
+      let val = 1;
+      if (rowIndex === 1) {
+        val = 2;
+      }
+      return val;
+    }
+  }, {
+    key: 'mergeColumn',
+    title: '合并列',
+    width: 150,
+    align: 'center',
+    colSpan: (rowIndex) => {
+      let val = 1;
+      if (rowIndex === 1) {
+        val = 0;
+      }
+      return val;
+    }
   }];
   for (let i = 0; i < num; i++) {
     columns.push({
@@ -27,7 +52,7 @@ let dataSource = (num = 1, colNum = 250) => {
 
   let list = [];
   for (let i = 0; i < num; i++) {
-    let rowObj = {id: i};
+    let rowObj = {id: i, mergeColumn: '合并列'};
     for (let j = 0; j < colNum; j++) {
       rowObj[`title${j}`] = `内容${j}`;
       if (i < 5) {
