@@ -556,7 +556,7 @@ class Grid extends React.Component {
               height: visibleHeight,
               // 设置最小高度[visibleHeight计算会少滚动条的高度]
               minHeight: estimatedRowHeight,
-              marginRight: this.props.type==='header' ? scrollBarWidth : 0
+              marginRight: this.props.type === 'header' ? scrollBarWidth : 0
             }}
           >
             <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
