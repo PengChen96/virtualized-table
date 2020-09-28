@@ -52,7 +52,7 @@ let dataSource = (num = 1, colNum = 250) => {
 
   let list = [];
   for (let i = 0; i < num; i++) {
-    let rowObj = {id: i, mergeColumn: '合并列'};
+    let rowObj = {id: i};
     for (let j = 0; j < colNum; j++) {
       rowObj[`title${j}`] = `内容${j}`;
       if (i < 5) {
