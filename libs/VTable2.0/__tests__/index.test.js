@@ -17,7 +17,7 @@ let columns = (num = 25) => {
     align: 'center',
     colSpan: (rowIndex) => {
       let val = 1;
-      if (rowIndex === 1) {
+      if (rowIndex === 0) {
         val = 2;
       }
       return val;
@@ -29,7 +29,7 @@ let columns = (num = 25) => {
     align: 'center',
     colSpan: (rowIndex) => {
       let val = 1;
-      if (rowIndex === 1) {
+      if (rowIndex === 0) {
         val = 0;
       }
       return val;
