@@ -10,7 +10,7 @@ addParameters({
   options: {
     // tool bar
     // isToolshown: false,
-    showAddonPanel: false,
+    showAddonPanel: true,
     theme:{
       // base: 'light',
       //
