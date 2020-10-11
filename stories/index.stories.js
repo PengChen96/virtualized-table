@@ -1,6 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { withKnobs, number } from '@storybook/addon-knobs';
+import { withKnobs, number, boolean } from '@storybook/addon-knobs';
 import VTable from '../src/example/VTable/index';
 import VTableMD from '../README.md';
 
@@ -46,8 +46,14 @@ storiesOf('VTable2.0|Grid', module)
   .addDecorator(storyFn => <div style={{ padding: 16 }}>{storyFn()}</div>)
   .addDecorator(withKnobs)
   .add('default', () => {  // 一个 add 表示添加一个 story
-    const bordered = number('totalPage', 100);
-    return <GridCase bordered={bordered}/>;
+    const columnsNum = number('ColumnsNum', 25, {range: true, min: 25, max: 1000, step: 25});
+    const dataNum = number('DataNum', 50, {range: true, min: 50, max: 100000, step: 50});
+    const bordered = boolean('Bordered', true);
+    return <GridCase
+      columnsNum={columnsNum}
+      dataNum={dataNum}
+      bordered={bordered}
+    />;
   },{
     notes: {GridMD}   // 将会渲染 markdown 内容
   })
