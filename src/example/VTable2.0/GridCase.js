@@ -7,13 +7,22 @@ import {Grid} from '../../../libs/VTable2.0';
 import {generateColumns, generateData} from '../common/utils';
 
 export default (props) => {
-  let {columnsNum, dataNum} = props;
+  let {columnsNum, dataNum, align} = props;
   let [columns, setColumns] = useState([]);
   let [dataSource, setDataSource] = useState([]);
   useEffect(() => {
-    setColumns(generateColumns(columnsNum));
+    setColumns(generateColumns(
+      columnsNum,
+      {
+        columnObj: () => {
+          return {
+            align: align,
+          };
+        }
+      }
+    ));
     setDataSource(generateData(dataNum, columnsNum));
-  }, [props.columnsNum, props.dataNum]);
+  }, [props.columnsNum, props.dataNum, props.align]);
   return (
       <>
         <h2>Grid</h2>

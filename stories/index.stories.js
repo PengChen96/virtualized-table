@@ -1,6 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { withKnobs, number, boolean } from '@storybook/addon-knobs';
+import { withKnobs, number, boolean, optionsKnob } from '@storybook/addon-knobs';
 import VTable from '../src/example/VTable/index';
 import VTableMD from '../README.md';
 
@@ -51,10 +51,18 @@ storiesOf('VTable2.0|Grid', module)
     const columnsNum = number('ColumnsNum', 25, {range: true, min: 25, max: 1000, step: 25});
     const dataNum = number('DataNum', 50, {range: true, min: 50, max: 100000, step: 50});
     const bordered = boolean('Bordered', true);
+    // column
+    const align = optionsKnob(
+      'Align',
+      {left: 'left', center: 'center', right: 'right'},
+      'left',
+      {display: 'inline-radio'}
+    );
     return <GridCase
       columnsNum={columnsNum}
       dataNum={dataNum}
       bordered={bordered}
+      align={align}
     />;
   },{
     notes: {GridMD}   // 将会渲染 markdown 内容

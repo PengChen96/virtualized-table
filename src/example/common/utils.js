@@ -7,7 +7,9 @@ const COLUMNS_KEY = 'title';
 * @param {number} num 列数
 * @param {Object} params {columns}
 **/
-export const generateColumns = (num = 1, params = {columnObj: () => {}}) => {
+export const generateColumns = (num = 1, params = {
+  columnObj: () =>  {}}
+) => {
 
   let columns = params.columns || [{
     key: 'id',
