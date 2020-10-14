@@ -16,6 +16,7 @@ export default (props) => {
   }, [props.columnsNum, props.dataNum]);
   return (
       <>
+        <h2>Grid</h2>
         <Grid
           // 表格样式类名
           className="my-custom-class"

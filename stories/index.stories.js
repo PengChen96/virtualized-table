@@ -17,6 +17,8 @@ import GridDragSortingMD from '../src/example/VTable2.0/Grid/drag-sorting.md';
 // 行/列合并示例
 import GridColspanRowSpan from '../src/example/VTable2.0/Grid/colspan-rowspan';
 import GridColspanRowSpanMD from '../src/example/VTable2.0/Grid/colspan-rowspan.md';
+// ellipsis
+import GridEllipsis from '../src/example/VTable2.0/Grid/ellipsis';
 
 storiesOf('VTable1.0|VTable', module)
   .addDecorator(storyFn => <div style={{ textAlign: 'center' }}>{storyFn()}</div>)
@@ -67,6 +69,9 @@ storiesOf('VTable2.0|Grid', module)
   ),{
     notes: {GridDragSortingMD}
   })
+  .add('ellipsis', () => (
+    <GridEllipsis/>
+  ))
   .add('emoji', () => (  // 这里是另一个 story
     <Dnd/>
   ), {

@@ -228,7 +228,7 @@ const Grid = (props) => {
       }}
     >
       {/* 因flex布局下省略号不生效 故加一层div*/}
-      <div className={`${ellipsis}`}>
+      <div className={`${ellipsis}`} title={column.ellipsis ? value : ''}>
         {
           column.render ? column.render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) : value
         }
