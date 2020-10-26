@@ -543,7 +543,7 @@ class Grid extends React.Component {
           {/* 表格主内容*/}
           <div className={`v-grid-main-container ${this.props.emptyContainer ? 'v-grid-empty-main-container' : ''}` }
             ref={sc => this._scrollContainer = sc}
-            onScrollCapture={this._onScrollEvent.bind(this)}
+            onScroll={this._onScrollEvent.bind(this)}
             style={{
               width: scrollColumnsWidth,
               height: visibleHeight,
