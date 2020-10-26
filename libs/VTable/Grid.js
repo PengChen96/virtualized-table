@@ -507,6 +507,9 @@ class Grid extends React.Component {
       <div>
         <div className="v-grid-container"
           ref={mc => this._masterContainer = mc}
+          style={{
+            height: visibleHeight
+          }}
         >
 
           {/* 左侧固定列*/} {/*TODO (这里设置1是为了保证滚动同步，为什么呢？？？暂不清楚)*/}
@@ -556,7 +559,7 @@ class Grid extends React.Component {
               height: visibleHeight,
               // 设置最小高度[visibleHeight计算会少滚动条的高度]
               minHeight: estimatedRowHeight,
-              marginRight: this.props.type === 'header' ? scrollBarWidth : 0
+              marginRight: this.props.type==='header' ? scrollBarWidth : 0
             }}
           >
             <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
