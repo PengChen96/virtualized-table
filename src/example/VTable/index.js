@@ -13,7 +13,7 @@ class VTableCase extends React.Component {
       loading: false,
       // 参数设置
       __rowSelection: false,
-      __pointerEventDisabled: false
+      __pointerEventDisabled: false,
     };
   }
 
