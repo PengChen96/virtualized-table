@@ -120,7 +120,7 @@ class Grid extends React.Component {
         dataSource: props.dataSource,
         virtualData: props.dataSource.slice(state.startRowIndex, endRowIndex),
         startVerticalOffset: state.startRowIndex * state.estimatedRowHeight,
-        endVerticalOffset: (props.dataSource.length - endRowIndex) * state.estimatedRowHeight,
+        endVerticalOffset: props.dataSource.length ? (props.dataSource.length - endRowIndex) * state.estimatedRowHeight : 0,
         rowVisibleCount
       };
     }
@@ -254,7 +254,7 @@ class Grid extends React.Component {
       columnVisibleCount,
       virtualData: props.dataSource.slice(state.startRowIndex, endRowIndex),
       startVerticalOffset: state.startRowIndex * state.estimatedRowHeight,
-      endVerticalOffset: (props.dataSource.length - endRowIndex) * state.estimatedRowHeight,
+      endVerticalOffset: props.dataSource.length ? (props.dataSource.length - endRowIndex) * state.estimatedRowHeight : 0,
       rowVisibleCount,
     };
 
@@ -296,7 +296,7 @@ class Grid extends React.Component {
     // 上方未渲染数据的paddingTop值
     let startVerticalOffset = startRowIndex * estimatedRowHeight;
     // 上方未渲染数据的paddingBottom值
-    let endVerticalOffset = (dataSource.length - endRowIndex) * estimatedRowHeight;
+    let endVerticalOffset = dataSource.length ? (dataSource.length - endRowIndex) * estimatedRowHeight : 0;
     // 需要渲染显示的行数据
     let virtualData = dataSource.slice(startRowIndex, endRowIndex);
 
