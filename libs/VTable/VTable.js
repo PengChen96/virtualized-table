@@ -34,7 +34,7 @@ class VTable extends React.Component {
       // props.columns !== state.columns
     ) {
       let columns = props.columns;
-      let footerColumns = JSON.parse(JSON.stringify(props.columns));
+      let footerColumns = this.getColumns(props.columns);
       // 是否能勾选全选
       let selectionDisableList = props.dataSource.filter((item) => item.selectionDisable);
       let selectionAllDisable = selectionDisableList.length === props.dataSource.length;
@@ -92,7 +92,7 @@ class VTable extends React.Component {
     let {props} = this;
     let {rowRemoveVisible = true} = props;
     let columns = props.columns;
-    let footerColumns = JSON.parse(JSON.stringify(props.columns));
+    let footerColumns = this.getColumns(props.columns);
     // 是否能勾选全选
     let selectionDisableList = props.dataSource.filter((item) => item.selectionDisable);
     let selectionAllDisable = selectionDisableList.length === props.dataSource.length;
@@ -163,7 +163,7 @@ class VTable extends React.Component {
   //
   getColumns(originColumns) {
     let columns = [];
-    originColumns.forEach((item) => {
+    (originColumns || []).forEach((item) => {
       let column = [item];
       if (item.subColumns && item.subColumns.length > 0) {
         column = item.subColumns;
