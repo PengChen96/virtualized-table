@@ -14,6 +14,8 @@ import Dnd from '../src/example/VTable2.0/dnd';
 // 结合react-dnd拖拽行示例
 import GridDragSorting from '../src/example/VTable2.0/Grid/drag-sorting';
 import GridDragSortingMD from '../src/example/VTable2.0/Grid/drag-sorting.md';
+// 结合react-resizable拖拽列
+import GridColumnResize from '../src/example/VTable2.0/Grid/column-resize';
 // 行/列合并示例
 import GridColspanRowSpan from '../src/example/VTable2.0/Grid/colspan-rowspan';
 import GridColspanRowSpanMD from '../src/example/VTable2.0/Grid/colspan-rowspan.md';
@@ -77,6 +79,9 @@ storiesOf('VTable2.0|Grid', module)
   ),{
     notes: {GridDragSortingMD}
   })
+  .add('column-resize', () => (
+    <GridColumnResize/>
+  ))
   .add('ellipsis', () => (
     <GridEllipsis/>
   ))

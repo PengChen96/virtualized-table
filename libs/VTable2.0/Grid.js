@@ -81,7 +81,8 @@ const Grid = (props) => {
     console.log('dataSource change');
 
   }, [
-    props.dataSource
+    props.dataSource,
+    props.columns,
   ]);
 
   const _onScrollEvent = () => {
@@ -213,7 +214,8 @@ const Grid = (props) => {
     let ellipsis = column.ellipsis ? 'vt-ellipsis' : '';
     //
     return <div
-      key={realColumnIndex}
+      key={`cell_${realRowIndex}_${realColumnIndex}`}
+      data-key={`cell_${realRowIndex}_${realColumnIndex}`}
       className={`vt-grid-cell ${bordered} ${align}`}
       onClick={() => __onCellTap(
         value,
@@ -250,8 +252,10 @@ const Grid = (props) => {
 
   // 默认行
   const defaultGridRow = (row, rowIndex) => {
+    let realRowIndex = rowIndex + grid.startRowIndex;
     return <div
-      key={rowIndex}
+      key={`row_${realRowIndex}`}
+      data-key={`row_${realRowIndex}`}
       className="vt-grid-row"
       style={{
         // height: stateProps.estimatedRowHeight,
@@ -260,7 +264,20 @@ const Grid = (props) => {
     >
       {
         grid.virtualColumns.map((column, columnIndex) => {
-          return _cellRender(row, rowIndex, column, columnIndex);
+          let gridRowCell = _cellRender(row, rowIndex, column, columnIndex);
+          if (props.components && props.components.cell) {
+            let realColumnIndex = columnIndex + grid.startColumnIndex;
+            // {width, onResize}
+            let cellProps = typeof column.onCell === 'function' ? column.onCell(column, realRowIndex) : {};
+            gridRowCell = <props.components.cell
+              key={`${realRowIndex}_${realColumnIndex}`}
+              data-key={`${realRowIndex}_${realColumnIndex}`}
+              {...cellProps}
+            >
+              {_cellRender(row, rowIndex, column, columnIndex)}
+            </props.components.cell>;
+          }
+          return gridRowCell;
         })
       }
     </div>;
@@ -268,8 +285,7 @@ const Grid = (props) => {
 
   // 渲染行
   const _gridRowRender = (row, rowIndex) => {
-
-    let gridRow = <>{defaultGridRow(row, rowIndex)}</>;
+    let gridRow = defaultGridRow(row, rowIndex);
     // 覆盖默认的 GridRow 元素
     if (props.components && props.components.row) {
       let realRowIndex = rowIndex + grid.startRowIndex;
@@ -277,6 +293,7 @@ const Grid = (props) => {
       let rowProps = typeof props.onRow === 'function' ? props.onRow(row, realRowIndex) : {};
       gridRow = <props.components.row
         key={realRowIndex}
+        data-key={realRowIndex}
         {...rowProps}
       >
         {defaultGridRow(row, rowIndex)}
@@ -318,7 +335,7 @@ Grid.propTypes = {
   // 是否显示边框
   bordered: PropTypes.bool,
   // 点击每个子项的方法
-  onCellTap: PropTypes.func
+  onCellTap: PropTypes.func,
 };
 
 export default Grid;
