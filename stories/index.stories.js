@@ -16,6 +16,7 @@ import GridDragSorting from '../src/example/VTable2.0/Grid/drag-sorting';
 import GridDragSortingMD from '../src/example/VTable2.0/Grid/drag-sorting.md';
 // 结合react-resizable拖拽列
 import GridColumnResize from '../src/example/VTable2.0/Grid/column-resize';
+import GridColumnResizeMd from '../src/example/VTable2.0/Grid/column-resize.md';
 // 行/列合并示例
 import GridColspanRowSpan from '../src/example/VTable2.0/Grid/colspan-rowspan';
 import GridColspanRowSpanMD from '../src/example/VTable2.0/Grid/colspan-rowspan.md';
@@ -81,7 +82,9 @@ storiesOf('VTable2.0|Grid', module)
   })
   .add('column-resize', () => (
     <GridColumnResize/>
-  ))
+  ), {
+    notes: {GridColumnResizeMd}
+  })
   .add('ellipsis', () => (
     <GridEllipsis/>
   ))
