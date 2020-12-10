@@ -7,10 +7,10 @@ import VTableMD from '../README.md';
 // 2.0
 import VTable2 from '../src/example/VTable2.0/index';
 import markdown from '../libs/VTable2.0/README.md';
-//　
+// default
 import GridCase from '../src/example/VTable2.0/GridCase';
 import GridMD from '../libs/VTable2.0/Grid_README.md';
-import Dnd from '../src/example/VTable2.0/dnd';
+// import Dnd from '../src/example/VTable2.0/dnd';
 // 结合react-dnd拖拽行示例
 import GridDragSorting from '../src/example/VTable2.0/Grid/drag-sorting';
 import GridDragSortingMD from '../src/example/VTable2.0/Grid/drag-sorting.md';
@@ -22,6 +22,7 @@ import GridColspanRowSpan from '../src/example/VTable2.0/Grid/colspan-rowspan';
 import GridColspanRowSpanMD from '../src/example/VTable2.0/Grid/colspan-rowspan.md';
 // ellipsis
 import GridEllipsis from '../src/example/VTable2.0/Grid/ellipsis';
+import GridEllipsisMd from '../src/example/VTable2.0/Grid/ellipsis.md';
 
 storiesOf('VTable1.0|VTable', module)
   .addDecorator(storyFn => <div style={{ textAlign: 'center' }}>{storyFn()}</div>)
@@ -87,13 +88,15 @@ storiesOf('VTable2.0|Grid', module)
   })
   .add('ellipsis', () => (
     <GridEllipsis/>
-  ))
-  .add('emoji', () => (  // 这里是另一个 story
-    <Dnd/>
   ), {
-    notes: {
-      Introduction: markdown,
-      DesignNotes: markdown
-    }
+    notes: {GridEllipsisMd}
   });
+// .add('emoji', () => (  // 这里是另一个 story
+//   <Dnd/>
+// ), {
+//   notes: {
+//     Introduction: markdown,
+//     DesignNotes: markdown
+//   }
+// });
 
