@@ -203,7 +203,6 @@ class Grid extends React.Component {
   resizeListener () {
 
     if (this._masterContainer) {
-
       let {clientWidth} = this._masterContainer;
       this.setState({
         visibleWidth: clientWidth
@@ -351,6 +350,9 @@ class Grid extends React.Component {
 
   // 滚动事件
   _onScrollEvent(e) {
+    if (e.target.id !== 'v-grid-main-container') {
+      return;
+    }
     this._syncScrollTop(e.target);
     // 同步header滚动条
     this.__onScroll(this._scrollContainer.scrollLeft);
@@ -553,6 +555,7 @@ class Grid extends React.Component {
           </div>
           {/* 表格主内容*/}
           <div className={`v-grid-main-container ${this.props.emptyContainer ? 'v-grid-empty-main-container' : ''}` }
+            id={'v-grid-main-container'}
             ref={sc => this._scrollContainer = sc}
             onScrollCapture={this._onScrollEvent.bind(this)}
             style={{

@@ -9,7 +9,7 @@
 [![npm version](https://badge.fury.io/js/virtualized-table.svg)](http://badge.fury.io/js/virtualized-table)
 [![Build Status](https://travis-ci.org/PengChen96/virtualized-table.svg?branch=master)](https://travis-ci.org/PengChen96/virtualized-table)
 [![codecov](https://codecov.io/gh/PengChen96/virtualized-table/branch/master/graph/badge.svg)](https://codecov.io/gh/PengChen96/virtualized-table)
-[![NPM downloads](http://img.shields.io/npm/dm/virtualized-table.svg?style=flat-square)](https://www.npmjs.com/package/virtualized-table)
+[![NPM downloads](http://img.shields.io/npm/dm/virtualized-table.svg?style=flat-square)](https://www.npmjs.com/package/virtualized-table)  
 大数据量虚拟化表格组件
 
 ## Usage
