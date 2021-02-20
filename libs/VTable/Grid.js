@@ -266,15 +266,15 @@ class Grid extends React.Component {
     });
 
     // 禁用
-    if (this._leftContainer.scrollTop !== this._scrollContainer.scrollTop) {
-      this.setState({
-        pointerEvents: 'none'
-      });
-    } else {
-      this.setState({
-        pointerEvents: 'auto'
-      });
-    }
+    // if (this._leftContainer.scrollTop !== this._scrollContainer.scrollTop) {
+    //   this.setState({
+    //     pointerEvents: 'none'
+    //   });
+    // } else {
+    //   this.setState({
+    //     pointerEvents: 'auto'
+    //   });
+    // }
   }
 
   // 垂直方向滚动
