@@ -7,6 +7,9 @@ import VTableMD from '../README.md';
 // 2.0
 import VTable2 from '../src/example/VTable2.0/index';
 import markdown from '../libs/VTable2.0/README.md';
+// MultiGrid
+import MultiGridCase from '../src/example/VTable2.0/MultiGridCase';
+import MultiGridMD from '../libs/VTable2.0/MultiGrid_README.md';
 // default
 import GridCase from '../src/example/VTable2.0/GridCase';
 import GridMD from '../libs/VTable2.0/Grid_README.md';
@@ -41,11 +44,27 @@ storiesOf('VTable2.0|VTable', module)
   });
 
 storiesOf('VTable2.0|MultiGrid', module)
-  .addDecorator(storyFn => <div style={{ textAlign: 'center' }}>{storyFn()}</div>)
-  .add('default', () => (
-    <span/>
-  ),{
-    notes: {markdown}   // 将会渲染 markdown 内容
+  .addDecorator(storyFn => <div style={{ padding: 16 }}>{storyFn()}</div>)
+  .addDecorator(withKnobs)
+  .add('default', () => {
+    const columnsNum = number('ColumnsNum', 25, {range: true, min: 25, max: 1000, step: 25});
+    const dataNum = number('DataNum', 50, {range: true, min: 50, max: 100000, step: 50});
+    const bordered = boolean('Bordered', true);
+    // column
+    const align = optionsKnob(
+      'Align',
+      {left: 'left', center: 'center', right: 'right'},
+      'left',
+      {display: 'inline-radio'}
+    );
+    return <MultiGridCase
+      columnsNum={columnsNum}
+      dataNum={dataNum}
+      bordered={bordered}
+      align={align}
+    />;
+  },{
+    notes: {MultiGridMD}   // 将会渲染 markdown 内容
   });
 
 storiesOf('VTable2.0|Grid', module)

@@ -11,6 +11,10 @@ const ALIGN_TYPE = {
   center: 'vt-align-center',
 };
 
+// const whyDidYouRender = require('@welldone-software/why-did-you-render');
+// whyDidYouRender(React, {
+//   trackAllPureComponents: true
+// });
 const Grid = (props) => {
 
   const _scrollContainer = useRef(null);
@@ -95,6 +99,7 @@ const Grid = (props) => {
   };
   // 垂直方向滚动
   const _onVerticalScroll = () => {
+    console.log('vertical');
     const {scrollTop} = _scrollContainer.current;
     const {
       dataSource,
@@ -174,7 +179,7 @@ const Grid = (props) => {
     const {columns} = stateProps;
 
     let realRowIndex = rowIndex + grid.startRowIndex;
-    let realColumnIndex = columnIndex + grid.startColumnIndex;
+    let realColumnIndex = column.fixed ? column.realFcIndex : columnIndex + grid.startColumnIndex;
     let value = row[column['key'] || column['dataIndex']];
     let width = column.width || stateProps.estimatedColumnWidth;
 
@@ -212,11 +217,15 @@ const Grid = (props) => {
     let align = ALIGN_TYPE[column.align] || ALIGN_TYPE.left;
     // 省略号
     let ellipsis = column.ellipsis ? 'vt-ellipsis' : '';
-    //
+    // 固定列阴影
+    const cellInfo = getFixedCellInfo({column});
+    const {lastFixLeft, firstFixRight} = cellInfo;
+    let lastFixLeftShadow = lastFixLeft ? 'vt-cell-fix-left-last' : '';
+    let firstFixRightShadow = firstFixRight ? 'vt-cell-fix-right-first' : '';
     return <div
       key={`cell_${realRowIndex}_${realColumnIndex}`}
       data-key={`cell_${realRowIndex}_${realColumnIndex}`}
-      className={`vt-grid-cell ${bordered} ${align}`}
+      className={`vt-grid-cell ${lastFixLeftShadow} ${firstFixRightShadow} ${bordered} ${align}`}
       onClick={() => __onCellTap(
         value,
         row, rowIndex, realRowIndex,
@@ -226,7 +235,8 @@ const Grid = (props) => {
         width: width,
         minWidth: width,
         minHeight: stateProps.minRowHeight,
-        display: display
+        display: display,
+        ...getFixedCellStyle({column})
       }}
     >
       {/* 因flex布局下省略号不生效 故加一层div*/}
@@ -236,7 +246,41 @@ const Grid = (props) => {
         }
       </div>
     </div>;
-
+  };
+  // 使用sticky实现固定列
+  const getFixedCellStyle = ({column}) => {
+    let cellInfo = getFixedCellInfo({column});
+    const {isSticky, fixLeft, fixRight} = cellInfo;
+    return {
+      zIndex: isSticky ? 2 : undefined,
+      position: isSticky ? 'sticky' : undefined,
+      left: fixLeft,
+      right: fixRight,
+    };
+  };
+  const getFixedCellInfo = ({column}) => {
+    let isSticky = false;
+    let fixLeft = undefined;
+    let fixRight = undefined;
+    let lastFixLeft = false;
+    let firstFixRight = false;
+    const {fixedLeftColumns, fixedRightColumns} = props;
+    if (column.fixed === 'left' && fixedLeftColumns.length > 0) {
+      isSticky = true;
+      fixLeft = getColumnsWidth(fixedLeftColumns.slice(0, column.realFcIndex));
+      lastFixLeft = column.lastFixLeft;
+    } else if (column.fixed === 'right' && fixedRightColumns.length > 0) {
+      isSticky = true;
+      fixRight = getColumnsWidth(fixedRightColumns.slice(column.fcIndex + 1));
+      firstFixRight = column.firstFixRight;
+    }
+    return {
+      isSticky,
+      fixLeft,
+      fixRight,
+      lastFixLeft,
+      firstFixRight
+    };
   };
   // 点击单元格
   const __onCellTap = (
@@ -263,7 +307,7 @@ const Grid = (props) => {
       }}
     >
       {
-        grid.virtualColumns.map((column, columnIndex) => {
+        [...(props.fixedLeftColumns || []), ...grid.virtualColumns, ...(props.fixedRightColumns || [])].map((column, columnIndex) => {
           let gridRowCell = _cellRender(row, rowIndex, column, columnIndex);
           if (props.components && props.components.cell) {
             let realColumnIndex = columnIndex + grid.startColumnIndex;
@@ -273,6 +317,7 @@ const Grid = (props) => {
               key={`${realRowIndex}_${realColumnIndex}`}
               data-key={`${realRowIndex}_${realColumnIndex}`}
               {...cellProps}
+              style={{...getFixedCellStyle({column})}}
             >
               {_cellRender(row, rowIndex, column, columnIndex)}
             </props.components.cell>;
@@ -337,5 +382,5 @@ Grid.propTypes = {
   // 点击每个子项的方法
   onCellTap: PropTypes.func,
 };
-
+// Grid.whyDidYouRender = true;
 export default Grid;

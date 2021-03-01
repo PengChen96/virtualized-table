@@ -7,6 +7,7 @@ export {
   Input,
   InputNumber,
   Select,
-  Switch
+  Switch,
+  Table
 } from 'antd';
 import 'antd/dist/antd.css';

@@ -16,6 +16,7 @@
     .@{prefix}-grid-cell {
       display: flex;
       align-items: center;
+      background: #fff;
       // 对齐方式
       &.@{prefix}-align-left {
         justify-content: flex-start;
@@ -34,6 +35,27 @@
         &:last-child {
           border-right: none;
         }
+      }
+      // 固定列阴影
+      &.@{prefix}-cell-fix-left-last:after,
+      &.@{prefix}-cell-fix-right-first:after {
+        position: absolute;
+        top: 0;
+        bottom: -1px;
+        width: 30px;
+        transition: box-shadow .3s,-webkit-box-shadow .3s;
+        content: "";
+        pointer-events: none;
+      }
+      &.@{prefix}-cell-fix-left-last:after {
+        right: 0;
+        box-shadow: inset 10px 0 8px -8px rgba(0,0,0,0.15);
+        transform: translateX(100%);
+      }
+      &.@{prefix}-cell-fix-right-first:after {
+        left: 0;
+        box-shadow: inset -10px 0 8px -8px rgba(0,0,0,0.15);
+        transform: translateX(-100%);
       }
       // 省略号
       .@{prefix}-ellipsis {
