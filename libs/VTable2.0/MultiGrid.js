@@ -1,18 +1,11 @@
 
-import React, {useEffect} from 'react';
+import React from 'react';
 import Grid from './Grid';
 import PropTypes from 'prop-types';
 import './styles/multi-grid.less';
 
 const MultiGrid =  (props) => {
 
-  useEffect(() => {
-
-    console.log('111', props.columns);
-
-  }, [
-    props.columns,
-  ]);
   const getColumns = () => {
     const {columns, fixedLeftColumnCount = 0, fixedRightColumnCount} = props;
     const end = fixedRightColumnCount ? -fixedRightColumnCount : undefined;
