@@ -3,6 +3,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import PropTypes from 'prop-types';
 import './styles/grid.less';
 import {getColumnsWidth} from './utils';
+import {getFixedCellInfo} from './utils/fixUtil';
 import {sameType} from '../common/utils';
 
 const ALIGN_TYPE = {
@@ -218,7 +219,8 @@ const Grid = (props) => {
     // 省略号
     let ellipsis = column.ellipsis ? 'vt-ellipsis' : '';
     // 固定列阴影
-    const cellInfo = getFixedCellInfo({column});
+    const {fixedLeftColumns, fixedRightColumns} = props;
+    const cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
     const {lastFixLeft, firstFixRight} = cellInfo;
     let lastFixLeftShadow = lastFixLeft ? 'vt-cell-fix-left-last' : '';
     let firstFixRightShadow = firstFixRight ? 'vt-cell-fix-right-first' : '';
@@ -249,7 +251,8 @@ const Grid = (props) => {
   };
   // 使用sticky实现固定列
   const getFixedCellStyle = ({column}) => {
-    let cellInfo = getFixedCellInfo({column});
+    const {fixedLeftColumns, fixedRightColumns} = props;
+    let cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
     const {isSticky, fixLeft, fixRight} = cellInfo;
     return {
       zIndex: isSticky ? 2 : undefined,
@@ -258,30 +261,7 @@ const Grid = (props) => {
       right: fixRight,
     };
   };
-  const getFixedCellInfo = ({column}) => {
-    let isSticky = false;
-    let fixLeft = undefined;
-    let fixRight = undefined;
-    let lastFixLeft = false;
-    let firstFixRight = false;
-    const {fixedLeftColumns, fixedRightColumns} = props;
-    if (column.fixed === 'left' && fixedLeftColumns.length > 0) {
-      isSticky = true;
-      fixLeft = getColumnsWidth(fixedLeftColumns.slice(0, column.realFcIndex));
-      lastFixLeft = column.lastFixLeft;
-    } else if (column.fixed === 'right' && fixedRightColumns.length > 0) {
-      isSticky = true;
-      fixRight = getColumnsWidth(fixedRightColumns.slice(column.fcIndex + 1));
-      firstFixRight = column.firstFixRight;
-    }
-    return {
-      isSticky,
-      fixLeft,
-      fixRight,
-      lastFixLeft,
-      firstFixRight
-    };
-  };
+
   // 点击单元格
   const __onCellTap = (
     value,
@@ -381,6 +361,10 @@ Grid.propTypes = {
   bordered: PropTypes.bool,
   // 点击每个子项的方法
   onCellTap: PropTypes.func,
+  // 左侧固定列
+  fixedLeftColumns: PropTypes.array,
+  // 右侧固定列
+  fixedRightColumns: PropTypes.array,
 };
 // Grid.whyDidYouRender = true;
 export default Grid;

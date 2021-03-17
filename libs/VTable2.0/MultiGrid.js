@@ -2,6 +2,7 @@
 import React from 'react';
 import Grid from './Grid';
 import PropTypes from 'prop-types';
+import {formatFixedLeftColumns, formatFixedRightColumns} from './utils/fixUtil';
 import './styles/multi-grid.less';
 
 const MultiGrid =  (props) => {
@@ -15,24 +16,12 @@ const MultiGrid =  (props) => {
   const getFixedLeftColumns = () => {
     const {columns, fixedLeftColumnCount} = props;
     const fixedLeftColumns = fixedLeftColumnCount ? columns.slice(0, fixedLeftColumnCount) : [];
-    return fixedLeftColumns.map((column, index) => {
-      column.fixed = 'left';
-      column.lastFixLeft = index === fixedLeftColumns.length - 1;
-      column.fcIndex = index;
-      column.realFcIndex = index;
-      return column;
-    });
+    return formatFixedLeftColumns({fixedLeftColumns});
   };
   const getFixedRightColumns = () => {
     const {columns, fixedRightColumnCount} = props;
     const fixedRightColumns = fixedRightColumnCount ? columns.slice(-fixedRightColumnCount) : [];
-    return fixedRightColumns.map((column, index) => {
-      column.fixed = 'right';
-      column.firstFixRight = index === 0;
-      column.fcIndex = index;
-      column.realFcIndex = columns.length - fixedRightColumns.length + index;
-      return column;
-    });
+    return formatFixedRightColumns({fixedRightColumns, columnsLength: columns.length});
   };
 
   return <>
