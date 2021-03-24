@@ -142,6 +142,10 @@ class Grid extends React.Component {
       }
 
     }
+    // 这个是保证能得到正确的可视宽度
+    if (this._masterContainer && this._masterContainer.clientWidth !== this.state.visibleWidth) {
+      this.resizeListener();
+    }
 
   }
 
