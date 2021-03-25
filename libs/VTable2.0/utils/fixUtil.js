@@ -1,4 +1,5 @@
 import {getColumnsWidth} from './columns';
+import {deepClone} from './deepClone';
 
 /**
  * 格式化 左侧固定列
@@ -6,7 +7,7 @@ import {getColumnsWidth} from './columns';
  * @return columns
  */
 export const formatFixedLeftColumns = ({fixedLeftColumns}) => {
-  return fixedLeftColumns.map((column, index) => {
+  return deepClone(fixedLeftColumns).map((column, index) => {
     column.fixed = 'left';
     column.lastFixLeft = index === fixedLeftColumns.length - 1;
     column.fcIndex = index;
@@ -25,7 +26,7 @@ export const formatFixedLeftColumns = ({fixedLeftColumns}) => {
  * @return columns
  */
 export const formatFixedRightColumns = ({fixedRightColumns, columnsLength}) => {
-  return fixedRightColumns.map((column, index) => {
+  return deepClone(fixedRightColumns).map((column, index) => {
     column.fixed = 'right';
     column.firstFixRight = index === 0;
     column.fcIndex = index;

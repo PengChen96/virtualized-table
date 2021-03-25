@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 import Grid from './Grid';
 import PropTypes from 'prop-types';
 import {formatFixedLeftColumns, formatFixedRightColumns} from './utils/fixUtil';
@@ -7,31 +7,35 @@ import './styles/multi-grid.less';
 
 const MultiGrid =  (props) => {
 
-  const getColumns = () => {
+  // main columns
+  const getColumns = useMemo(() => {
     const {columns, fixedLeftColumnCount = 0, fixedRightColumnCount} = props;
     const end = fixedRightColumnCount ? -fixedRightColumnCount : undefined;
     return (fixedLeftColumnCount || fixedRightColumnCount) ? columns.slice(fixedLeftColumnCount, end) : columns;
-  };
-  // fixed columns
-  const getFixedLeftColumns = () => {
+  }, [props.columns, props.fixedLeftColumnCount, props.fixedRightColumnCount]);
+
+  // fixed left columns
+  const getFixedLeftColumns = useMemo(() => {
     const {columns, fixedLeftColumnCount} = props;
-    const fixedLeftColumns = fixedLeftColumnCount ? columns.slice(0, fixedLeftColumnCount) : [];
+    let fixedLeftColumns = fixedLeftColumnCount ? columns.slice(0, fixedLeftColumnCount) : [];
     return formatFixedLeftColumns({fixedLeftColumns});
-  };
-  const getFixedRightColumns = () => {
+  }, [props.columns, props.fixedLeftColumnCount]);
+
+  // fixed right columns
+  const getFixedRightColumns = useMemo(() => {
     const {columns, fixedRightColumnCount} = props;
-    const fixedRightColumns = fixedRightColumnCount ? columns.slice(-fixedRightColumnCount) : [];
+    let fixedRightColumns = fixedRightColumnCount ? columns.slice(-fixedRightColumnCount) : [];
     return formatFixedRightColumns({fixedRightColumns, columnsLength: columns.length});
-  };
+  }, [props.columns, props.fixedRightColumnCount]);
 
   return <>
     <div className="vt-multi-grid-container">
       <Grid
         type={'1'}
         {...props}
-        columns={getColumns()}
-        fixedLeftColumns={getFixedLeftColumns()}
-        fixedRightColumns={getFixedRightColumns()}
+        columns={getColumns}
+        fixedLeftColumns={getFixedLeftColumns}
+        fixedRightColumns={getFixedRightColumns}
       />
     </div>
   </>;

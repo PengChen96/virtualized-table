@@ -50,6 +50,8 @@ storiesOf('VTable2.0|MultiGrid', module)
     const columnsNum = number('ColumnsNum', 25, {range: true, min: 25, max: 1000, step: 25});
     const dataNum = number('DataNum', 50, {range: true, min: 50, max: 100000, step: 50});
     const bordered = boolean('Bordered', true);
+    const fixedLeftColumnCount = number('FixedLeftColumnCount', 1);
+    const fixedRightColumnCount = number('FixedRightColumnCount', 1);
     // column
     const align = optionsKnob(
       'Align',
@@ -62,6 +64,8 @@ storiesOf('VTable2.0|MultiGrid', module)
       dataNum={dataNum}
       bordered={bordered}
       align={align}
+      fixedLeftColumnCount={fixedLeftColumnCount}
+      fixedRightColumnCount={fixedRightColumnCount}
     />;
   },{
     notes: {MultiGridMD}   // 将会渲染 markdown 内容

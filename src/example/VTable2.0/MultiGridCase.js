@@ -36,8 +36,8 @@ export default (props) => {
           // 边框
           bordered={props.bordered}
           //
-          fixedLeftColumnCount={2}
-          fixedRightColumnCount={2}
+          fixedLeftColumnCount={props.fixedLeftColumnCount}
+          fixedRightColumnCount={props.fixedRightColumnCount}
           //
           visibleHeight={400}
           minRowHeight={40}

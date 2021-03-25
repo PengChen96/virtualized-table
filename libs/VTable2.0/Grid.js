@@ -5,6 +5,7 @@ import './styles/grid.less';
 import {getColumnsWidth} from './utils';
 import {getFixedCellInfo} from './utils/fixUtil';
 import {sameType} from '../common/utils';
+import {uuid} from './utils/uuid';
 
 const ALIGN_TYPE = {
   left: 'vt-align-left',
@@ -92,10 +93,12 @@ const Grid = (props) => {
 
   const _onScrollEvent = () => {
 
-    // 垂直方向滚动
-    _onVerticalScroll();
-    // 水平方向滚动
-    _onHorizontalScroll();
+    window.requestAnimationFrame(() => {
+      // 垂直方向滚动
+      _onVerticalScroll();
+      // 水平方向滚动
+      _onHorizontalScroll();
+    });
 
   };
   // 垂直方向滚动
@@ -225,7 +228,7 @@ const Grid = (props) => {
     let lastFixLeftShadow = lastFixLeft ? 'vt-cell-fix-left-last' : '';
     let firstFixRightShadow = firstFixRight ? 'vt-cell-fix-right-first' : '';
     return <div
-      key={`cell_${realRowIndex}_${realColumnIndex}`}
+      key={`cell_${realRowIndex}_${realColumnIndex}_${uuid()}`}
       data-key={`cell_${realRowIndex}_${realColumnIndex}`}
       className={`vt-grid-cell ${lastFixLeftShadow} ${firstFixRightShadow} ${bordered} ${align}`}
       onClick={() => __onCellTap(
