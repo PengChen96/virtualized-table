@@ -1,9 +1,10 @@
 
-import React, {useCallback, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import Grid from './Grid';
 import PropTypes from 'prop-types';
 import {formatFixedLeftColumns, formatFixedRightColumns} from './utils/fixUtil';
 import './styles/multi-grid.less';
+import {deepClone} from './utils/deepClone';
 
 const MultiGrid =  (props) => {
 
@@ -11,7 +12,7 @@ const MultiGrid =  (props) => {
   const getColumns = useMemo(() => {
     const {columns, fixedLeftColumnCount = 0, fixedRightColumnCount} = props;
     const end = fixedRightColumnCount ? -fixedRightColumnCount : undefined;
-    return (fixedLeftColumnCount || fixedRightColumnCount) ? columns.slice(fixedLeftColumnCount, end) : columns;
+    return (fixedLeftColumnCount || fixedRightColumnCount) ? deepClone(columns).slice(fixedLeftColumnCount, end) : columns;
   }, [props.columns, props.fixedLeftColumnCount, props.fixedRightColumnCount]);
 
   // fixed left columns
@@ -33,6 +34,8 @@ const MultiGrid =  (props) => {
       <Grid
         type={'1'}
         {...props}
+        // 加这个key是因为固定列变化 列数据多渲染一列 todo 原因
+        key={`${props.fixedLeftColumnCount}_${props.fixedRightColumnCount}`}
         columns={getColumns}
         fixedLeftColumns={getFixedLeftColumns}
         fixedRightColumns={getFixedRightColumns}

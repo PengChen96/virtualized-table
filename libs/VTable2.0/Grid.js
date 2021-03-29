@@ -5,7 +5,6 @@ import './styles/grid.less';
 import {getColumnsWidth} from './utils';
 import {getFixedCellInfo} from './utils/fixUtil';
 import {sameType} from '../common/utils';
-import {uuid} from './utils/uuid';
 
 const ALIGN_TYPE = {
   left: 'vt-align-left',
@@ -93,18 +92,25 @@ const Grid = (props) => {
 
   const _onScrollEvent = () => {
 
-    window.requestAnimationFrame(() => {
-      // 垂直方向滚动
-      _onVerticalScroll();
-      // 水平方向滚动
-      _onHorizontalScroll();
-    });
+    // window.requestAnimationFrame(() => {
+    // 垂直方向滚动
+    _onVerticalScroll();
+    // 水平方向滚动
+    _onHorizontalScroll();
+    // });
 
   };
   // 垂直方向滚动
   const _onVerticalScroll = () => {
     console.log('vertical');
     const {scrollTop} = _scrollContainer.current;
+    // 当前scrollTop
+    let gridInfo = getRealGridVerticalScrollInfo({scrollTop});
+    // 更新渲染
+    updateGrid(gridInfo);
+  };
+  // 计算获取网格垂直滚动对应的实时信息
+  const getRealGridVerticalScrollInfo = ({scrollTop}) => {
     const {
       dataSource,
       estimatedRowHeight,
@@ -129,17 +135,25 @@ const Grid = (props) => {
     // 需要渲染显示的行数据
     let virtualData = dataSource.slice(startRowIndex, endRowIndex);
     // console.table({scrollTop, scrollTopNum, startRowIndex, endRowIndex});
-    updateGrid({
+    return {
       startRowIndex,
       endRowIndex,
       startVerticalOffset,
       endVerticalOffset,
       virtualData
-    });
+    };
   };
+
   // 水平方向滚动
   const _onHorizontalScroll = () => {
     const {scrollLeft} = _scrollContainer.current;
+    // 当前scrollLeft
+    let gridInfo = getRealGridHorizontalScrollInfo({scrollLeft});
+    // 更新渲染
+    updateGrid(gridInfo);
+  };
+  // 计算获取网格水平滚动对应的实时信息
+  const getRealGridHorizontalScrollInfo = ({scrollLeft}) => {
     const {
       dataSource,
       columns,
@@ -169,13 +183,13 @@ const Grid = (props) => {
     let virtualColumns = scrollColumns.slice(startColumnIndex, endColumnIndex);
     // console.log(leftOffsetColumns, startHorizontalOffset, rightOffsetColumns, endHorizontalOffset, virtualColumns, getColumnsWidth(virtualColumns));
     // console.table({scrollLeft, scrollLeftNum, startColumnIndex, endColumnIndex});
-    updateGrid({
+    return{
       startColumnIndex,
       endColumnIndex,
       startHorizontalOffset,
       endHorizontalOffset,
       virtualColumns
-    });
+    };
   };
   // 渲染单元格
   const _cellRender = (row, rowIndex, column, columnIndex) => {
@@ -228,7 +242,7 @@ const Grid = (props) => {
     let lastFixLeftShadow = lastFixLeft ? 'vt-cell-fix-left-last' : '';
     let firstFixRightShadow = firstFixRight ? 'vt-cell-fix-right-first' : '';
     return <div
-      key={`cell_${realRowIndex}_${realColumnIndex}_${uuid()}`}
+      key={`cell_${realRowIndex}_${realColumnIndex}}`}
       data-key={`cell_${realRowIndex}_${realColumnIndex}`}
       className={`vt-grid-cell ${lastFixLeftShadow} ${firstFixRightShadow} ${bordered} ${align}`}
       onClick={() => __onCellTap(
