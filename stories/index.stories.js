@@ -47,7 +47,7 @@ storiesOf('VTable2.0|MultiGrid', module)
   .addDecorator(storyFn => <div style={{ padding: 16 }}>{storyFn()}</div>)
   .addDecorator(withKnobs)
   .add('default', () => {
-    const columnsNum = number('ColumnsNum', 25, {range: true, min: 25, max: 1000, step: 25});
+    const columnsNum = number('ColumnsNum', 10, {range: true, min: 1, max: 1000, step: 1});
     const dataNum = number('DataNum', 50, {range: true, min: 50, max: 100000, step: 50});
     const bordered = boolean('Bordered', true);
     const fixedLeftColumnCount = number('FixedLeftColumnCount', 1);

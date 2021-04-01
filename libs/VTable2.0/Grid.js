@@ -31,7 +31,7 @@ const Grid = (props) => {
     estimatedRowHeight: props.estimatedRowHeight || 40,
     minRowHeight: props.minRowHeight || 40,
     // 可渲染的元素个数
-    rowVisibleCount: props.rowVisibleCount || 30,
+    rowVisibleCount: props.rowVisibleCount || 20,
     // 上下偏移渲染个数
     rowOffsetCount: props.rowOffsetCount || 20,
 
@@ -42,7 +42,7 @@ const Grid = (props) => {
     // 可渲染个数（水平）
     columnVisibleCount: props.columnVisibleCount || 8,
     // 左右偏移渲染个数
-    columnOffsetCount: props.columnOffsetCount || 6,
+    columnOffsetCount: props.columnOffsetCount || 4,
 
     // 是否显示边框
     bordered: props.bordered || false
