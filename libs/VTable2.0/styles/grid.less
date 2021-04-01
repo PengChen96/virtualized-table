@@ -13,6 +13,9 @@
   flex-wrap: wrap;
   .@{prefix}-grid-row {
     display: flex;
+    &:hover .@{prefix}-grid-cell {
+      background: #ebf5ff;
+    }
     .@{prefix}-grid-cell {
       display: flex;
       align-items: center;
@@ -35,6 +38,10 @@
         &:last-child {
           border-right: none;
         }
+      }
+      // 左侧固定列最后一列  没有右边框
+      &.@{prefix}-cell-fix-left-last {
+        border-right: none;
       }
       // 固定列阴影
       &.@{prefix}-cell-fix-left-last:after,
