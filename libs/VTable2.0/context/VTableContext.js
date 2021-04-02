@@ -5,6 +5,10 @@ import React from 'react';
  * isSticky {Boolean} 是否使用position:sticky
  * headerTitle {Array} 表头数据
  */
-const VTableContext = React.createContext(null);
+const VTableContext = React.createContext({
+  onScroll: ()=> {},
+  isSticky: true,
+  headerTitle: []
+});
 
 export default VTableContext;
