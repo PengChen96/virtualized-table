@@ -1,0 +1,23 @@
+
+@import "./variables.less";
+
+.@{prefix}-table-header {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  &.@{prefix}-header-sticky {
+    z-index: 3;
+    position: sticky;
+    top: 0;
+  }
+  //
+  .@{prefix}-grid-row {
+    &:hover .@{prefix}-grid-cell {
+      background: #e9ebf0;
+    }
+    .@{prefix}-grid-cell {
+      background: #e9ebf0;
+      font-weight: 700;
+    }
+  }
+}

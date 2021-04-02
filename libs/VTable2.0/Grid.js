@@ -1,10 +1,11 @@
 
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useImperativeHandle, useContext} from 'react';
 import PropTypes from 'prop-types';
 import './styles/grid.less';
 import {getColumnsWidth} from './utils';
 import {getFixedCellInfo} from './utils/fixUtil';
 import {sameType} from '../common/utils';
+import VTableContext from './context/VTableContext';
 
 const ALIGN_TYPE = {
   left: 'vt-align-left',
@@ -16,9 +17,16 @@ const ALIGN_TYPE = {
 // whyDidYouRender(React, {
 //   trackAllPureComponents: true
 // });
-const Grid = (props) => {
+const Grid = (props, ref) => {
 
-  const _scrollContainer = useRef(null);
+  // 要向父MultiGrid暴露的
+  const gridContainer = useRef(null);
+  useImperativeHandle(ref, () => ({
+    gridContainer: gridContainer.current,
+  }));
+
+  const _VTableContext = useContext(VTableContext);
+
   let stateProps = {
     // 列 #
     columns: props.columns || [],
@@ -90,8 +98,9 @@ const Grid = (props) => {
     props.columns,
   ]);
 
-  const _onScrollEvent = () => {
+  const _onScrollEvent = (e) => {
 
+    _VTableContext.onScroll(e);
     // window.requestAnimationFrame(() => {
     // 垂直方向滚动
     _onVerticalScroll();
@@ -103,7 +112,7 @@ const Grid = (props) => {
   // 垂直方向滚动
   const _onVerticalScroll = () => {
     console.log('vertical');
-    const {scrollTop} = _scrollContainer.current;
+    const {scrollTop} = gridContainer.current;
     // 当前scrollTop
     let gridInfo = getRealGridVerticalScrollInfo({scrollTop});
     // 更新渲染
@@ -146,7 +155,7 @@ const Grid = (props) => {
 
   // 水平方向滚动
   const _onHorizontalScroll = () => {
-    const {scrollLeft} = _scrollContainer.current;
+    const {scrollLeft} = gridContainer.current;
     // 当前scrollLeft
     let gridInfo = getRealGridHorizontalScrollInfo({scrollLeft});
     // 更新渲染
@@ -344,11 +353,10 @@ const Grid = (props) => {
     return gridRow;
 
   };
-
   return <>
     <div className={`vt-grid-container ${props.className}`}
-      ref={_scrollContainer}
-      onScrollCapture={() => _onScrollEvent()}
+      ref={gridContainer}
+      onScrollCapture={(e) => _onScrollEvent(e)}
       style={{height: stateProps.visibleHeight}}
     >
       <div style={{
@@ -358,7 +366,18 @@ const Grid = (props) => {
         paddingRight: grid.endHorizontalOffset
       }}>
         {
-          grid.virtualData.map((row, rowIndex) => {
+          // sticky header
+          _VTableContext.isSticky && <div className="vt-table-header vt-header-sticky">
+            {
+              _VTableContext.headerTitle.map((row, rowIndex) => {
+                // 行渲染
+                return _gridRowRender(row, rowIndex);
+              })
+            }
+          </div>
+        }
+        {
+          [ ...grid.virtualData].map((row, rowIndex) => {
             // 行渲染
             return _gridRowRender(row, rowIndex);
           })
@@ -384,4 +403,4 @@ Grid.propTypes = {
   fixedRightColumns: PropTypes.array,
 };
 // Grid.whyDidYouRender = true;
-export default Grid;
+export default React.forwardRef(Grid);

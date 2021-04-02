@@ -1,5 +1,5 @@
 
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import Grid from './Grid';
 import PropTypes from 'prop-types';
 import {formatFixedLeftColumns, formatFixedRightColumns} from './utils/fixUtil';
@@ -7,9 +7,16 @@ import {deepClone} from './utils/deepClone';
 import {getSelfAdaptionColumns} from './utils/columns';
 import './styles/multi-grid.less';
 
-const MultiGrid =  (props) => {
+const MultiGrid =  (props, ref) => {
 
+  const _multiGridContainer = useRef(null);
+  // 要向父VTable暴露的
   const multiGridContainer = useRef(null);
+  useImperativeHandle(ref, () => ({
+    // multiGridContainer: multiGridContainer.current,
+    gridContainer: multiGridContainer.current.gridContainer
+  }));
+
   let [columns, setColumns] = useState(props.columns);
   let [hasFixed, setHasFixed] = useState(true);
 
@@ -22,7 +29,7 @@ const MultiGrid =  (props) => {
   // 设置自适应列
   const reSetColumns = () => {
     const {columns} = props;
-    const {offsetWidth} = multiGridContainer.current;
+    const {offsetWidth} = _multiGridContainer.current;
     setColumns(getSelfAdaptionColumns({columns, offsetWidth}).columns);
     setHasFixed(getSelfAdaptionColumns({columns, offsetWidth}).hasFixed);
   };
@@ -53,10 +60,10 @@ const MultiGrid =  (props) => {
 
   return <>
     <div className="vt-multi-grid-container"
-      ref={multiGridContainer}>
+      ref={_multiGridContainer}>
       <Grid
-        type={'1'}
         {...props}
+        ref={multiGridContainer}
         // 加这个key是因为固定列变化 列数据多渲染一列 todo 原因
         key={`${props.fixedLeftColumnCount}_${props.fixedRightColumnCount}`}
         columns={getColumns}
@@ -75,4 +82,4 @@ MultiGrid.propTypes = {
   bordered: PropTypes.bool
 };
 
-export default MultiGrid;
+export default React.forwardRef(MultiGrid);

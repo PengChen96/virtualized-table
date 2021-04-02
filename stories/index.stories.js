@@ -5,8 +5,8 @@ import VTable from '../src/example/VTable/index';
 import VTableMD from '../README.md';
 
 // 2.0
-import VTable2 from '../src/example/VTable2.0/index';
-import markdown from '../libs/VTable2.0/README.md';
+import VTableCase from '../src/example/VTable2.0/index';
+import VTable2MD from '../libs/VTable2.0/README.md';
 // MultiGrid
 import MultiGridCase from '../src/example/VTable2.0/MultiGridCase';
 import MultiGridMD from '../libs/VTable2.0/MultiGrid_README.md';
@@ -36,11 +36,33 @@ storiesOf('VTable1.0|VTable', module)
   });
 
 storiesOf('VTable2.0|VTable', module)
-  .addDecorator(storyFn => <div style={{ textAlign: 'center' }}>{storyFn()}</div>)
-  .add('default', () => (
-    <span>😀 😎 👍 💯<VTable2/></span>
-  ),{
-    notes: {markdown}   // 将会渲染 markdown 内容
+  .addDecorator(storyFn => <div style={{ padding: 16 }}>{storyFn()}</div>)
+  .addDecorator(withKnobs)
+  .add('default', () => {
+    const columnsNum = number('ColumnsNum', 10, {range: true, min: 1, max: 1000, step: 1});
+    const dataNum = number('DataNum', 50, {range: true, min: 50, max: 100000, step: 50});
+    const bordered = boolean('Bordered', true);
+    const isSticky = boolean('IsSticky', true);
+    const fixedLeftColumnCount = number('FixedLeftColumnCount', 1);
+    const fixedRightColumnCount = number('FixedRightColumnCount', 1);
+    // column
+    const align = optionsKnob(
+      'Align',
+      {left: 'left', center: 'center', right: 'right'},
+      'left',
+      {display: 'inline-radio'}
+    );
+    return <VTableCase
+      columnsNum={columnsNum}
+      dataNum={dataNum}
+      bordered={bordered}
+      isSticky={isSticky}
+      align={align}
+      fixedLeftColumnCount={fixedLeftColumnCount}
+      fixedRightColumnCount={fixedRightColumnCount}
+    />;
+  },{
+    notes: {VTable2MD}   // 将会渲染 markdown 内容
   });
 
 storiesOf('VTable2.0|MultiGrid', module)
