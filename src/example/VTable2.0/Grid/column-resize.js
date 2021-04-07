@@ -6,7 +6,7 @@
 import React, {useEffect, useState} from 'react';
 import { Resizable } from 'react-resizable';
 import 'react-resizable/css/styles.css';
-import {Grid} from '../../../../libs/VTable2.0';
+import {VTable} from '../../../../libs/VTable2.0';
 import {generateColumns, generateData} from '../../common/utils';
 import './column-resize.less';
 
@@ -22,7 +22,7 @@ export default (props) => {
       dataNum,
       columnsNum
     ));
-  }, []);
+  }, [props.columnsNum, props.dataNum,]);
   //
   const handleResize = index => (e, { size }) => {
     const nextColumns = [...columns];
@@ -38,12 +38,16 @@ export default (props) => {
       width: column.width,
       onResize: handleResize(index),
     }),
+    onHeaderCell: (column) => ({
+      width: column.width,
+      onResize: handleResize(index),
+    }),
   }));
 
   return (
     <>
         <h2>Grid column resize</h2>
-        <Grid
+        <VTable
           // 表格样式类名
           className="my-custom-class"
           // 列
@@ -54,8 +58,14 @@ export default (props) => {
           bordered={true}
           // 高度
           visibleHeight={400}
+          isSticky={props.isSticky}
           components={{
-            cell: ResizableCell
+            header: {
+              cell: ResizableCell
+            },
+            // body: {
+            //   cell: ResizableCell
+            // }
           }}
         />
     </>
@@ -64,16 +74,30 @@ export default (props) => {
 const ResizableCell = (props) => {
 
   const { onResize, width = 150, ...restProps } = props;
-  // if (!width) {
-  //   return <th {...restProps} />;
-  // }
+  let [w, setW] = useState(width);
+  let [resizeActive, setResizeActive] = useState(false);
+  const _onResize = (e, { size }) => {
+    e.stopPropagation();
+    setW(size.width);
+  };
+  const _onResizeStart = (e) => {
+    e.stopPropagation();
+    setResizeActive(true);
+  };
+  const _onResizeStop = (e, {element, size}) => {
+    e.stopPropagation();
+    setResizeActive(false);
+    onResize(e, {element, size});
+  };
   return (
     <Resizable
-      width={width}
+      width={w}
       height={0}
-      onResize={onResize}
+      onResize={_onResize}
+      onResizeStart={_onResizeStart}
+      onResizeStop={_onResizeStop}
       resizeHandles={['e']}
-      handle={<span className="custom-handle-e"  onClick={e => {e.stopPropagation();}}/>}
+      handle={<span className={`custom-handle-e ${resizeActive ? 'active' : ''}`} style={{left: w - 5}} onClick={e => {e.stopPropagation();}}/>}
       // draggableOpts={{ grid: [25, 25] }}
     >
       <div className={'my_cell'} {...restProps} />

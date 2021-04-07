@@ -126,9 +126,16 @@ storiesOf('VTable2.0|Grid', module)
   ),{
     notes: {GridDragSortingMD}
   })
-  .add('column-resize', () => (
-    <GridColumnResize/>
-  ), {
+  .add('column-resize', () => {
+    const columnsNum = number('ColumnsNum', 10, {range: true, min: 1, max: 1000, step: 1});
+    const dataNum = number('DataNum', 50, {range: true, min: 50, max: 100000, step: 50});
+    const isSticky = boolean('IsSticky', true);
+    return <GridColumnResize
+      columnsNum={columnsNum}
+      dataNum={dataNum}
+      isSticky={isSticky}
+    />;
+  }, {
     notes: {GridColumnResizeMd}
   })
   .add('ellipsis', () => (

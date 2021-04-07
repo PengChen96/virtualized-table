@@ -98,9 +98,8 @@ const Grid = (props, ref) => {
     props.columns,
   ]);
 
-  const _onScrollEvent = (e) => {
+  const _onScrollEvent = () => {
 
-    _VTableContext.onScroll(e);
     // window.requestAnimationFrame(() => {
     // 垂直方向滚动
     _onVerticalScroll();
@@ -373,7 +372,10 @@ const Grid = (props, ref) => {
   return <>
     <div className={`vt-grid-container ${props.className}`}
       ref={gridContainer}
-      onScrollCapture={(e) => _onScrollEvent(e)}
+      onScrollCapture={(e) => {
+        _VTableContext.onScroll(e);
+        _onScrollEvent();
+      }}
       style={{height: stateProps.visibleHeight}}
     >
       <div style={{
