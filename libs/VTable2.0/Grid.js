@@ -300,8 +300,13 @@ const Grid = (props, ref) => {
     }
   };
 
-  // 默认行
-  const defaultGridRow = (row, rowIndex) => {
+  /**
+   * 默认行
+   * @param {Object} row 行数据
+   * @param {Number} rowIndex 行坐标
+   * @param {String} type 类型 header|body|footer
+   */
+  const defaultGridRow = (row, rowIndex, {type}) => {
     let realRowIndex = rowIndex + grid.startRowIndex;
     return <div
       key={`row_${realRowIndex}`}
@@ -315,18 +320,25 @@ const Grid = (props, ref) => {
       {
         [...(props.fixedLeftColumns || []), ...grid.virtualColumns, ...(props.fixedRightColumns || [])].map((column, columnIndex) => {
           let gridRowCell = _cellRender(row, rowIndex, column, columnIndex);
-          if (props.components && props.components.cell) {
+          // 有要重写对应header|body|footer的cell
+          if (props.components && props.components[type] && props.components[type].cell) {
             let realColumnIndex = columnIndex + grid.startColumnIndex;
             // {width, onResize}
-            let cellProps = typeof column.onCell === 'function' ? column.onCell(column, realRowIndex) : {};
-            gridRowCell = <props.components.cell
+            let defaultCellProps = typeof column.onCell === 'function' ? column.onCell(column, realRowIndex) : {};
+            let cellPropsMap = {
+              header: sameType(column.onHeaderCell, 'Function') ? column.onHeaderCell(column, realRowIndex) : undefined,
+              body: sameType(column.onBodyCell, 'Function') ? column.onBodyCell(column, realRowIndex) : undefined,
+              footer: sameType(column.onFooterCell, 'Function') ? column.onFooterCell(column, realRowIndex) : undefined,
+            };
+            let Cell = props.components[type].cell;
+            gridRowCell = <Cell
               key={`${realRowIndex}_${realColumnIndex}`}
               data-key={`${realRowIndex}_${realColumnIndex}`}
-              {...cellProps}
+              {...(cellPropsMap[type] || defaultCellProps)}
               style={{...getFixedCellStyle({column})}}
             >
               {_cellRender(row, rowIndex, column, columnIndex)}
-            </props.components.cell>;
+            </Cell>;
           }
           return gridRowCell;
         })
@@ -334,9 +346,14 @@ const Grid = (props, ref) => {
     </div>;
   };
 
-  // 渲染行
-  const _gridRowRender = (row, rowIndex) => {
-    let gridRow = defaultGridRow(row, rowIndex);
+  /**
+   * 渲染行
+   * @param {Object} row 行数据
+   * @param {Number} rowIndex 行坐标
+   * @param {String} type 类型 header|body|footer
+   */
+  const _gridRowRender = (row, rowIndex, {type}) => {
+    let gridRow = defaultGridRow(row, rowIndex, {type});
     // 覆盖默认的 GridRow 元素
     if (props.components && props.components.row) {
       let realRowIndex = rowIndex + grid.startRowIndex;
@@ -347,7 +364,7 @@ const Grid = (props, ref) => {
         data-key={realRowIndex}
         {...rowProps}
       >
-        {defaultGridRow(row, rowIndex)}
+        {defaultGridRow(row, rowIndex, {type})}
       </props.components.row>;
     }
     return gridRow;
@@ -371,7 +388,7 @@ const Grid = (props, ref) => {
             {
               _VTableContext.headerTitle.map((row, rowIndex) => {
                 // 行渲染
-                return _gridRowRender(row, rowIndex);
+                return _gridRowRender(row, rowIndex, {type: 'header'});
               })
             }
           </div>
@@ -379,7 +396,7 @@ const Grid = (props, ref) => {
         {
           [ ...grid.virtualData].map((row, rowIndex) => {
             // 行渲染
-            return _gridRowRender(row, rowIndex);
+            return _gridRowRender(row, rowIndex, {type: props.type});
           })
         }
       </div>
