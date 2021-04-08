@@ -200,7 +200,7 @@ const Grid = (props, ref) => {
     };
   };
   // 渲染单元格
-  const _cellRender = (row, rowIndex, column, columnIndex) => {
+  const _cellRender = (row, rowIndex, column, columnIndex, {type}) => {
 
     const {columns} = stateProps;
 
@@ -241,18 +241,18 @@ const Grid = (props, ref) => {
     let bordered = stateProps.bordered ? 'vt-bordered' : '';
     // 对齐方式 'left' | 'right' | 'center'
     let align = ALIGN_TYPE[column.align] || ALIGN_TYPE.left;
-    // 省略号
-    let ellipsis = column.ellipsis ? 'vt-ellipsis' : '';
     // 固定列阴影
     const {fixedLeftColumns, fixedRightColumns} = props;
     const cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
     const {lastFixLeft, firstFixRight} = cellInfo;
-    let lastFixLeftShadow = lastFixLeft ? 'vt-cell-fix-left-last' : '';
-    let firstFixRightShadow = firstFixRight ? 'vt-cell-fix-right-first' : '';
+    const lastFixLeftShadow = lastFixLeft ? 'vt-cell-fix-left-last' : '';
+    const firstFixRightShadow = firstFixRight ? 'vt-cell-fix-right-first' : '';
+    // className
+    const className = column.className;
     return <div
       key={`cell_${realRowIndex}_${realColumnIndex}}`}
       data-key={`cell_${realRowIndex}_${realColumnIndex}`}
-      className={`vt-grid-cell ${lastFixLeftShadow} ${firstFixRightShadow} ${bordered} ${align}`}
+      className={`vt-grid-cell ${lastFixLeftShadow} ${firstFixRightShadow} ${bordered} ${align} ${className}`}
       onClick={() => __onCellTap(
         value,
         row, rowIndex, realRowIndex,
@@ -263,16 +263,29 @@ const Grid = (props, ref) => {
         minWidth: width,
         minHeight: stateProps.minRowHeight,
         display: display,
+        ...column.style,
         ...getFixedCellStyle({column})
       }}
     >
-      {/* 因flex布局下省略号不生效 故加一层div*/}
-      <div className={`${ellipsis}`} title={column.ellipsis ? value : ''}>
-        {
-          column.render ? column.render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) : value
-        }
-      </div>
+      {
+        /* 因flex布局下省略号不生效 故加一层div*/
+        column.ellipsis ? <div className={'vt-ellipsis'} title={value}>
+          { _render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type}) }
+        </div>
+          : _render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type})
+      }
     </div>;
+  };
+  const _render = (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type}) => {
+    if (type === 'header') {
+      if (column.headRender) { // TODO 后续废弃
+        return sameType(column.headRender, 'Function') ? column.headRender(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) : value;
+      }
+      return sameType(column.title, 'Function') ? column.title(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) : value;
+    } else {
+      return column.render ? column.render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) : value;
+    }
+
   };
   // 使用sticky实现固定列
   const getFixedCellStyle = ({column}) => {
@@ -318,7 +331,7 @@ const Grid = (props, ref) => {
     >
       {
         [...(props.fixedLeftColumns || []), ...grid.virtualColumns, ...(props.fixedRightColumns || [])].map((column, columnIndex) => {
-          let gridRowCell = _cellRender(row, rowIndex, column, columnIndex);
+          let gridRowCell = _cellRender(row, rowIndex, column, columnIndex, {type});
           // 有要重写对应header|body|footer的cell
           if (props.components && props.components[type] && props.components[type].cell) {
             let realColumnIndex = columnIndex + grid.startColumnIndex;
@@ -336,7 +349,7 @@ const Grid = (props, ref) => {
               {...(cellPropsMap[type] || defaultCellProps)}
               style={{...getFixedCellStyle({column})}}
             >
-              {_cellRender(row, rowIndex, column, columnIndex)}
+              {_cellRender(row, rowIndex, column, columnIndex, {type})}
             </Cell>;
           }
           return gridRowCell;

@@ -4,7 +4,7 @@ import Grid from './Grid';
 import PropTypes from 'prop-types';
 import {formatFixedLeftColumns, formatFixedRightColumns} from './utils/fixUtil';
 import {deepClone} from './utils/deepClone';
-import {getSelfAdaptionColumns} from './utils/columns';
+import {getSelfAdaptionColumns, getScrollBarWidth} from './utils/columns';
 import './styles/multi-grid.less';
 
 const MultiGrid =  (props, ref) => {
@@ -30,7 +30,13 @@ const MultiGrid =  (props, ref) => {
   const reSetColumns = () => {
     const {columns} = props;
     const {offsetWidth} = _multiGridContainer.current;
-    setColumns(getSelfAdaptionColumns({columns, offsetWidth}).columns);
+    let autoColumns = getSelfAdaptionColumns({columns, offsetWidth}).columns;
+    // 表头最后一列的宽度加上滚动条宽度
+    if (props.type === 'header' && autoColumns.length > 0) {
+      const scrollBarWidth = getScrollBarWidth();
+      autoColumns[autoColumns.length - 1].width = autoColumns[autoColumns.length - 1].width + scrollBarWidth;
+    }
+    setColumns(autoColumns);
     setHasFixed(getSelfAdaptionColumns({columns, offsetWidth}).hasFixed);
   };
 
@@ -57,7 +63,6 @@ const MultiGrid =  (props, ref) => {
     let fixedRightColumns = fixedRightColumnCount ? columns.slice(-fixedRightColumnCount) : [];
     return formatFixedRightColumns({fixedRightColumns, columnsLength: columns.length});
   }, [hasFixed, columns, props.fixedRightColumnCount]);
-
   return <>
     <div className="vt-multi-grid-container"
       ref={_multiGridContainer}>

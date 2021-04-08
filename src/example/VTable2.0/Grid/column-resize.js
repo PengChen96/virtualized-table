@@ -16,7 +16,14 @@ export default (props) => {
   let [dataSource, setDataSource] = useState([]);
   useEffect(() => {
     setColumns(generateColumns(
-      columnsNum
+      columnsNum,
+      {
+        columnObj: (i) => {
+          return {
+            ellipsis: true,
+          };
+        }
+      }
     ));
     setDataSource(generateData(
       dataNum,
