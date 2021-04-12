@@ -24,20 +24,112 @@ const MultiGrid =  (props, ref) => {
     reSetColumns();
     window.addEventListener('resize', reSetColumns);
     return () => window.removeEventListener('resize', reSetColumns);
-  }, [props.columns]);
+  }, [props.columns, props.rowSelection]);
 
   // 设置自适应列
   const reSetColumns = () => {
-    const {columns} = props;
-    const {offsetWidth} = _multiGridContainer.current;
+    const {columns, dataSource, rowSelection} = props;
+    const {columnWidth = 32, selectedRowKeys, getCheckboxProps} = rowSelection;
+    let {offsetWidth} = _multiGridContainer.current;
+    if (rowSelection) {
+      offsetWidth = offsetWidth - columnWidth;
+    }
     let autoColumns = getSelfAdaptionColumns({columns, offsetWidth}).columns;
     // 表头最后一列的宽度加上滚动条宽度
     if (props.type === 'header' && autoColumns.length > 0) {
       const scrollBarWidth = getScrollBarWidth();
       autoColumns[autoColumns.length - 1].width = autoColumns[autoColumns.length - 1].width + scrollBarWidth;
     }
+    // 加上勾选列
+    if (rowSelection) {
+      autoColumns.unshift({
+        type: 'checkBox',
+        width: columnWidth,
+        align: 'center',
+        title: () => {
+          let checked = selectedRowKeys.length === dataSource.filter((r) => !getCheckboxProps(r).disabled).length;
+          return <div
+            className={'v-checkbox-container'}
+            onClick={(e) => {
+              _onSelectAll(e);
+            }}
+          >
+            <input type="checkbox" checked={checked}/>
+            <div className="show-box" />
+          </div>;
+        },
+        render: (value, row, rowIndex, realRowIndex) => {
+          // 是否选中
+          let rowKey = props.rowKey ? row[props.rowKey] : realRowIndex;
+          const checked = selectedRowKeys.includes(rowKey);
+          // 是否禁用
+          let {disabled} = getCheckboxProps(row);
+          return [
+            <div
+              key={1}
+              className={`v-checkbox-container ${disabled ? 'v-checkbox-container-disabled' : ''}`}
+              onClick={(e) => {
+                if (!disabled) {
+                  _onChange(e, row, realRowIndex);
+                }
+              }}
+            >
+              <input type="checkbox" checked={checked}/>
+              <div className="show-box" />
+            </div>
+          ];
+        }
+      });
+    }
     setColumns(autoColumns);
     setHasFixed(getSelfAdaptionColumns({columns, offsetWidth}).hasFixed);
+  };
+  // 勾选改变
+  const _onChange = (e, row, realRowIndex) => {
+    e.stopPropagation();
+    const {rowSelection, dataSource} = props;
+    const {selectedRowKeys, onChange, onSelect} = rowSelection;
+    let rowKey = props.rowKey ? row[props.rowKey] : realRowIndex;
+    let rowKeysSet = new Set(selectedRowKeys);
+    let selected = undefined;
+    if (rowKeysSet.has(rowKey)) {
+      rowKeysSet.delete(rowKey);
+      selected = false;
+    } else {
+      rowKeysSet.add(rowKey);
+      selected = true;
+    }
+    const _selectedRowKeys = Array.from(rowKeysSet);
+    const _selectedRows = dataSource.filter((v, i) => {
+      const k = props.rowKey ? v[props.rowKey] : i;
+      return _selectedRowKeys.includes(k);
+    });
+    onChange(_selectedRowKeys, _selectedRows);
+    onSelect(row, selected, _selectedRows, e);
+  };
+  // 勾选全部
+  const _onSelectAll = (e) => {
+    e.stopPropagation();
+    const {rowSelection, dataSource} = props;
+    const {selectedRowKeys, onChange, onSelectAll, getCheckboxProps} = rowSelection;
+    let checkedPart = selectedRowKeys.length < dataSource.filter((r) => !getCheckboxProps(r).disabled).length;
+    if (checkedPart) {
+      let _selectedRowKeys = [];
+      let _selectedRows = dataSource.filter((r, i) => {
+        const {disabled} = getCheckboxProps(r);
+        if (!disabled) {
+          let rowKey = props.rowKey ? r[props.rowKey] : i;
+          _selectedRowKeys.push(rowKey);
+        }
+        return !disabled;
+      });
+      onChange(_selectedRowKeys, _selectedRows);
+      // selected, selectedRows
+      onSelectAll(true, _selectedRows);
+    } else {
+      onChange([], []);
+      onSelectAll(false, []);
+    }
   };
 
   // main columns

@@ -49,6 +49,7 @@ export const generateData = (
   defRowObj = (i) => {
     return {
       id: i,
+      rowKey: 'rowKey' + i,
       mergeColumn: '合并列'
     };
   }
