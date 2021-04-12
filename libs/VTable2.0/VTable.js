@@ -2,6 +2,7 @@
 import React, {useEffect, useState, useMemo, useRef} from 'react';
 import VTableContext from './context/VTableContext';
 import MultiGrid from './MultiGrid';
+import {isSupportSticky} from './utils/isSupportSticky';
 import './styles/vtable.less';
 
 const VTable = (props) => {
@@ -11,7 +12,8 @@ const VTable = (props) => {
 
   let [isSticky, setIsSticky] = useState(false);
   useEffect(() => {
-    setIsSticky(props.isSticky);
+    let _isSticky = props.isSticky === undefined ? isSupportSticky() : props.isSticky;
+    setIsSticky(_isSticky);
   }, [props.isSticky]);
 
   // 表头
