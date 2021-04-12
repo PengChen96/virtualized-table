@@ -11,6 +11,7 @@ export default (props) => {
   let {columnsNum, dataNum, align} = props;
   let [columns, setColumns] = useState([]);
   let [dataSource, setDataSource] = useState([]);
+  let [selectedRowKeys, setSelectedRowKeys] = useState(['rowKey2']);
   useEffect(() => {
     setColumns(generateColumns(
       columnsNum,
@@ -45,6 +46,25 @@ export default (props) => {
           visibleHeight={400}
           minRowHeight={40}
           emptyText={<div>未查询到数据</div>}
+          //
+          rowKey={'rowKey'}
+          rowSelection={{
+            columnWidth: 60,
+            getCheckboxProps: (record) => ({
+              disabled: record.id === 5
+            }),
+            selectedRowKeys,
+            type: 'checkbox',
+            onChange: (selectedRowKeys, selectedRows) => {
+              console.log(selectedRowKeys, selectedRows);
+              setSelectedRowKeys(selectedRowKeys);
+            },
+            onSelect: (record, selected, selectedRows, nativeEvent)=>{console.log(record, selected, selectedRows);},
+            onSelectAll: (selected, selectedRows, changeRows) => {
+              console.log(selected, selectedRows, changeRows);
+              // setSelectedRowKeys(selectedRows.map((r) => ));
+            }
+          }}
         />
       </>
   );

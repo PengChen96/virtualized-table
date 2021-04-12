@@ -29,9 +29,9 @@ const MultiGrid =  (props, ref) => {
   // 设置自适应列
   const reSetColumns = () => {
     const {columns, dataSource, rowSelection} = props;
-    const {columnWidth = 32, selectedRowKeys, getCheckboxProps} = rowSelection;
     let {offsetWidth} = _multiGridContainer.current;
     if (rowSelection) {
+      const {columnWidth = 32} = rowSelection;
       offsetWidth = offsetWidth - columnWidth;
     }
     let autoColumns = getSelfAdaptionColumns({columns, offsetWidth}).columns;
@@ -42,12 +42,13 @@ const MultiGrid =  (props, ref) => {
     }
     // 加上勾选列
     if (rowSelection) {
+      const {columnWidth = 32, selectedRowKeys = [], getCheckboxProps} = rowSelection;
       autoColumns.unshift({
         type: 'checkBox',
         width: columnWidth,
         align: 'center',
         title: () => {
-          let checked = selectedRowKeys.length === dataSource.filter((r) => !getCheckboxProps(r).disabled).length;
+          let checked = selectedRowKeys.length === dataSource.filter((r) => getCheckboxProps ? !getCheckboxProps(r).disabled : true).length;
           return <div
             className={'v-checkbox-container'}
             onClick={(e) => {
@@ -63,7 +64,7 @@ const MultiGrid =  (props, ref) => {
           let rowKey = props.rowKey ? row[props.rowKey] : realRowIndex;
           const checked = selectedRowKeys.includes(rowKey);
           // 是否禁用
-          let {disabled} = getCheckboxProps(row);
+          let disabled = getCheckboxProps ? getCheckboxProps(row).disabled : false;
           return [
             <div
               key={1}
@@ -88,7 +89,7 @@ const MultiGrid =  (props, ref) => {
   const _onChange = (e, row, realRowIndex) => {
     e.stopPropagation();
     const {rowSelection, dataSource} = props;
-    const {selectedRowKeys, onChange, onSelect} = rowSelection;
+    const {selectedRowKeys = [], onChange = ()=>{}, onSelect = () => {}} = rowSelection;
     let rowKey = props.rowKey ? row[props.rowKey] : realRowIndex;
     let rowKeysSet = new Set(selectedRowKeys);
     let selected = undefined;
@@ -111,12 +112,12 @@ const MultiGrid =  (props, ref) => {
   const _onSelectAll = (e) => {
     e.stopPropagation();
     const {rowSelection, dataSource} = props;
-    const {selectedRowKeys, onChange, onSelectAll, getCheckboxProps} = rowSelection;
-    let checkedPart = selectedRowKeys.length < dataSource.filter((r) => !getCheckboxProps(r).disabled).length;
+    const {selectedRowKeys = [], onChange = ()=>{}, onSelectAll = ()=>{}, getCheckboxProps} = rowSelection;
+    let checkedPart = selectedRowKeys.length < dataSource.filter((r) => getCheckboxProps ? !getCheckboxProps(r).disabled : true).length;
     if (checkedPart) {
       let _selectedRowKeys = [];
       let _selectedRows = dataSource.filter((r, i) => {
-        const {disabled} = getCheckboxProps(r);
+        const disabled = getCheckboxProps ? getCheckboxProps(r).disabled : false;
         if (!disabled) {
           let rowKey = props.rowKey ? r[props.rowKey] : i;
           _selectedRowKeys.push(rowKey);

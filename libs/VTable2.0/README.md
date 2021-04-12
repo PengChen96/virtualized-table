@@ -18,7 +18,7 @@ ellipsis | 是否显示省略号 | boolean | false
 参数 | 说明 | 类型 | 默认值
 ---|---|---|---
 columnWidth | 自定义列表选择框宽度 | number | 32
-selectedRowKeys | 指定选中项的 key 数组，需要和 onChange 进行配合 | string[] | number[] | []
+selectedRowKeys | 指定选中项的 key 数组，需要和 onChange 进行配合 | string[]/number[] | []
 getCheckboxProps | 选择框的默认属性配置 | function(record) | -
 onChange | 选中项发生变化时的回调 | function(selectedRowKeys, selectedRows) | -
 onSelect | 用户手动选择/取消选择某行的回调 | function(record, selected, selectedRows) | -
