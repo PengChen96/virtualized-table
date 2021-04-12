@@ -1,5 +1,5 @@
 
-import React, {useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
+import React, {useContext, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import Grid from './Grid';
 import PropTypes from 'prop-types';
 import {formatFixedLeftColumns, formatFixedRightColumns} from './utils/fixUtil';
@@ -7,6 +7,7 @@ import {deepClone} from './utils/deepClone';
 import {getSelfAdaptionColumns, getScrollBarWidth} from './utils/columns';
 import {sameType} from './utils/base';
 import './styles/multi-grid.less';
+import VTableContext from './context/VTableContext';
 
 const MultiGrid =  (props, ref) => {
 
@@ -17,6 +18,8 @@ const MultiGrid =  (props, ref) => {
     // multiGridContainer: multiGridContainer.current,
     gridContainer: multiGridContainer.current.gridContainer
   }));
+
+  const _VTableContext = useContext(VTableContext);
 
   let [columns, setColumns] = useState(props.columns);
   let [hasFixed, setHasFixed] = useState(true);
@@ -29,7 +32,8 @@ const MultiGrid =  (props, ref) => {
 
   // 设置自适应列
   const reSetColumns = () => {
-    const {columns, dataSource, rowSelection} = props;
+    const {originDataSource} = _VTableContext;
+    const {columns, rowSelection} = props;
     let {offsetWidth} = _multiGridContainer.current;
     if (rowSelection) {
       const {columnWidth = 32} = rowSelection;
@@ -49,7 +53,7 @@ const MultiGrid =  (props, ref) => {
         width: columnWidth,
         align: 'center',
         title: () => {
-          let checked = selectedRowKeys.length === dataSource.filter((r) => getCheckboxProps ? !getCheckboxProps(r).disabled : true).length;
+          let checked = selectedRowKeys.length === originDataSource.filter((r) => getCheckboxProps ? !getCheckboxProps(r).disabled : true).length;
           return <div
             className={'v-checkbox-container'}
             onClick={(e) => {
@@ -89,7 +93,8 @@ const MultiGrid =  (props, ref) => {
   // 勾选改变
   const _onChange = (e, row, realRowIndex) => {
     e.stopPropagation();
-    const {rowSelection, dataSource} = props;
+    const {originDataSource} = _VTableContext;
+    const {rowSelection} = props;
     const {selectedRowKeys = [], onChange = ()=>{}, onSelect = () => {}} = rowSelection;
     let rowKey = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(row) : row[props.rowKey]) : realRowIndex;
     let rowKeysSet = new Set(selectedRowKeys);
@@ -102,7 +107,7 @@ const MultiGrid =  (props, ref) => {
       selected = true;
     }
     const _selectedRowKeys = Array.from(rowKeysSet);
-    const _selectedRows = dataSource.filter((v, i) => {
+    const _selectedRows = originDataSource.filter((v, i) => {
       const k = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(v) : v[props.rowKey]) : i;
       return _selectedRowKeys.includes(k);
     });
@@ -112,12 +117,13 @@ const MultiGrid =  (props, ref) => {
   // 勾选全部
   const _onSelectAll = (e) => {
     e.stopPropagation();
-    const {rowSelection, dataSource} = props;
+    const {originDataSource} = _VTableContext;
+    const {rowSelection} = props;
     const {selectedRowKeys = [], onChange = ()=>{}, onSelectAll = ()=>{}, getCheckboxProps} = rowSelection;
-    let checkedPart = selectedRowKeys.length < dataSource.filter((r) => getCheckboxProps ? !getCheckboxProps(r).disabled : true).length;
+    let checkedPart = selectedRowKeys.length < originDataSource.filter((r) => getCheckboxProps ? !getCheckboxProps(r).disabled : true).length;
     if (checkedPart) {
       let _selectedRowKeys = [];
-      let _selectedRows = dataSource.filter((v, i) => {
+      let _selectedRows = originDataSource.filter((v, i) => {
         const disabled = getCheckboxProps ? getCheckboxProps(v).disabled : false;
         if (!disabled) {
           const k = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(v) : v[props.rowKey]) : i;

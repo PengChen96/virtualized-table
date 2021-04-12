@@ -43,7 +43,8 @@ const VTable = (props) => {
       value={{
         onScroll,
         isSticky: props.isSticky,
-        headerTitle: getHeaderTitle
+        headerTitle: getHeaderTitle,
+        originDataSource: props.dataSource
       }}
     >
       {
