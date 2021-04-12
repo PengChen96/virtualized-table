@@ -51,12 +51,12 @@ const VTable = (props) => {
       }}
     >
       {
-        !props.isSticky && <MultiGrid
+        !isSticky && <MultiGrid
           {...props}
           ref={vtHeader}
           type={'header'}
           className={`vt-table-header ${props.className}`}
-          visibleHeight={props.rowHeight}
+          visibleHeight={props.rowHeight || 40}
           minRowHeight={props.rowHeight}
           dataSource={getHeaderTitle}
         />
