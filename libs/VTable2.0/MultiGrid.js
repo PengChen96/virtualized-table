@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {formatFixedLeftColumns, formatFixedRightColumns} from './utils/fixUtil';
 import {deepClone} from './utils/deepClone';
 import {getSelfAdaptionColumns, getScrollBarWidth} from './utils/columns';
+import {sameType} from './utils/base';
 import './styles/multi-grid.less';
 
 const MultiGrid =  (props, ref) => {
@@ -61,7 +62,7 @@ const MultiGrid =  (props, ref) => {
         },
         render: (value, row, rowIndex, realRowIndex) => {
           // 是否选中
-          let rowKey = props.rowKey ? row[props.rowKey] : realRowIndex;
+          let rowKey = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(row) : row[props.rowKey]) : realRowIndex;
           const checked = selectedRowKeys.includes(rowKey);
           // 是否禁用
           let disabled = getCheckboxProps ? getCheckboxProps(row).disabled : false;
@@ -90,7 +91,7 @@ const MultiGrid =  (props, ref) => {
     e.stopPropagation();
     const {rowSelection, dataSource} = props;
     const {selectedRowKeys = [], onChange = ()=>{}, onSelect = () => {}} = rowSelection;
-    let rowKey = props.rowKey ? row[props.rowKey] : realRowIndex;
+    let rowKey = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(row) : row[props.rowKey]) : realRowIndex;
     let rowKeysSet = new Set(selectedRowKeys);
     let selected = undefined;
     if (rowKeysSet.has(rowKey)) {
@@ -102,7 +103,7 @@ const MultiGrid =  (props, ref) => {
     }
     const _selectedRowKeys = Array.from(rowKeysSet);
     const _selectedRows = dataSource.filter((v, i) => {
-      const k = props.rowKey ? v[props.rowKey] : i;
+      const k = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(v) : v[props.rowKey]) : i;
       return _selectedRowKeys.includes(k);
     });
     onChange(_selectedRowKeys, _selectedRows);
@@ -116,11 +117,11 @@ const MultiGrid =  (props, ref) => {
     let checkedPart = selectedRowKeys.length < dataSource.filter((r) => getCheckboxProps ? !getCheckboxProps(r).disabled : true).length;
     if (checkedPart) {
       let _selectedRowKeys = [];
-      let _selectedRows = dataSource.filter((r, i) => {
-        const disabled = getCheckboxProps ? getCheckboxProps(r).disabled : false;
+      let _selectedRows = dataSource.filter((v, i) => {
+        const disabled = getCheckboxProps ? getCheckboxProps(v).disabled : false;
         if (!disabled) {
-          let rowKey = props.rowKey ? r[props.rowKey] : i;
-          _selectedRowKeys.push(rowKey);
+          const k = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(v) : v[props.rowKey]) : i;
+          _selectedRowKeys.push(k);
         }
         return !disabled;
       });
