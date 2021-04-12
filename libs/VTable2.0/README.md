@@ -4,7 +4,8 @@
 参数 | 说明 | 类型 | 默认值
 ---|---|---|---
 bordered | 是否显示边框 | boolean | false
-rowKey | 表格行 key 的取值，可以是字符串 | string | -
+rowKey | 表格行 key 的取值，可以是字符串或一个函数 | string/function(record) | -
+rowHeight | 表格行高 | number | 40
 
 
 #### columns

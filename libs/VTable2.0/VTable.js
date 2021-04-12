@@ -1,5 +1,5 @@
 
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useEffect, useState, useMemo, useRef} from 'react';
 import VTableContext from './context/VTableContext';
 import MultiGrid from './MultiGrid';
 import './styles/vtable.less';
@@ -9,9 +9,10 @@ const VTable = (props) => {
   let vtHeader = useRef(null);
   let vtBody = useRef(null);
 
+  let [isSticky, setIsSticky] = useState(false);
   useEffect(() => {
-
-  }, []);
+    setIsSticky(props.isSticky);
+  }, [props.isSticky]);
 
   // 表头
   const getHeaderTitle = useMemo(() => {
@@ -42,7 +43,7 @@ const VTable = (props) => {
     <VTableContext.Provider
       value={{
         onScroll,
-        isSticky: props.isSticky,
+        isSticky: isSticky,
         headerTitle: getHeaderTitle,
         originDataSource: props.dataSource
       }}
@@ -53,7 +54,8 @@ const VTable = (props) => {
           ref={vtHeader}
           type={'header'}
           className={`vt-table-header ${props.className}`}
-          visibleHeight={40}
+          visibleHeight={props.rowHeight}
+          minRowHeight={props.rowHeight}
           dataSource={getHeaderTitle}
         />
       }
@@ -61,6 +63,8 @@ const VTable = (props) => {
         {...props}
         ref={vtBody}
         type={'body'}
+        visibleHeight={!isSticky ? props.visibleHeight - (props.rowHeight || 40) : props.visibleHeight}
+        minRowHeight={props.rowHeight}
       />
     </VTableContext.Provider>
   </>;
