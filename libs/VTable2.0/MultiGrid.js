@@ -25,8 +25,10 @@ const MultiGrid =  (props, ref) => {
   let [hasFixed, setHasFixed] = useState(true);
 
   useEffect(() => {
-    reSetColumns();
-    window.addEventListener('resize', reSetColumns);
+    if ((props.columns||[]).length > 0) {
+      reSetColumns();
+      window.addEventListener('resize', reSetColumns);
+    }
     return () => window.removeEventListener('resize', reSetColumns);
   }, [props.columns, props.rowSelection]);
 
@@ -36,7 +38,7 @@ const MultiGrid =  (props, ref) => {
     const {columns, rowSelection} = props;
     let {offsetWidth} = _multiGridContainer.current;
     if (rowSelection) {
-      const {columnWidth = 32} = rowSelection;
+      const {columnWidth = 60} = rowSelection;
       offsetWidth = offsetWidth - columnWidth;
     }
     let autoColumns = getSelfAdaptionColumns({columns, offsetWidth}).columns;
@@ -47,7 +49,7 @@ const MultiGrid =  (props, ref) => {
     }
     // 加上勾选列
     if (rowSelection) {
-      const {columnWidth = 32, selectedRowKeys = [], getCheckboxProps} = rowSelection;
+      const {columnWidth = 60, selectedRowKeys = [], getCheckboxProps} = rowSelection;
       autoColumns.unshift({
         type: 'checkBox',
         width: columnWidth,
