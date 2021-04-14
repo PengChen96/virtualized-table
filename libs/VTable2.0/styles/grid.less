@@ -31,12 +31,21 @@
         justify-content: center;
       }
       // 显示边框
-      &.@{prefix}-bordered {
+      &.@{prefix}-default-bordered {
         box-sizing: border-box;
-        border-right: @SW-1 solid @borderColor;
         border-bottom: @SW-1 solid @borderColor;
-        &:last-child {
-          border-right: none;
+        &.@{prefix}-bordered-right {
+          border-right: @SW-1 solid @borderColor;
+        }
+        &.@{prefix}-has-last-child-border-right {
+          &:last-child {
+            border-right: @SW-1 solid @borderColor;
+          }
+        }
+        &.@{prefix}-no-last-child-border-right {
+          &:last-child {
+            border-right: none;
+          }
         }
       }
       // 左侧固定列最后一列  没有右边框

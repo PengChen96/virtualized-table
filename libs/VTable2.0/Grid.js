@@ -52,8 +52,6 @@ const Grid = (props, ref) => {
     // 左右偏移渲染个数
     columnOffsetCount: props.columnOffsetCount || 4,
 
-    // 是否显示边框
-    bordered: props.bordered || false
   };
   let [grid, setGrid] = useState({
     // 虚拟列
@@ -238,7 +236,9 @@ const Grid = (props, ref) => {
     }
 
     // 是否显示边框
-    let bordered = stateProps.bordered ? 'vt-bordered' : '';
+    let bordered = type==='header' ? (props.headerBordered || props.bordered) : props.bordered;
+    let noLastChildBorderRight = _VTableContext.isSticky ? 'vt-has-last-child-border-right' : 'vt-no-last-child-border-right';
+    bordered = `vt-default-bordered ${bordered?'vt-bordered-right':''} ${noLastChildBorderRight}`;
     // 对齐方式 'left' | 'right' | 'center'
     let align = ALIGN_TYPE[column.align] || ALIGN_TYPE.left;
     // 固定列阴影
@@ -426,6 +426,7 @@ Grid.propTypes = {
   // 类型 header
   type: PropTypes.string,
   // 是否显示边框
+  headerBordered: PropTypes.bool,
   bordered: PropTypes.bool,
   // 点击每个子项的方法
   onCellTap: PropTypes.func,
