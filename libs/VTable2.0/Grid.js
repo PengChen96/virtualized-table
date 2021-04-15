@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './styles/grid.less';
 import {getColumnsWidth} from './utils';
 import {getFixedCellInfo} from './utils/fixUtil';
-import {sameType} from '../common/utils';
+import {sameType} from './utils/base';
 import VTableContext from './context/VTableContext';
 
 const ALIGN_TYPE = {

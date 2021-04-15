@@ -6,7 +6,10 @@
 bordered | 是否显示边框 | boolean | false
 headerBordered | 是否显示表头边框,不设置则按bordered | boolean | false
 rowKey | 表格行 key 的取值，可以是字符串或一个函数 | string/function(record) | -
+rowSelection | 表格行是否可选择,rowSelection props | object | -
 rowHeight | 表格行高 | number | 40
+loading | 页面是否加载中 | boolean / Spin props | false
+locale | 默认文案设置，目前包括空数据文案 | object | emptyText: 暂无数据
 
 
 #### columns
@@ -25,3 +28,10 @@ getCheckboxProps | 选择框的默认属性配置 | function(record) | -
 onChange | 选中项发生变化时的回调 | function(selectedRowKeys, selectedRows) | -
 onSelect | 用户手动选择/取消选择某行的回调 | function(record, selected, selectedRows) | -
 onSelectAll | 用户手动选择/取消选择所有行的回调 | function(selected, selectedRows) | -
+
+#### Spin
+参数 | 说明 | 类型 | 默认值
+---|---|---|---
+spinning | 是否为加载中状态 | boolean | false
+spinningText | 加载中内容 | string / ReactNode | -
+wrapperClassName | 包装器的类属性 | string | -

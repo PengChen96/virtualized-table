@@ -1,23 +1,53 @@
 
 @import "./variables.less";
 
-.@{prefix}-table-header {
-  &::-webkit-scrollbar {
-    display: none;
+.@{prefix}-table {
+  position: relative;
+  // header
+  .@{prefix}-table-header {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    &.@{prefix}-header-sticky {
+      z-index: 3;
+      position: sticky;
+      top: 0;
+    }
+    //
+    .@{prefix}-grid-row {
+      &:hover .@{prefix}-grid-cell {
+        background: #e9ebf0;
+      }
+      .@{prefix}-grid-cell {
+        background: #e9ebf0;
+        font-weight: 700;
+      }
+    }
   }
-  &.@{prefix}-header-sticky {
-    z-index: 3;
-    position: sticky;
+  // loading
+  .@{prefix}-table-loading {
+    z-index: 20;
+    width: 100%;
+    height: 100%;
+    position: absolute;
     top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.8;
+    background: #fff;
   }
-  //
-  .@{prefix}-grid-row {
-    &:hover .@{prefix}-grid-cell {
-      background: #e9ebf0;
-    }
-    .@{prefix}-grid-cell {
-      background: #e9ebf0;
-      font-weight: 700;
-    }
+  // 空页面
+  .@{prefix}-table-empty {
+    z-index: 20;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
   }
 }
+

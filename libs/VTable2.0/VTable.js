@@ -1,9 +1,11 @@
 
 import React, {useEffect, useState, useMemo, useRef} from 'react';
+import PropTypes from 'prop-types';
 import VTableContext from './context/VTableContext';
 import MultiGrid from './MultiGrid';
 import {isSupportSticky} from './utils/isSupportSticky';
 import './styles/vtable.less';
+import {sameType} from "./utils/base";
 
 const VTable = (props) => {
 
@@ -41,6 +43,7 @@ const VTable = (props) => {
     // });
   };
 
+  let spinning = sameType(props.loading, 'Object') ? props.loading.spinning : props.loading;
   return <>
     <VTableContext.Provider
       value={{
@@ -50,26 +53,49 @@ const VTable = (props) => {
         originDataSource: props.dataSource
       }}
     >
-      {
-        !isSticky && <MultiGrid
+      <div className={`vt-table ${props.wrapperClassName}`}>
+        {
+          !isSticky && <MultiGrid
+            {...props}
+            ref={vtHeader}
+            type={'header'}
+            className={`vt-table-header ${props.className}`}
+            visibleHeight={props.rowHeight || 40}
+            minRowHeight={props.rowHeight}
+            dataSource={getHeaderTitle}
+          />
+        }
+        <MultiGrid
           {...props}
-          ref={vtHeader}
-          type={'header'}
-          className={`vt-table-header ${props.className}`}
-          visibleHeight={props.rowHeight || 40}
+          ref={vtBody}
+          type={'body'}
+          visibleHeight={!isSticky ? props.visibleHeight - (props.rowHeight || 40) : props.visibleHeight}
           minRowHeight={props.rowHeight}
-          dataSource={getHeaderTitle}
         />
-      }
-      <MultiGrid
-        {...props}
-        ref={vtBody}
-        type={'body'}
-        visibleHeight={!isSticky ? props.visibleHeight - (props.rowHeight || 40) : props.visibleHeight}
-        minRowHeight={props.rowHeight}
-      />
+        {
+          !spinning && props.dataSource.length < 1 ? <div className="vt-table-empty">
+            {
+              (props.locale && props.locale.emptyText) ? props.locale.emptyText : '暂无数据'
+            }
+          </div> : ''
+        }
+        {
+          spinning ? <div className="vt-table-loading">
+            {
+              (props.loading && props.loading.spinningText) ? props.loading.spinningText : '数据加载中，请稍后...'
+            }
+          </div> : ''
+        }
+      </div>
     </VTableContext.Provider>
   </>;
 
+};
+
+VTable.propTypes = {
+  loading: PropTypes.any,
+  locale: PropTypes.object,
+  wrapperClassName: PropTypes.string,
+  rowHeight: PropTypes.number
 };
 export default VTable;
