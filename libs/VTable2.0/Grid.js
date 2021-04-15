@@ -90,6 +90,10 @@ const Grid = (props, ref) => {
     // });
     _onScrollEvent();
     console.log('dataSource change');
+    //
+    if (!_VTableContext.isSticky && props.type === 'body') {
+      _VTableContext.getBodyScrollBarWidth({ref: gridContainer});
+    }
 
   }, [
     props.dataSource,

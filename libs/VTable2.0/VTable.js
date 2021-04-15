@@ -13,6 +13,7 @@ const VTable = (props) => {
   let vtBody = useRef(null);
 
   let [isSticky, setIsSticky] = useState(false);
+  let [bodyScrollBarWidth, setBodyScrollBarWidth] = useState(0);
   useEffect(() => {
     let _isSticky = props.isSticky === undefined ? isSupportSticky() : props.isSticky;
     setIsSticky(_isSticky);
@@ -42,15 +43,20 @@ const VTable = (props) => {
     //   }
     // });
   };
+  // 获取body的滚动条宽度，然后去设置header的最后一列宽度
+  const getBodyScrollBarWidth = ({ref}) => {
+    setBodyScrollBarWidth(ref.current.offsetWidth - ref.current.clientWidth);
+  };
 
   let spinning = sameType(props.loading, 'Object') ? props.loading.spinning : props.loading;
   return <>
     <VTableContext.Provider
       value={{
         onScroll,
+        getBodyScrollBarWidth,
         isSticky: isSticky,
         headerTitle: getHeaderTitle,
-        originDataSource: props.dataSource
+        originDataSource: props.dataSource,
       }}
     >
       <div className={`vt-table ${props.wrapperClassName}`}>
@@ -63,6 +69,7 @@ const VTable = (props) => {
             visibleHeight={props.rowHeight || 40}
             minRowHeight={props.rowHeight}
             dataSource={getHeaderTitle}
+            bodyScrollBarWidth={bodyScrollBarWidth}
           />
         }
         <MultiGrid

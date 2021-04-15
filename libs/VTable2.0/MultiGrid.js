@@ -30,7 +30,7 @@ const MultiGrid =  (props, ref) => {
       window.addEventListener('resize', reSetColumns);
     }
     return () => window.removeEventListener('resize', reSetColumns);
-  }, [props.columns, props.rowSelection]);
+  }, [props.columns, props.bodyScrollBarWidth, props.rowSelection]);
 
   // 设置自适应列
   const reSetColumns = () => {
@@ -41,10 +41,10 @@ const MultiGrid =  (props, ref) => {
       const {columnWidth = 60} = rowSelection;
       offsetWidth = offsetWidth - columnWidth;
     }
-    let autoColumns = getSelfAdaptionColumns({columns, offsetWidth}).columns;
+    let scrollBarWidth = props.bodyScrollBarWidth || 0;
+    let autoColumns = getSelfAdaptionColumns({columns, offsetWidth, scrollBarWidth}).columns;
     // 表头最后一列的宽度加上滚动条宽度
     if (props.type === 'header' && autoColumns.length > 0) {
-      const scrollBarWidth = getScrollBarWidth();
       autoColumns[autoColumns.length - 1].width = autoColumns[autoColumns.length - 1].width + scrollBarWidth;
     }
     // 加上勾选列
@@ -90,7 +90,7 @@ const MultiGrid =  (props, ref) => {
       });
     }
     setColumns(autoColumns);
-    setHasFixed(getSelfAdaptionColumns({columns, offsetWidth}).hasFixed);
+    setHasFixed(getSelfAdaptionColumns({columns, offsetWidth, scrollBarWidth}).hasFixed);
   };
   // 勾选改变
   const _onChange = (e, row, realRowIndex) => {
