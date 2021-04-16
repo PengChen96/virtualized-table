@@ -32,7 +32,7 @@ const MultiGrid =  (props, ref) => {
     return () => window.removeEventListener('resize', reSetColumns);
   }, [props.columns, props.bodyScrollBarWidth, props.rowSelection]);
 
-  // 设置自适应列
+  // 设置自适应列 // TODO 这里的适应列宽 移到外层去
   const reSetColumns = () => {
     const {originDataSource} = _VTableContext;
     const {columns, rowSelection} = props;

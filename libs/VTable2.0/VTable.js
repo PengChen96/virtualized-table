@@ -78,6 +78,7 @@ const VTable = (props) => {
           type={'body'}
           visibleHeight={!isSticky ? props.visibleHeight - (props.rowHeight || 40) : props.visibleHeight}
           minRowHeight={props.rowHeight}
+          bodyScrollBarWidth={bodyScrollBarWidth}
         />
         {
           !spinning && props.dataSource.length < 1 ? <div className="vt-table-empty">
