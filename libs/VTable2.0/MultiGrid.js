@@ -4,7 +4,7 @@ import Grid from './Grid';
 import PropTypes from 'prop-types';
 import {formatFixedLeftColumns, formatFixedRightColumns} from './utils/fixUtil';
 import {deepClone} from './utils/deepClone';
-import {getSelfAdaptionColumns, getScrollBarWidth} from './utils/columns';
+import {getSelfAdaptionColumns} from './utils/columns';
 import {sameType} from './utils/base';
 import './styles/multi-grid.less';
 import VTableContext from './context/VTableContext';
@@ -25,7 +25,7 @@ const MultiGrid =  (props, ref) => {
   let [hasFixed, setHasFixed] = useState(true);
 
   useEffect(() => {
-    if ((props.columns||[]).length > 0) {
+    if ((props.columns || []).length > 0) {
       reSetColumns();
       window.addEventListener('resize', reSetColumns);
     }
