@@ -5,7 +5,7 @@ import VTableContext from './context/VTableContext';
 import MultiGrid from './MultiGrid';
 import {isSupportSticky} from './utils/isSupportSticky';
 import './styles/vtable.less';
-import {sameType} from "./utils/base";
+import {sameType} from './utils/base';
 
 const VTable = (props) => {
 
