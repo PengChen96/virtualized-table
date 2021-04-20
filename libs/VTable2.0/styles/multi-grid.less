@@ -3,4 +3,23 @@
 
 .@{prefix}-multi-grid-container {
   display: flex;
+  //
+  .@{prefix}-multi-grid-fixed-left,
+  .@{prefix}-multi-grid-fixed-right {
+    position: absolute;
+  }
+  .@{prefix}-multi-grid-fixed-left {
+    left: 0;
+    box-shadow: 6px 0 6px -4px rgba(0,0,0,0.15);
+    .@{prefix}-grid-container {
+      overflow: hidden;
+    }
+  }
+  .@{prefix}-multi-grid-fixed-right {
+    right: 0;
+    box-shadow: -6px 0 6px -4px rgba(0,0,0,0.15);
+    .@{prefix}-grid-container {
+      overflow: scroll;
+    }
+  }
 }

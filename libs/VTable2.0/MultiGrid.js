@@ -18,6 +18,9 @@ const MultiGrid =  (props, ref) => {
     // multiGridContainer: multiGridContainer.current,
     gridContainer: multiGridContainer.current.gridContainer
   }));
+  //
+  const multiGridContainerLeft = useRef(null);
+  const multiGridContainerRight = useRef(null);
 
   const _VTableContext = useContext(VTableContext);
 
@@ -165,18 +168,58 @@ const MultiGrid =  (props, ref) => {
     let fixedRightColumns = fixedRightColumnCount ? columns.slice(-fixedRightColumnCount) : [];
     return formatFixedRightColumns({fixedRightColumns, columnsLength: columns.length});
   }, [hasFixed, columns, props.fixedRightColumnCount]);
+
+  //
+  const onScroll = (e) => {
+    let scrollTop = e && e.target && e.target.scrollTop;
+    if (multiGridContainerLeft.current && multiGridContainerRight.current) {
+      multiGridContainerLeft.current.gridContainer.scrollTop = scrollTop;
+      multiGridContainerRight.current.gridContainer.scrollTop = scrollTop;
+    }
+  };
+
   return <>
     <div className="vt-multi-grid-container"
       ref={_multiGridContainer}>
-      <Grid
-        {...props}
-        ref={multiGridContainer}
-        // 加这个key是因为固定列变化 列数据多渲染一列 todo 原因
-        key={`${props.fixedLeftColumnCount}_${props.fixedRightColumnCount}`}
-        columns={getColumns}
-        fixedLeftColumns={getFixedLeftColumns}
-        fixedRightColumns={getFixedRightColumns}
-      />
+      {
+        _VTableContext.isSticky ? <Grid
+          {...props}
+          ref={multiGridContainer}
+          // 加这个key是因为固定列变化 列数据多渲染一列 todo 原因
+          key={`${props.fixedLeftColumnCount}_${props.fixedRightColumnCount}`}
+          columns={getColumns}
+          fixedLeftColumns={getFixedLeftColumns}
+          fixedRightColumns={getFixedRightColumns}
+        /> : <>
+            <Grid
+              {...props}
+              ref={multiGridContainer}
+              columns={[...getFixedLeftColumns, ...getColumns, ...getFixedRightColumns]}
+              fixedLeftColumns={[]}
+              fixedRightColumns={[]}
+              onScroll={onScroll}
+            />
+          <div className="vt-multi-grid-fixed-left">
+            <Grid
+              {...props}
+              ref={multiGridContainerLeft}
+              columns={getFixedLeftColumns}
+              fixedLeftColumns={[]}
+              fixedRightColumns={[]}
+            />
+          </div>
+          <div className="vt-multi-grid-fixed-right">
+            <Grid
+              {...props}
+              ref={multiGridContainerRight}
+              columns={getFixedRightColumns}
+              fixedLeftColumns={[]}
+              fixedRightColumns={[]}
+            />
+          </div>
+        </>
+      }
+
     </div>
   </>;
 
