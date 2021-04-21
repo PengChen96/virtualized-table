@@ -392,8 +392,8 @@ const Grid = (props, ref) => {
     <div className={`vt-grid-container ${props.className}`}
       ref={gridContainer}
       onScrollCapture={(e) => {
-        if (!_VTableContext.isSticky && props.onScroll) _VTableContext.onScroll(e);
-        if (props.type === 'body' && props.onScroll) props.onScroll(e);
+        if (!_VTableContext.isSticky && props.onScrollTopSync) _VTableContext.onScroll(e);
+        if (props.type === 'body' && props.onScrollTopSync) props.onScrollTopSync(e);
         _onScrollEvent();
       }}
       style={{height: stateProps.visibleHeight}}

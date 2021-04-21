@@ -170,7 +170,7 @@ const MultiGrid =  (props, ref) => {
   }, [hasFixed, columns, props.fixedRightColumnCount]);
 
   //
-  const onScroll = (e) => {
+  const onScrollTopSync = (e) => {
     let scrollTop = e && e.target && e.target.scrollTop;
     if (multiGridContainerLeft.current && multiGridContainerRight.current) {
       multiGridContainerLeft.current.gridContainer.scrollTop = scrollTop;
@@ -197,7 +197,7 @@ const MultiGrid =  (props, ref) => {
               columns={[...getFixedLeftColumns, ...getColumns, ...getFixedRightColumns]}
               fixedLeftColumns={[]}
               fixedRightColumns={[]}
-              onScroll={onScroll}
+              onScrollTopSync={onScrollTopSync}
             />
           <div className="vt-multi-grid-fixed-left">
             <Grid
