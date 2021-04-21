@@ -186,7 +186,7 @@ const MultiGrid =  (props, ref) => {
           {...props}
           ref={multiGridContainer}
           // 加这个key是因为固定列变化 列数据多渲染一列 todo 原因
-          key={`${props.fixedLeftColumnCount}_${props.fixedRightColumnCount}`}
+          key={`${props.fixedLeftColumnCount}_${props.fixedRightColumnCount}_${hasFixed}`}
           columns={getColumns}
           fixedLeftColumns={getFixedLeftColumns}
           fixedRightColumns={getFixedRightColumns}

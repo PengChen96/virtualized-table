@@ -244,7 +244,9 @@ const Grid = (props, ref) => {
     let noLastChildBorderRight = _VTableContext.isSticky ? 'vt-has-last-child-border-right' : 'vt-no-last-child-border-right';
     bordered = `vt-default-bordered ${bordered ? 'vt-bordered-right' : ''} ${noLastChildBorderRight}`;
     // 对齐方式 'left' | 'right' | 'center'
-    let align = ALIGN_TYPE[column.align] || ALIGN_TYPE.left;
+    let headerAlign = ALIGN_TYPE[column.headerAlign] || ALIGN_TYPE.center;
+    let bodyAlign = ALIGN_TYPE[column.align] || ALIGN_TYPE.left;
+    let align = type === 'header' ? headerAlign : bodyAlign;
     // 固定列阴影
     const {fixedLeftColumns, fixedRightColumns} = props;
     const cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
