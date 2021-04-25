@@ -7,20 +7,23 @@
   .@{prefix}-multi-grid-fixed-left,
   .@{prefix}-multi-grid-fixed-right {
     position: absolute;
+    overflow: hidden;
+  }
+  &.@{prefix}-table-body {
+    .@{prefix}-multi-grid-fixed-left,
+    .@{prefix}-multi-grid-fixed-right {
+      .@{prefix}-grid-container {
+        overflow-y: hidden;
+        overflow-x: scroll;
+      }
+    }
   }
   .@{prefix}-multi-grid-fixed-left {
     left: 0;
     box-shadow: 6px 0 6px -4px rgba(0,0,0,0.15);
-    .@{prefix}-grid-container {
-      overflow-y: hidden;
-      overflow-x: scroll;
-    }
   }
   .@{prefix}-multi-grid-fixed-right {
     right: 0;
     box-shadow: -6px 0 6px -4px rgba(0,0,0,0.15);
-    .@{prefix}-grid-container {
-      overflow: scroll;
-    }
   }
 }

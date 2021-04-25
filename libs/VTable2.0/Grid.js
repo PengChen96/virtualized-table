@@ -91,10 +91,11 @@ const Grid = (props, ref) => {
     _onScrollEvent();
     console.log('dataSource change');
     //
-    if (props.type === 'body') {
-      _VTableContext.getBodyScrollBarWidth({ref: gridContainer});
+    if (props.type === 'body' && props.mgType==='mainMultiGrid') {
+      setTimeout(() => {
+        _VTableContext.getBodyScrollBarWidth({ref: gridContainer});
+      }, 0);
     }
-
   }, [
     props.dataSource,
     props.columns,
@@ -392,11 +393,14 @@ const Grid = (props, ref) => {
     <div className={`vt-grid-container ${props.className}`}
       ref={gridContainer}
       onScrollCapture={(e) => {
-        if (!_VTableContext.isSticky && props.onScrollTopSync) _VTableContext.onScroll(e);
-        if (props.type === 'body' && props.onScrollTopSync) props.onScrollTopSync(e);
+        if (!_VTableContext.isSticky && props.mgType==='mainMultiGrid') _VTableContext.onScroll(e);
+        if (props.type === 'body' && props.onScrollTopSync) props.onScrollTopSync(e, props.mgType);
         _onScrollEvent();
       }}
-      style={{height: stateProps.visibleHeight}}
+      style={{
+        height: stateProps.visibleHeight,
+        ...(props.gridStyle || {})
+      }}
     >
       <div style={{
         paddingTop: grid.startVerticalOffset,
@@ -443,4 +447,4 @@ Grid.propTypes = {
   fixedRightColumns: PropTypes.array,
 };
 // Grid.whyDidYouRender = true;
-export default React.forwardRef(Grid);
+export default React.memo(React.forwardRef(Grid));

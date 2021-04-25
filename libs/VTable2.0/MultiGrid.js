@@ -170,16 +170,24 @@ const MultiGrid =  (props, ref) => {
   }, [hasFixed, columns, props.fixedRightColumnCount]);
 
   //
-  const onScrollTopSync = (e) => {
+  const onScrollTopSync = (e, mgType) => {
     let scrollTop = e && e.target && e.target.scrollTop;
-    if (multiGridContainerLeft.current && multiGridContainerRight.current) {
-      multiGridContainerLeft.current.gridContainer.scrollTop = scrollTop;
-      multiGridContainerRight.current.gridContainer.scrollTop = scrollTop;
-    }
+    // window.requestAnimationFrame(() => {
+      if (multiGridContainerLeft.current && multiGridContainerRight.current) {
+        multiGridContainerLeft.current.gridContainer.scrollTop = scrollTop;
+        multiGridContainerRight.current.gridContainer.scrollTop = scrollTop;
+        // multiGridContainer.current.gridContainer.scrollTop = scrollTop;
+      }
+    // });
+
+    // if (multiGridContainerLeft.current && multiGridContainer.current && mgType==='rightMultiGrid') {
+    //   multiGridContainerLeft.current.gridContainer.scrollTop = scrollTop;
+    //   multiGridContainer.current.gridContainer.scrollTop = scrollTop;
+    // }
   };
 
   return <>
-    <div className="vt-multi-grid-container"
+    <div className={`vt-multi-grid-container ${props.mgClassName || ''}`}
       ref={_multiGridContainer}>
       {
         _VTableContext.isSticky ? <Grid
@@ -197,26 +205,42 @@ const MultiGrid =  (props, ref) => {
               columns={[...getFixedLeftColumns, ...getColumns, ...getFixedRightColumns]}
               fixedLeftColumns={[]}
               fixedRightColumns={[]}
+              mgType={'mainMultiGrid'}
               onScrollTopSync={onScrollTopSync}
             />
-          <div className="vt-multi-grid-fixed-left">
-            <Grid
-              {...props}
-              ref={multiGridContainerLeft}
-              columns={getFixedLeftColumns}
-              fixedLeftColumns={[]}
-              fixedRightColumns={[]}
-            />
-          </div>
-          <div className="vt-multi-grid-fixed-right">
-            <Grid
-              {...props}
-              ref={multiGridContainerRight}
-              columns={getFixedRightColumns}
-              fixedLeftColumns={[]}
-              fixedRightColumns={[]}
-            />
-          </div>
+          {
+            getFixedLeftColumns.length > 0 ? <div className="vt-multi-grid-fixed-left">
+              <Grid
+                {...props}
+                ref={multiGridContainerLeft}
+                columns={getFixedLeftColumns}
+                fixedLeftColumns={[]}
+                fixedRightColumns={[]}
+                mgType={'leftMultiGrid'}
+                gridStyle={{
+                  marginBottom: props.type === 'body' ? props.bodyScrollBarWidth : undefined
+                }}
+              />
+            </div> : null
+          }
+          {
+            getFixedRightColumns.length > 0 ? <div className="vt-multi-grid-fixed-right" style={{
+              marginRight: props.type === 'body' ? props.bodyScrollBarWidth : undefined
+            }}>
+              <Grid
+                {...props}
+                ref={multiGridContainerRight}
+                columns={getFixedRightColumns}
+                fixedLeftColumns={[]}
+                fixedRightColumns={[]}
+                mgType={'rightMultiGrid'}
+                onScrollTopSync={onScrollTopSync}
+                gridStyle={{
+                  marginBottom: props.type === 'body' ? -props.bodyScrollBarWidth : undefined
+                }}
+              />
+            </div> : null
+          }
         </>
       }
 
@@ -232,4 +256,4 @@ MultiGrid.propTypes = {
   bordered: PropTypes.bool
 };
 
-export default React.forwardRef(MultiGrid);
+export default React.memo(React.forwardRef(MultiGrid));
