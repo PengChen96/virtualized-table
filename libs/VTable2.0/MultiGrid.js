@@ -218,7 +218,7 @@ const MultiGrid =  (props, ref) => {
                 fixedRightColumns={[]}
                 mgType={'leftMultiGrid'}
                 gridStyle={{
-                  marginBottom: props.type === 'body' ? props.bodyScrollBarWidth : undefined
+                  marginBottom: props.type === 'body' ? -props.bodyScrollBarWidth : undefined
                 }}
               />
             </div> : null

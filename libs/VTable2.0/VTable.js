@@ -45,7 +45,9 @@ const VTable = (props) => {
   };
   // 获取body的滚动条宽度，然后去设置header的最后一列宽度
   const getBodyScrollBarWidth = ({ref}) => {
+    if (ref && ref.current) {
       setBodyScrollBarWidth(ref.current.offsetWidth - ref.current.clientWidth);
+    }
   };
 
   let spinning = sameType(props.loading, 'Object') ? props.loading.spinning : props.loading;
