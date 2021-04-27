@@ -91,7 +91,7 @@ const Grid = (props, ref) => {
     _onScrollEvent();
     console.log('dataSource change');
     //
-    if (props.type === 'body' && props.mgType==='mainMultiGrid') {
+    if (props.type === 'body' && props.mgType === 'mainMultiGrid') {
       setTimeout(() => {
         _VTableContext.getBodyScrollBarWidth({ref: gridContainer});
       }, 0);
@@ -194,7 +194,7 @@ const Grid = (props, ref) => {
     let virtualColumns = scrollColumns.slice(startColumnIndex, endColumnIndex);
     // console.log(leftOffsetColumns, startHorizontalOffset, rightOffsetColumns, endHorizontalOffset, virtualColumns, getColumnsWidth(virtualColumns));
     // console.table({scrollLeft, scrollLeftNum, startColumnIndex, endColumnIndex});
-    return{
+    return {
       startColumnIndex,
       endColumnIndex,
       startHorizontalOffset,
@@ -277,8 +277,8 @@ const Grid = (props, ref) => {
       {
         /* 因flex布局下省略号不生效 故加一层div*/
         column.ellipsis ? <div className={'vt-ellipsis'} title={value}>
-          { _render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type}) }
-        </div>
+            {_render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type})}
+          </div>
           : _render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type})
       }
     </div>;
@@ -391,16 +391,16 @@ const Grid = (props, ref) => {
   };
   return <>
     <div className={`vt-grid-container ${props.className}`}
-      ref={gridContainer}
-      onScrollCapture={(e) => {
-        if (!_VTableContext.isSticky && props.mgType==='mainMultiGrid') _VTableContext.onScroll(e);
-        if (props.type === 'body' && props.onScrollTopSync) props.onScrollTopSync(e, props.mgType);
-        _onScrollEvent();
-      }}
-      style={{
-        height: stateProps.visibleHeight,
-        ...(props.gridStyle || {})
-      }}
+         ref={gridContainer}
+         onScrollCapture={(e) => {
+           if (!_VTableContext.isSticky && props.mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
+           if (props.type === 'body' && props.onScrollTopSync) props.onScrollTopSync(e, props.mgType);
+           _onScrollEvent();
+         }}
+         style={{
+           height: stateProps.visibleHeight,
+           ...(props.gridStyle || {})
+         }}
     >
       <div style={{
         paddingTop: grid.startVerticalOffset,
@@ -420,7 +420,7 @@ const Grid = (props, ref) => {
           </div>
         }
         {
-          [ ...grid.virtualData].map((row, rowIndex) => {
+          [...grid.virtualData].map((row, rowIndex) => {
             // 行渲染
             return _gridRowRender(row, rowIndex, {type: props.type});
           })
@@ -428,7 +428,6 @@ const Grid = (props, ref) => {
       </div>
     </div>
   </>;
-
 };
 
 Grid.propTypes = {
