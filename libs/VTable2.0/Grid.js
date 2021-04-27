@@ -257,7 +257,7 @@ const Grid = (props, ref) => {
     // className
     const className = column.className;
     return <div
-      key={`cell_${realRowIndex}_${realColumnIndex}}`}
+      key={`cell_${realRowIndex}_${realColumnIndex}`}
       data-key={`cell_${realRowIndex}_${realColumnIndex}`}
       className={`vt-grid-cell ${lastFixLeftShadow} ${firstFixRightShadow} ${bordered} ${align} ${className}`}
       onClick={() => __onCellTap(
