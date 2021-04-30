@@ -24,7 +24,7 @@ const VTable = (props) => {
     const {columns} = props;
     let headerData = [{}];
     columns.forEach((column) => {
-      headerData[0][column.key] = column.title;
+      headerData[0][column.key || column.dataIndex] = column.title;
     });
     return headerData;
   }, [props.columns]);
