@@ -85,9 +85,11 @@ const VTable = (props) => {
         />
         {
           !spinning && props.dataSource.length < 1 ? <div className="vt-table-empty">
-            {
-              (props.locale && props.locale.emptyText) ? props.locale.emptyText : '暂无数据'
-            }
+            <div style={{pointerEvents: 'auto'}}>
+              {
+                (props.locale && props.locale.emptyText) ? props.locale.emptyText : '暂无数据'
+              }
+            </div>
           </div> : ''
         }
         {
