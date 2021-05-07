@@ -277,8 +277,8 @@ const Grid = (props, ref) => {
       {
         /* 因flex布局下省略号不生效 故加一层div*/
         column.ellipsis ? <div className={'vt-ellipsis'} title={value}>
-            {_render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type})}
-          </div>
+          {_render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type})}
+        </div>
           : _render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type})
       }
     </div>;
@@ -391,16 +391,16 @@ const Grid = (props, ref) => {
   };
   return <>
     <div className={`vt-grid-container ${props.className}`}
-         ref={gridContainer}
-         onScrollCapture={(e) => {
-           if (!_VTableContext.isSticky && props.mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
-           if (props.type === 'body' && props.onScrollTopSync) props.onScrollTopSync(e, props.mgType);
-           _onScrollEvent();
-         }}
-         style={{
-           height: stateProps.visibleHeight,
-           ...(props.gridStyle || {})
-         }}
+      ref={gridContainer}
+      onScrollCapture={(e) => {
+        if (!_VTableContext.isSticky && props.mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
+        if (props.type === 'body' && props.onScrollTopSync) props.onScrollTopSync(e, props.mgType);
+        _onScrollEvent();
+      }}
+      style={{
+        height: stateProps.visibleHeight,
+        ...(props.gridStyle || {})
+      }}
     >
       <div style={{
         paddingTop: grid.startVerticalOffset,
