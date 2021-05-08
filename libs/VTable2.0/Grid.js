@@ -329,7 +329,7 @@ const Grid = (props, ref) => {
   const defaultGridRow = (row, rowIndex, {type}) => {
     let realRowIndex = rowIndex + grid.startRowIndex;
     // 是否选中
-    const {rowSelection, rowKey} = props;
+    const {rowSelection = {}, rowKey} = props;
     const {selectedRowKeys = []} = rowSelection;
     // const _rowKey = rowKey ? (sameType(rowKey, 'Function') ? rowKey(row) : row[rowKey]) : realRowIndex;
     const _rowKey = getRowKey(rowKey, row, realRowIndex);
