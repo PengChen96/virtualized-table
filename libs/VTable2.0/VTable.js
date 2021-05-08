@@ -5,7 +5,7 @@ import VTableContext from './context/VTableContext';
 import MultiGrid from './MultiGrid';
 import {isSupportSticky} from './utils/isSupportSticky';
 import './styles/vtable.less';
-import {sameType} from './utils/base';
+import {sameType, classNames} from './utils/base';
 
 const VTable = (props) => {
 
@@ -61,13 +61,15 @@ const VTable = (props) => {
         originDataSource: props.dataSource,
       }}
     >
-      <div className={`vt-table ${props.wrapperClassName}`}>
+      <div className={
+        classNames('vt-table', props.wrapperClassName)
+      }>
         {
           !isSticky && <MultiGrid
             {...props}
             ref={vtHeader}
             type={'header'}
-            className={`vt-table-header ${props.className}`}
+            className={classNames('vt-table-header', props.className)}
             visibleHeight={props.rowHeight || 40}
             minRowHeight={props.rowHeight}
             dataSource={getHeaderTitle}

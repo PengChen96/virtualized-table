@@ -35,3 +35,23 @@ export const sameType = (value, type) => {
   }
 };
 
+// classNames('foo', 'bar'); // => 'foo bar'
+// classNames('foo', { bar: true }); // => 'foo bar'
+// classNames({ 'foo-bar': true }); // => 'foo-bar'
+// classNames({ 'foo-bar': false }); // => ''
+// classNames({ foo: true }, { bar: true }); // => 'foo bar'
+// classNames({ foo: true, bar: true }); // => 'foo bar'
+export function classNames () {
+  let className = '';
+  for (let i in arguments) {
+    if (sameType(arguments[i], 'String')) {
+      className += ` ${arguments[i]}`;
+    }
+    if (sameType(arguments[i], 'Object')) {
+      Object.keys(arguments[i]).forEach((k) => {
+        className += arguments[i][k] ? ` ${k}` : '';
+      })
+    }
+  }
+  return className.trim();
+};

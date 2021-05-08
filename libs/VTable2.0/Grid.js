@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './styles/grid.less';
 import {getColumnsWidth} from './utils';
 import {getFixedCellInfo} from './utils/fixUtil';
-import {sameType} from './utils/base';
+import {sameType, classNames} from './utils/base';
 import VTableContext from './context/VTableContext';
 import {getRowKey} from "./utils/rowKey";
 
@@ -256,7 +256,7 @@ const Grid = (props, ref) => {
     const lastFixLeftShadow = lastFixLeft ? 'vt-cell-fix-left-last' : '';
     const firstFixRightShadow = firstFixRight ? 'vt-cell-fix-right-first' : '';
     // className
-    const className = column.className;
+    const {className} = column;
     return <div
       key={`cell_${realRowIndex}_${realColumnIndex}`}
       data-key={`cell_${realRowIndex}_${realColumnIndex}`}
@@ -333,11 +333,14 @@ const Grid = (props, ref) => {
     const {selectedRowKeys = []} = rowSelection;
     // const _rowKey = rowKey ? (sameType(rowKey, 'Function') ? rowKey(row) : row[rowKey]) : realRowIndex;
     const _rowKey = getRowKey(rowKey, row, realRowIndex);
-    const checked = selectedRowKeys.includes(_rowKey);
+    const selected = selectedRowKeys.includes(_rowKey);
     return <div
       key={`row_${realRowIndex}`}
       data-key={`row_${realRowIndex}`}
-      className={`vt-grid-row ${checked ? 'vt-grid-row-selected' : ''}`}
+      className={classNames(
+        'vt-grid-row',
+        {'vt-grid-row-selected': selected}
+      )}
       style={{
         // height: stateProps.estimatedRowHeight,
         // width: stateProps.visibleWidth
@@ -397,7 +400,7 @@ const Grid = (props, ref) => {
 
   };
   return <>
-    <div className={`vt-grid-container ${props.className}`}
+    <div className={classNames('vt-grid-container', props.className)}
       ref={gridContainer}
       onScrollCapture={(e) => {
         if (!_VTableContext.isSticky && props.mgType === 'mainMultiGrid') _VTableContext.onScroll(e);

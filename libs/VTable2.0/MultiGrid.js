@@ -6,6 +6,7 @@ import {formatFixedLeftColumns, formatFixedRightColumns} from './utils/fixUtil';
 import {deepClone} from './utils/deepClone';
 import {getSelfAdaptionColumns} from './utils/columns';
 import {getRowKey} from "./utils/rowKey";
+import {classNames} from "./utils/base";
 import './styles/multi-grid.less';
 import VTableContext from './context/VTableContext';
 
@@ -79,7 +80,10 @@ const MultiGrid =  (props, ref) => {
           return [
             <div
               key={1}
-              className={`v-checkbox-container ${disabled ? 'v-checkbox-container-disabled' : ''}`}
+              className={classNames(
+                'v-checkbox-container',
+                {'v-checkbox-container-disabled': disabled}
+              )}
               onClick={(e) => {
                 if (!disabled) {
                   _onChange(e, row, realRowIndex);
@@ -191,7 +195,7 @@ const MultiGrid =  (props, ref) => {
   }, []);
 
   return <>
-    <div className={`vt-multi-grid-container ${props.mgClassName || ''}`}
+    <div className={classNames('vt-multi-grid-container', props.mgClassName)}
       ref={_multiGridContainer}>
       {
         _VTableContext.isSticky ? <Grid
