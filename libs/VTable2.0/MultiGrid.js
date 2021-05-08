@@ -1,11 +1,11 @@
 
-import React, {useContext, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
+import React, {useContext, useEffect, useImperativeHandle, useMemo, useRef, useState, useCallback} from 'react';
 import Grid from './Grid';
 import PropTypes from 'prop-types';
 import {formatFixedLeftColumns, formatFixedRightColumns} from './utils/fixUtil';
 import {deepClone} from './utils/deepClone';
 import {getSelfAdaptionColumns} from './utils/columns';
-import {sameType} from './utils/base';
+import {getRowKey} from "./utils/rowKey";
 import './styles/multi-grid.less';
 import VTableContext from './context/VTableContext';
 
@@ -71,7 +71,8 @@ const MultiGrid =  (props, ref) => {
         },
         render: (value, row, rowIndex, realRowIndex) => {
           // 是否选中
-          let rowKey = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(row) : row[props.rowKey]) : realRowIndex;
+          // let rowKey = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(row) : row[props.rowKey]) : realRowIndex;
+          const rowKey = getRowKey(props.rowKey, row, realRowIndex);
           const checked = selectedRowKeys.includes(rowKey);
           // 是否禁用
           let disabled = getCheckboxProps ? getCheckboxProps(row).disabled : false;
@@ -101,7 +102,8 @@ const MultiGrid =  (props, ref) => {
     const {originDataSource} = _VTableContext;
     const {rowSelection} = props;
     const {selectedRowKeys = [], onChange = ()=>{}, onSelect = () => {}} = rowSelection;
-    let rowKey = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(row) : row[props.rowKey]) : realRowIndex;
+    // let rowKey = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(row) : row[props.rowKey]) : realRowIndex;
+    const rowKey = getRowKey(props.rowKey, row, realRowIndex);
     let rowKeysSet = new Set(selectedRowKeys);
     let selected = undefined;
     if (rowKeysSet.has(rowKey)) {
@@ -113,7 +115,8 @@ const MultiGrid =  (props, ref) => {
     }
     const _selectedRowKeys = Array.from(rowKeysSet);
     const _selectedRows = originDataSource.filter((v, i) => {
-      const k = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(v) : v[props.rowKey]) : i;
+      // const k = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(v) : v[props.rowKey]) : i;
+      const k = getRowKey(props.rowKey, v, i);
       return _selectedRowKeys.includes(k);
     });
     onChange(_selectedRowKeys, _selectedRows);
@@ -131,7 +134,8 @@ const MultiGrid =  (props, ref) => {
       let _selectedRows = originDataSource.filter((v, i) => {
         const disabled = getCheckboxProps ? getCheckboxProps(v).disabled : false;
         if (!disabled) {
-          const k = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(v) : v[props.rowKey]) : i;
+          // const k = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(v) : v[props.rowKey]) : i;
+          const k = getRowKey(props.rowKey, v, i);
           _selectedRowKeys.push(k);
         }
         return !disabled;
@@ -170,7 +174,7 @@ const MultiGrid =  (props, ref) => {
   }, [hasFixed, columns, props.fixedRightColumnCount]);
 
   //
-  const onScrollTopSync = (e, mgType) => {
+  const onScrollTopSync = useCallback((e, mgType) => {
     let scrollTop = e && e.target && e.target.scrollTop;
     // window.requestAnimationFrame(() => {
       if (multiGridContainerLeft.current && multiGridContainerRight.current) {
@@ -184,7 +188,7 @@ const MultiGrid =  (props, ref) => {
     //   multiGridContainerLeft.current.gridContainer.scrollTop = scrollTop;
     //   multiGridContainer.current.gridContainer.scrollTop = scrollTop;
     // }
-  };
+  }, []);
 
   return <>
     <div className={`vt-multi-grid-container ${props.mgClassName || ''}`}

@@ -6,6 +6,7 @@ import {getColumnsWidth} from './utils';
 import {getFixedCellInfo} from './utils/fixUtil';
 import {sameType} from './utils/base';
 import VTableContext from './context/VTableContext';
+import {getRowKey} from "./utils/rowKey";
 
 const ALIGN_TYPE = {
   left: 'vt-align-left',
@@ -327,10 +328,16 @@ const Grid = (props, ref) => {
    */
   const defaultGridRow = (row, rowIndex, {type}) => {
     let realRowIndex = rowIndex + grid.startRowIndex;
+    // 是否选中
+    const {rowSelection, rowKey} = props;
+    const {selectedRowKeys = []} = rowSelection;
+    // const _rowKey = rowKey ? (sameType(rowKey, 'Function') ? rowKey(row) : row[rowKey]) : realRowIndex;
+    const _rowKey = getRowKey(rowKey, row, realRowIndex);
+    const checked = selectedRowKeys.includes(_rowKey);
     return <div
       key={`row_${realRowIndex}`}
       data-key={`row_${realRowIndex}`}
-      className="vt-grid-row"
+      className={`vt-grid-row ${checked ? 'vt-grid-row-selected' : ''}`}
       style={{
         // height: stateProps.estimatedRowHeight,
         // width: stateProps.visibleWidth
