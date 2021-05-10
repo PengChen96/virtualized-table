@@ -1,5 +1,5 @@
 
-import React, {useEffect, useState, useRef, useImperativeHandle, useContext} from 'react';
+import React, {useEffect, useState, useMemo, useRef, useImperativeHandle, useContext} from 'react';
 import PropTypes from 'prop-types';
 import './styles/grid.less';
 import {getColumnsWidth} from './utils';
@@ -53,7 +53,12 @@ const Grid = (props, ref) => {
     // 左右偏移渲染个数
     columnOffsetCount: props.columnOffsetCount || 4,
 
+    fixedLeftColumns: props.fixedLeftColumns || [],
+    fixedRightColumns: props.fixedRightColumns || []
+
   };
+  let [gridScrollTop, setGridScrollTop] = useState(null);
+  let [gridScrollLeft, setGridScrollLeft] = useState(null);
   let [grid, setGrid] = useState({
     // 虚拟列
     virtualColumns: [],
@@ -72,6 +77,10 @@ const Grid = (props, ref) => {
     startHorizontalOffset: 0,
     endHorizontalOffset: 0,
   });
+  // 真实展示的列
+  const displayedColumns = useMemo(() => {
+    return [...stateProps.fixedLeftColumns, ...grid.virtualColumns, ...stateProps.fixedRightColumns];
+  }, [stateProps.fixedLeftColumns, grid.virtualColumns, stateProps.fixedRightColumns]);
 
   const updateGrid = (partialState) => {
     setGrid(oldState => ({
@@ -89,7 +98,7 @@ const Grid = (props, ref) => {
     // updateGrid({
     //   virtualData: props.dataSource.slice(grid.startRowIndex, endRowIndex)
     // });
-    _onScrollEvent();
+    _onScrollEvent(true);
     console.log('dataSource change');
     //
     if (props.type === 'body' && props.mgType === 'mainMultiGrid') {
@@ -102,24 +111,27 @@ const Grid = (props, ref) => {
     props.columns,
   ]);
 
-  const _onScrollEvent = () => {
+  const _onScrollEvent = (didMount) => {
 
     // window.requestAnimationFrame(() => {
     // 垂直方向滚动
-    _onVerticalScroll();
+    _onVerticalScroll(didMount);
     // 水平方向滚动
-    _onHorizontalScroll();
+    _onHorizontalScroll(didMount);
     // });
 
   };
   // 垂直方向滚动
-  const _onVerticalScroll = () => {
-    console.log('vertical');
+  const _onVerticalScroll = (didMount) => {
     const {scrollTop} = gridContainer.current;
-    // 当前scrollTop
-    let gridInfo = getRealGridVerticalScrollInfo({scrollTop});
-    // 更新渲染
-    updateGrid(gridInfo);
+    if (didMount || gridScrollTop !== scrollTop) {
+      console.log('vertical');
+      setGridScrollTop(scrollTop);
+      // 当前scrollTop
+      let gridInfo = getRealGridVerticalScrollInfo({scrollTop});
+      // 更新渲染
+      updateGrid(gridInfo);
+    }
   };
   // 计算获取网格垂直滚动对应的实时信息
   const getRealGridVerticalScrollInfo = ({scrollTop}) => {
@@ -157,12 +169,16 @@ const Grid = (props, ref) => {
   };
 
   // 水平方向滚动
-  const _onHorizontalScroll = () => {
+  const _onHorizontalScroll = (didMount) => {
     const {scrollLeft} = gridContainer.current;
-    // 当前scrollLeft
-    let gridInfo = getRealGridHorizontalScrollInfo({scrollLeft});
-    // 更新渲染
-    updateGrid(gridInfo);
+    if (didMount || gridScrollLeft !== scrollLeft) {
+      console.log('horizontal');
+      setGridScrollLeft(scrollLeft);
+      // 当前scrollLeft
+      let gridInfo = getRealGridHorizontalScrollInfo({scrollLeft});
+      // 更新渲染
+      updateGrid(gridInfo);
+    }
   };
   // 计算获取网格水平滚动对应的实时信息
   const getRealGridHorizontalScrollInfo = ({scrollLeft}) => {
@@ -327,7 +343,7 @@ const Grid = (props, ref) => {
    * @param {String} type 类型 header|body|footer
    */
   const defaultGridRow = (row, rowIndex, {type}) => {
-    let realRowIndex = rowIndex + grid.startRowIndex;
+    const realRowIndex = rowIndex + grid.startRowIndex;
     // 是否选中
     const {rowSelection = {}, rowKey} = props;
     const {selectedRowKeys = []} = rowSelection;
@@ -347,7 +363,7 @@ const Grid = (props, ref) => {
       }}
     >
       {
-        [...(props.fixedLeftColumns || []), ...grid.virtualColumns, ...(props.fixedRightColumns || [])].map((column, columnIndex) => {
+        displayedColumns.map((column, columnIndex) => {
           let gridRowCell = _cellRender(row, rowIndex, column, columnIndex, {type});
           // 有要重写对应header|body|footer的cell
           if (props.components && props.components[type] && props.components[type].cell) {
