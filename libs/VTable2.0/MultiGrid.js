@@ -206,6 +206,8 @@ const MultiGrid =  (props, ref) => {
           columns={getColumns}
           fixedLeftColumns={getFixedLeftColumns}
           fixedRightColumns={getFixedRightColumns}
+          // 这里加mgType是为了getBodyScrollBarWidth
+          mgType={'mainMultiGrid'}
         /> : <>
             <Grid
               {...props}
