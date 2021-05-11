@@ -45,8 +45,13 @@ const MultiGrid =  (props, ref) => {
       const {columnWidth = 60} = rowSelection;
       offsetWidth = offsetWidth - columnWidth;
     }
-    let scrollBarWidth = props.bodyScrollBarWidth || 0;
-    let autoColumns = getSelfAdaptionColumns({columns, offsetWidth, scrollBarWidth}).columns;
+    const scrollBarWidth = props.bodyScrollBarWidth || 0;
+    const clientWidth = offsetWidth - scrollBarWidth;
+    const columnsObj = getSelfAdaptionColumns({
+      columns,
+      clientWidth,
+    });
+    let autoColumns = columnsObj.columns;
     // 表头最后一列的宽度加上滚动条宽度
     if (props.type === 'header' && autoColumns.length > 0) {
       autoColumns[autoColumns.length - 1].width = autoColumns[autoColumns.length - 1].width + scrollBarWidth;
@@ -98,7 +103,7 @@ const MultiGrid =  (props, ref) => {
       });
     }
     setColumns(autoColumns);
-    setHasFixed(getSelfAdaptionColumns({columns, offsetWidth, scrollBarWidth}).hasFixed);
+    setHasFixed(columnsObj.hasFixed);
   };
   // 勾选改变
   const _onChange = (e, row, realRowIndex) => {

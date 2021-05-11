@@ -20,19 +20,17 @@ export const getColumnsWidth = (columns = []) => {
 /**
  * 自适应宽度
  * @param {Array} columns 列
- * @param {Number} offsetWidth 列表展示宽度
- * @param {Number} scrollBarWidth 滚动条宽度
+ * @param {Number} clientWidth 列表展示宽度 去掉滚动条的
  * @returns {Object} {columns, hasFixed}
  */
-export const getSelfAdaptionColumns = ({columns, offsetWidth, scrollBarWidth}) => {
+export const getSelfAdaptionColumns = ({columns, clientWidth}) => {
   let hasFixed = true;
   let cloneColumns = deepClone(columns);
   const allColumnsWidth = getColumnsWidth(columns);
   // const scrollBarWidth = getScrollBarWidth();
-  const _offsetWidth = offsetWidth - scrollBarWidth;
-  if (_offsetWidth > allColumnsWidth) {
+  if (clientWidth > allColumnsWidth) {
     const columnsLen = cloneColumns.length;
-    const absentAllWidth = _offsetWidth - allColumnsWidth;
+    const absentAllWidth = clientWidth - allColumnsWidth;
     // 取余
     const remainder = absentAllWidth % columnsLen;
     // 向下取整
