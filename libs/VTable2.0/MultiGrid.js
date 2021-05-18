@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import {formatFixedLeftColumns, formatFixedRightColumns} from './utils/fixUtil';
 import {deepClone} from './utils/deepClone';
 import {getSelfAdaptionColumns} from './utils/columns';
-import {getRowKey} from "./utils/rowKey";
-import {classNames} from "./utils/base";
+import {getRowKey} from './utils/rowKey';
+import {classNames} from './utils/base';
 import './styles/multi-grid.less';
 import VTableContext from './context/VTableContext';
 
@@ -186,11 +186,11 @@ const MultiGrid =  (props, ref) => {
   const onScrollTopSync = useCallback((e, mgType) => {
     let scrollTop = e && e.target && e.target.scrollTop;
     // window.requestAnimationFrame(() => {
-      if (multiGridContainerLeft.current && multiGridContainerRight.current) {
-        multiGridContainerLeft.current.gridContainer.scrollTop = scrollTop;
-        multiGridContainerRight.current.gridContainer.scrollTop = scrollTop;
-        // multiGridContainer.current.gridContainer.scrollTop = scrollTop;
-      }
+    if (multiGridContainerLeft.current && multiGridContainerRight.current) {
+      multiGridContainerLeft.current.gridContainer.scrollTop = scrollTop;
+      multiGridContainerRight.current.gridContainer.scrollTop = scrollTop;
+      // multiGridContainer.current.gridContainer.scrollTop = scrollTop;
+    }
     // });
 
     // if (multiGridContainerLeft.current && multiGridContainer.current && mgType==='rightMultiGrid') {
@@ -257,7 +257,6 @@ const MultiGrid =  (props, ref) => {
           }
         </>
       }
-
     </div>
   </>;
 

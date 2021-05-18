@@ -6,7 +6,7 @@ import {getColumnsWidth} from './utils';
 import {getFixedCellInfo} from './utils/fixUtil';
 import {sameType, classNames} from './utils/base';
 import VTableContext from './context/VTableContext';
-import {getRowKey} from "./utils/rowKey";
+import {getRowKey} from './utils/rowKey';
 
 const ALIGN_TYPE = {
   left: 'vt-align-left',
@@ -413,7 +413,6 @@ const Grid = (props, ref) => {
       </props.components.row>;
     }
     return gridRow;
-
   };
   return <>
     <div className={classNames('vt-grid-container', props.className)}
