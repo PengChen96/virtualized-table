@@ -219,19 +219,37 @@ const Grid = (props, ref) => {
       virtualColumns
     };
   };
-  // 渲染单元格
-  const _cellRender = (row, rowIndex, column, columnIndex, {type}) => {
-
+  // cell bordered
+  const getCellBordered = ({type}) => {
+    // 是否显示边框
+    let bordered = type === 'header' ? (props.headerBordered || props.bordered) : props.bordered;
+    const noLastChildBorderRight = _VTableContext.isSticky ? 'vt-has-last-child-border-right' : 'vt-no-last-child-border-right';
+    bordered = `vt-default-bordered ${bordered ? 'vt-bordered-right' : ''} ${noLastChildBorderRight}`;
+    return bordered;
+  };
+  // cell align
+  const getCellAlign = ({type, column}) => {
+    let headerAlign = ALIGN_TYPE[column.headerAlign] || ALIGN_TYPE.center;
+    let bodyAlign = ALIGN_TYPE[column.align] || ALIGN_TYPE.left;
+    let align = type === 'header' ? headerAlign : bodyAlign;
+    return align;
+  };
+  // cell fixed shadow
+  const getCellFixedShadow = ({column}) => {
+    const {fixedLeftColumns, fixedRightColumns} = props;
+    const cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
+    const {lastFixLeft, firstFixRight} = cellInfo;
+    const lastFixLeftShadow = lastFixLeft ? 'vt-cell-fix-left-last' : '';
+    const firstFixRightShadow = firstFixRight ? 'vt-cell-fix-right-first' : '';
+    return `${lastFixLeftShadow} ${firstFixRightShadow}`;
+  };
+  // 合并列
+  const getCellColSpanStyle = ({column, realRowIndex, realColumnIndex, columnIndex}) => {
     const {columns} = stateProps;
-
-    let realRowIndex = rowIndex + grid.startRowIndex;
-    let realColumnIndex = column.fixed ? column.realFcIndex : columnIndex + grid.startColumnIndex;
-    let value = row[column['key'] || column['dataIndex']];
     let width = column.width || stateProps.estimatedColumnWidth;
-
     // colSpan目前方案是传方法确定哪一行需要列合并
-    let colSpan = sameType(column.colSpan, 'Function') ? column.colSpan(realRowIndex) : 1;
-    let rowMergeColumns = columns.slice(realColumnIndex, realColumnIndex + colSpan);
+    const colSpan = sameType(column.colSpan, 'Function') ? column.colSpan(realRowIndex) : 1;
+    const rowMergeColumns = columns.slice(realColumnIndex, realColumnIndex + colSpan);
     if (rowMergeColumns.length > 1) {
       width = getColumnsWidth(rowMergeColumns);
       // console.log(rowMergeColumns, realColumnIndex, realColumnIndex + colSpan);
@@ -256,27 +274,59 @@ const Grid = (props, ref) => {
         display = 'flex';
       }
     }
+    return {
+      width,
+      display
+    };
+  };
+  // 渲染单元格
+  const _cellRender = (row, rowIndex, column, columnIndex, {type}) => {
 
+    let realRowIndex = rowIndex + grid.startRowIndex;
+    let realColumnIndex = column.fixed ? column.realFcIndex : columnIndex + grid.startColumnIndex;
+    let value = row[column['key'] || column['dataIndex']];
+    let {width, display} = getCellColSpanStyle({column, realRowIndex, realColumnIndex, columnIndex});
+    // let width = column.width || stateProps.estimatedColumnWidth;
+    //
+    // // colSpan目前方案是传方法确定哪一行需要列合并
+    // let colSpan = sameType(column.colSpan, 'Function') ? column.colSpan(realRowIndex) : 1;
+    // let rowMergeColumns = columns.slice(realColumnIndex, realColumnIndex + colSpan);
+    // if (rowMergeColumns.length > 1) {
+    //   width = getColumnsWidth(rowMergeColumns);
+    //   // console.log(rowMergeColumns, realColumnIndex, realColumnIndex + colSpan);
+    // }
+    // // 改行设置colSpan=0，直接隐藏，就不设置width=0了； 不隐藏设置width=0，会显示border和value，有问题
+    // let display = colSpan === 0 ? 'none' : 'flex';
+    // // 如果虚拟列的第一列是合并导致隐藏的，需要让它占个位置，不然这行会错位
+    // // 如果是尾部列不用考虑这个问题
+    // let vFirstColSpan = grid.virtualColumns[0] && grid.virtualColumns[0].colSpan;
+    // if (vFirstColSpan && sameType(vFirstColSpan, 'Function') && vFirstColSpan(realRowIndex) === 0) {
+    //   // console.log('virtualColumns的第一列是display none的');
+    //   // 截取第一列到当前列
+    //   let startVirtualColumns = grid.virtualColumns.slice(0, columnIndex + 1);
+    //   // console.log(startVirtualColumns, 0, columnIndex + 1, value, realColumnIndex);
+    //   // 过滤出第一列到当前列display none的列
+    //   let svHiddenColumns = startVirtualColumns.filter((svColumn) => {
+    //     let svColSpan = sameType(svColumn.colSpan, 'Function') ? svColumn.colSpan(realRowIndex) : 1;
+    //     return svColSpan === 0;
+    //   });
+    //   // 这两个columns相等，说明第一列到当前列全是隐藏到列
+    //   if (startVirtualColumns.length === svHiddenColumns.length) {
+    //     display = 'flex';
+    //   }
+    // }
     // 是否显示边框
-    let bordered = type === 'header' ? (props.headerBordered || props.bordered) : props.bordered;
-    let noLastChildBorderRight = _VTableContext.isSticky ? 'vt-has-last-child-border-right' : 'vt-no-last-child-border-right';
-    bordered = `vt-default-bordered ${bordered ? 'vt-bordered-right' : ''} ${noLastChildBorderRight}`;
+    const bordered = getCellBordered({type});
     // 对齐方式 'left' | 'right' | 'center'
-    let headerAlign = ALIGN_TYPE[column.headerAlign] || ALIGN_TYPE.center;
-    let bodyAlign = ALIGN_TYPE[column.align] || ALIGN_TYPE.left;
-    let align = type === 'header' ? headerAlign : bodyAlign;
+    const align = getCellAlign({type, column});
     // 固定列阴影
-    const {fixedLeftColumns, fixedRightColumns} = props;
-    const cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
-    const {lastFixLeft, firstFixRight} = cellInfo;
-    const lastFixLeftShadow = lastFixLeft ? 'vt-cell-fix-left-last' : '';
-    const firstFixRightShadow = firstFixRight ? 'vt-cell-fix-right-first' : '';
+    const cellFixedShadow = getCellFixedShadow({column});
     // className
     const {className} = column;
     return <div
       key={`cell_${realRowIndex}_${realColumnIndex}`}
       data-key={`cell_${realRowIndex}_${realColumnIndex}`}
-      className={`vt-grid-cell ${lastFixLeftShadow} ${firstFixRightShadow} ${bordered} ${align} ${className}`}
+      className={`vt-grid-cell ${cellFixedShadow} ${bordered} ${align} ${className}`}
       onClick={() => __onCellTap(
         value,
         row, rowIndex, realRowIndex,
