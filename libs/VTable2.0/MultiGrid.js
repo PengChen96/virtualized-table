@@ -183,13 +183,14 @@ const MultiGrid =  (props, ref) => {
   }, [hasFixed, columns, props.fixedRightColumnCount]);
 
   //
-  const onScrollTopSync = useCallback((e, mgType) => {
+  const onScrollTopSync = useCallback((e) => {
     let scrollTop = e && e.target && e.target.scrollTop;
     // window.requestAnimationFrame(() => {
-    if (multiGridContainerLeft.current && multiGridContainerRight.current) {
+    if (multiGridContainerLeft.current) {
       multiGridContainerLeft.current.gridContainer.scrollTop = scrollTop;
+    }
+    if (multiGridContainerRight.current) {
       multiGridContainerRight.current.gridContainer.scrollTop = scrollTop;
-      // multiGridContainer.current.gridContainer.scrollTop = scrollTop;
     }
     // });
 
