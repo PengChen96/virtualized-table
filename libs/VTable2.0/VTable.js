@@ -61,9 +61,10 @@ const VTable = (props) => {
         originDataSource: props.dataSource,
       }}
     >
-      <div className={
-        classNames('vt-table', props.wrapperClassName)
-      }>
+      <div
+        className={classNames('vt-table', props.wrapperClassName)}
+        style={{height: props.visibleHeight}}
+      >
         {
           !isSticky && <MultiGrid
             {...props}
