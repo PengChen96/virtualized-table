@@ -7,6 +7,7 @@ import {deepClone} from './utils/deepClone';
 import {getSelfAdaptionColumns} from './utils/columns';
 import {getRowKey} from './utils/rowKey';
 import {classNames} from './utils/base';
+import {isRowsHeightCached, setRowHeightCache} from './cache/rowHeightCache';
 import './styles/multi-grid.less';
 import VTableContext from './context/VTableContext';
 
@@ -28,6 +29,8 @@ const MultiGrid =  (props, ref) => {
   let [columns, setColumns] = useState(props.columns);
   let [hasFixed, setHasFixed] = useState(true);
 
+  // let [rowsHeightCacheId, setRowsHeightCacheId] = useState(null);
+
   useEffect(() => {
     if ((props.columns || []).length > 0) {
       reSetColumns();
@@ -35,6 +38,22 @@ const MultiGrid =  (props, ref) => {
     }
     return () => window.removeEventListener('resize', reSetColumns);
   }, [props.columns, props.bodyScrollBarWidth, props.rowSelection]);
+
+  useEffect(() => {
+    // 同步固定列的高度
+    const {fixedLeftColumnCount = 0, fixedRightColumnCount = 0} = props;
+    if (!_VTableContext.isSticky && (fixedLeftColumnCount > 0 || fixedRightColumnCount > 0)) {
+      let timer = setTimeout(() => {
+        // syncRowHeight({forceUpdate: true});
+        const {current} = multiGridContainer;
+        current.gridContainer.scrollTop += 1;
+        window.requestAnimationFrame(() => {
+          current.gridContainer.scrollTop -= 1;
+        });
+        clearTimeout(timer);
+      }, 150);
+    }
+  }, [props.columns, props.dataSource]);
 
   // 设置自适应列 // TODO 这里的适应列宽 移到外层去
   const reSetColumns = () => {
@@ -183,22 +202,38 @@ const MultiGrid =  (props, ref) => {
   }, [hasFixed, columns, props.fixedRightColumnCount]);
 
   //
-  const onScrollTopSync = useCallback((e) => {
-    let scrollTop = e && e.target && e.target.scrollTop;
+  const onScrollTopSync = useCallback((e, {startRowIndex, endRowIndex}) => {
+    const scrollTop = e && e.target && e.target.scrollTop;
     // window.requestAnimationFrame(() => {
-    if (multiGridContainerLeft.current) {
-      multiGridContainerLeft.current.gridContainer.scrollTop = scrollTop;
+    const {current: leftCurrent} = multiGridContainerLeft;
+    const {current: rightCurrent} = multiGridContainerRight;
+    //
+    if (leftCurrent) {
+      leftCurrent.gridContainer.scrollTop = scrollTop;
     }
-    if (multiGridContainerRight.current) {
-      multiGridContainerRight.current.gridContainer.scrollTop = scrollTop;
+    if (rightCurrent) {
+      rightCurrent.gridContainer.scrollTop = scrollTop;
     }
     // });
-
-    // if (multiGridContainerLeft.current && multiGridContainer.current && mgType==='rightMultiGrid') {
-    //   multiGridContainerLeft.current.gridContainer.scrollTop = scrollTop;
-    //   multiGridContainer.current.gridContainer.scrollTop = scrollTop;
-    // }
+    syncRowHeight({startRowIndex, endRowIndex});
   }, []);
+  // no isSticky
+  const syncRowHeight = ({startRowIndex, endRowIndex}) => {
+    // 同步固定列的高度
+    const {fixedLeftColumnCount = 0, fixedRightColumnCount = 0} = props;
+    if (!_VTableContext.isSticky && props.type === 'body' && (fixedLeftColumnCount > 0 || fixedRightColumnCount > 0)) {
+      const {current} = multiGridContainer;
+      const gridRowCollection = current.gridContainer.getElementsByClassName('vt-grid-row');
+      const gridRowHeightArr = Array.prototype.slice.call(gridRowCollection).map((item) => {
+        return item.clientHeight;
+      });
+      //
+      const cached = isRowsHeightCached({startRowIndex, endRowIndex, rowHeightArr: gridRowHeightArr});
+      if (!cached) {
+        setRowHeightCache({startRowIndex, endRowIndex, rowHeightArr: gridRowHeightArr});
+      }
+    }
+  };
 
   return <>
     <div className={classNames('vt-multi-grid-container', props.mgClassName)}
@@ -232,6 +267,7 @@ const MultiGrid =  (props, ref) => {
                 columns={getFixedLeftColumns}
                 fixedLeftColumns={[]}
                 fixedRightColumns={[]}
+                // rowsHeightCacheId={rowsHeightCacheId}
                 mgType={'leftMultiGrid'}
                 gridStyle={{
                   marginBottom: props.type === 'body' ? -props.bodyScrollBarWidth : undefined
@@ -249,6 +285,7 @@ const MultiGrid =  (props, ref) => {
                 columns={getFixedRightColumns}
                 fixedLeftColumns={[]}
                 fixedRightColumns={[]}
+                // rowsHeightCacheId={rowsHeightCacheId}
                 mgType={'rightMultiGrid'}
                 gridStyle={{
                   marginBottom: props.type === 'body' ? -props.bodyScrollBarWidth : undefined

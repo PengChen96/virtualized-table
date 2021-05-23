@@ -7,6 +7,7 @@ import {getFixedCellInfo} from './utils/fixUtil';
 import {sameType, classNames} from './utils/base';
 import VTableContext from './context/VTableContext';
 import {getRowKey} from './utils/rowKey';
+import {getRowHeightArr} from './cache/rowHeightCache';
 
 const ALIGN_TYPE = {
   left: 'vt-align-left',
@@ -285,6 +286,7 @@ const Grid = (props, ref) => {
     let realRowIndex = rowIndex + grid.startRowIndex;
     let realColumnIndex = column.fixed ? column.realFcIndex : columnIndex + grid.startColumnIndex;
     let value = row[column['key'] || column['dataIndex']];
+    //
     let {width, display} = getCellColSpanStyle({column, realRowIndex, realColumnIndex, columnIndex});
     // let width = column.width || stateProps.estimatedColumnWidth;
     //
@@ -395,11 +397,20 @@ const Grid = (props, ref) => {
   const defaultGridRow = (row, rowIndex, {type}) => {
     const realRowIndex = rowIndex + grid.startRowIndex;
     // 是否选中
-    const {rowSelection = {}, rowKey} = props;
+    const {rowSelection = {}, rowKey, mgType} = props;
     const {selectedRowKeys = []} = rowSelection;
     // const _rowKey = rowKey ? (sameType(rowKey, 'Function') ? rowKey(row) : row[rowKey]) : realRowIndex;
     const _rowKey = getRowKey(rowKey, row, realRowIndex);
     const selected = selectedRowKeys.includes(_rowKey);
+    //
+    let height = undefined;
+    if (!_VTableContext.isSticky && type === 'body' && mgType !== 'mainMultiGrid') {
+      let rowHeightArr = getRowHeightArr({
+        startRowIndex: grid.startRowIndex,
+        endRowIndex: grid.endRowIndex
+      });
+      height = rowHeightArr[rowIndex];
+    }
     return <div
       key={`row_${realRowIndex}`}
       data-key={`row_${realRowIndex}`}
@@ -408,6 +419,7 @@ const Grid = (props, ref) => {
         {'vt-grid-row-selected': selected}
       )}
       style={{
+        height
         // height: stateProps.estimatedRowHeight,
         // width: stateProps.visibleWidth
       }}
@@ -469,7 +481,12 @@ const Grid = (props, ref) => {
       ref={gridContainer}
       onScrollCapture={(e) => {
         if (!_VTableContext.isSticky && props.mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
-        if (props.type === 'body' && props.onScrollTopSync) props.onScrollTopSync(e, props.mgType);
+        if (props.type === 'body' && props.onScrollTopSync) {
+          props.onScrollTopSync(e, {
+            startRowIndex: grid.startRowIndex,
+            endRowIndex: grid.endRowIndex,
+          });
+        }
         _onScrollEvent();
       }}
       style={{
