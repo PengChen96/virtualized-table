@@ -55,9 +55,25 @@ const Grid = (props, ref) => {
     columnOffsetCount: props.columnOffsetCount || 4,
 
     fixedLeftColumns: props.fixedLeftColumns || [],
-    fixedRightColumns: props.fixedRightColumns || []
+    fixedRightColumns: props.fixedRightColumns || [],
 
   };
+  const {
+    type,
+    mgType,
+    //
+    rowKey,
+    rowSelection = {},
+    //
+    components,
+    onRow,
+    //
+    headerBordered,
+    bordered,
+    //
+    onScrollTopSync,
+    onCellTap
+  } = props;
   let [gridScrollTop, setGridScrollTop] = useState(null);
   let [gridScrollLeft, setGridScrollLeft] = useState(null);
   let [grid, setGrid] = useState({
@@ -102,14 +118,14 @@ const Grid = (props, ref) => {
     _onScrollEvent(true);
     console.log('dataSource change');
     //
-    if (props.type === 'body' && props.mgType === 'mainMultiGrid') {
+    if (type === 'body' && mgType === 'mainMultiGrid') {
       setTimeout(() => {
         _VTableContext.getBodyScrollBarWidth({ref: gridContainer});
       }, 0);
     }
   }, [
-    props.dataSource,
-    props.columns,
+    stateProps.dataSource,
+    stateProps.columns,
   ]);
 
   const _onScrollEvent = (didMount) => {
@@ -223,10 +239,10 @@ const Grid = (props, ref) => {
   // cell bordered
   const getCellBordered = ({type}) => {
     // 是否显示边框
-    let bordered = type === 'header' ? (props.headerBordered || props.bordered) : props.bordered;
+    let _bordered = type === 'header' ? (headerBordered || bordered) : bordered;
     const noLastChildBorderRight = _VTableContext.isSticky ? 'vt-has-last-child-border-right' : 'vt-no-last-child-border-right';
-    bordered = `vt-default-bordered ${bordered ? 'vt-bordered-right' : ''} ${noLastChildBorderRight}`;
-    return bordered;
+    _bordered = `vt-default-bordered ${_bordered ? 'vt-bordered-right' : ''} ${noLastChildBorderRight}`;
+    return _bordered;
   };
   // cell align
   const getCellAlign = ({type, column}) => {
@@ -237,7 +253,7 @@ const Grid = (props, ref) => {
   };
   // cell fixed shadow
   const getCellFixedShadow = ({column}) => {
-    const {fixedLeftColumns, fixedRightColumns} = props;
+    const {fixedLeftColumns, fixedRightColumns} = stateProps;
     const cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
     const {lastFixLeft, firstFixRight} = cellInfo;
     const lastFixLeftShadow = lastFixLeft ? 'vt-cell-fix-left-last' : '';
@@ -288,35 +304,6 @@ const Grid = (props, ref) => {
     let value = row[column['key'] || column['dataIndex']];
     //
     let {width, display} = getCellColSpanStyle({column, realRowIndex, realColumnIndex, columnIndex});
-    // let width = column.width || stateProps.estimatedColumnWidth;
-    //
-    // // colSpan目前方案是传方法确定哪一行需要列合并
-    // let colSpan = sameType(column.colSpan, 'Function') ? column.colSpan(realRowIndex) : 1;
-    // let rowMergeColumns = columns.slice(realColumnIndex, realColumnIndex + colSpan);
-    // if (rowMergeColumns.length > 1) {
-    //   width = getColumnsWidth(rowMergeColumns);
-    //   // console.log(rowMergeColumns, realColumnIndex, realColumnIndex + colSpan);
-    // }
-    // // 改行设置colSpan=0，直接隐藏，就不设置width=0了； 不隐藏设置width=0，会显示border和value，有问题
-    // let display = colSpan === 0 ? 'none' : 'flex';
-    // // 如果虚拟列的第一列是合并导致隐藏的，需要让它占个位置，不然这行会错位
-    // // 如果是尾部列不用考虑这个问题
-    // let vFirstColSpan = grid.virtualColumns[0] && grid.virtualColumns[0].colSpan;
-    // if (vFirstColSpan && sameType(vFirstColSpan, 'Function') && vFirstColSpan(realRowIndex) === 0) {
-    //   // console.log('virtualColumns的第一列是display none的');
-    //   // 截取第一列到当前列
-    //   let startVirtualColumns = grid.virtualColumns.slice(0, columnIndex + 1);
-    //   // console.log(startVirtualColumns, 0, columnIndex + 1, value, realColumnIndex);
-    //   // 过滤出第一列到当前列display none的列
-    //   let svHiddenColumns = startVirtualColumns.filter((svColumn) => {
-    //     let svColSpan = sameType(svColumn.colSpan, 'Function') ? svColumn.colSpan(realRowIndex) : 1;
-    //     return svColSpan === 0;
-    //   });
-    //   // 这两个columns相等，说明第一列到当前列全是隐藏到列
-    //   if (startVirtualColumns.length === svHiddenColumns.length) {
-    //     display = 'flex';
-    //   }
-    // }
     // 是否显示边框
     const bordered = getCellBordered({type});
     // 对齐方式 'left' | 'right' | 'center'
@@ -365,7 +352,7 @@ const Grid = (props, ref) => {
   };
   // 使用sticky实现固定列
   const getFixedCellStyle = ({column}) => {
-    const {fixedLeftColumns, fixedRightColumns} = props;
+    const {fixedLeftColumns, fixedRightColumns} = stateProps;
     let cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
     const {isSticky, fixLeft, fixRight} = cellInfo;
     return {
@@ -383,8 +370,8 @@ const Grid = (props, ref) => {
     column, columnIndex, realColumnIndex
   ) => {
     console.log(realRowIndex, realColumnIndex);
-    if (typeof props.onCellTap === 'function') {
-      props.onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
+    if (typeof onCellTap === 'function') {
+      onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
     }
   };
 
@@ -397,7 +384,6 @@ const Grid = (props, ref) => {
   const defaultGridRow = (row, rowIndex, {type}) => {
     const realRowIndex = rowIndex + grid.startRowIndex;
     // 是否选中
-    const {rowSelection = {}, rowKey, mgType} = props;
     const {selectedRowKeys = []} = rowSelection;
     // const _rowKey = rowKey ? (sameType(rowKey, 'Function') ? rowKey(row) : row[rowKey]) : realRowIndex;
     const _rowKey = getRowKey(rowKey, row, realRowIndex);
@@ -428,7 +414,7 @@ const Grid = (props, ref) => {
         displayedColumns.map((column, columnIndex) => {
           let gridRowCell = _cellRender(row, rowIndex, column, columnIndex, {type});
           // 有要重写对应header|body|footer的cell
-          if (props.components && props.components[type] && props.components[type].cell) {
+          if (components && components[type] && components[type].cell) {
             let realColumnIndex = columnIndex + grid.startColumnIndex;
             // {width, onResize}
             let defaultCellProps = typeof column.onCell === 'function' ? column.onCell(column, realRowIndex) : {};
@@ -437,7 +423,7 @@ const Grid = (props, ref) => {
               body: sameType(column.onBodyCell, 'Function') ? column.onBodyCell(column, realRowIndex) : undefined,
               footer: sameType(column.onFooterCell, 'Function') ? column.onFooterCell(column, realRowIndex) : undefined,
             };
-            let Cell = props.components[type].cell;
+            let Cell = components[type].cell;
             gridRowCell = <Cell
               key={`${realRowIndex}_${realColumnIndex}`}
               data-key={`${realRowIndex}_${realColumnIndex}`}
@@ -462,17 +448,17 @@ const Grid = (props, ref) => {
   const _gridRowRender = (row, rowIndex, {type}) => {
     let gridRow = defaultGridRow(row, rowIndex, {type});
     // 覆盖默认的 GridRow 元素
-    if (props.components && props.components.row) {
+    if (components && components.row) {
       let realRowIndex = rowIndex + grid.startRowIndex;
       // {index, moveRow}
-      let rowProps = typeof props.onRow === 'function' ? props.onRow(row, realRowIndex) : {};
-      gridRow = <props.components.row
+      let rowProps = typeof onRow === 'function' ? onRow(row, realRowIndex) : {};
+      gridRow = <components.row
         key={realRowIndex}
         data-key={realRowIndex}
         {...rowProps}
       >
         {defaultGridRow(row, rowIndex, {type})}
-      </props.components.row>;
+      </components.row>;
     }
     return gridRow;
   };
@@ -480,9 +466,9 @@ const Grid = (props, ref) => {
     <div className={classNames('vt-grid-container', props.className)}
       ref={gridContainer}
       onScrollCapture={(e) => {
-        if (!_VTableContext.isSticky && props.mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
-        if (props.type === 'body' && props.onScrollTopSync) {
-          props.onScrollTopSync(e, {
+        if (!_VTableContext.isSticky && mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
+        if (type === 'body' && onScrollTopSync) {
+          onScrollTopSync(e, {
             startRowIndex: grid.startRowIndex,
             endRowIndex: grid.endRowIndex,
           });
@@ -514,7 +500,7 @@ const Grid = (props, ref) => {
         {
           [...grid.virtualData].map((row, rowIndex) => {
             // 行渲染
-            return _gridRowRender(row, rowIndex, {type: props.type});
+            return _gridRowRender(row, rowIndex, {type});
           })
         }
       </div>
