@@ -375,6 +375,18 @@ const Grid = (props, ref) => {
     }
   };
 
+  // 同步固定列行高
+  const getRowHeight = ({type, rowIndex}) => {
+    let height = undefined;
+    if (!_VTableContext.isSticky && type === 'body' && mgType !== 'mainMultiGrid') {
+      let rowHeightArr = getRowHeightArr({
+        startRowIndex: grid.startRowIndex,
+        endRowIndex: grid.endRowIndex
+      });
+      height = rowHeightArr[rowIndex];
+    }
+    return height;
+  };
   /**
    * 默认行
    * @param {Object} row 行数据
@@ -388,15 +400,8 @@ const Grid = (props, ref) => {
     // const _rowKey = rowKey ? (sameType(rowKey, 'Function') ? rowKey(row) : row[rowKey]) : realRowIndex;
     const _rowKey = getRowKey(rowKey, row, realRowIndex);
     const selected = selectedRowKeys.includes(_rowKey);
-    //
-    let height = undefined;
-    if (!_VTableContext.isSticky && type === 'body' && mgType !== 'mainMultiGrid') {
-      let rowHeightArr = getRowHeightArr({
-        startRowIndex: grid.startRowIndex,
-        endRowIndex: grid.endRowIndex
-      });
-      height = rowHeightArr[rowIndex];
-    }
+    // isSticky:true时设置
+    let height = getRowHeight({type, rowIndex});
     return <div
       key={`row_${realRowIndex}`}
       data-key={`row_${realRowIndex}`}
@@ -414,16 +419,16 @@ const Grid = (props, ref) => {
         displayedColumns.map((column, columnIndex) => {
           let gridRowCell = _cellRender(row, rowIndex, column, columnIndex, {type});
           // 有要重写对应header|body|footer的cell
-          if (components && components[type] && components[type].cell) {
-            let realColumnIndex = columnIndex + grid.startColumnIndex;
+          const Cell = components && components[type] && components[type].cell;
+          if (Cell) {
+            const realColumnIndex = columnIndex + grid.startColumnIndex;
             // {width, onResize}
-            let defaultCellProps = typeof column.onCell === 'function' ? column.onCell(column, realRowIndex) : {};
-            let cellPropsMap = {
+            const defaultCellProps = typeof column.onCell === 'function' ? column.onCell(column, realRowIndex) : {};
+            const cellPropsMap = {
               header: sameType(column.onHeaderCell, 'Function') ? column.onHeaderCell(column, realRowIndex) : undefined,
               body: sameType(column.onBodyCell, 'Function') ? column.onBodyCell(column, realRowIndex) : undefined,
               footer: sameType(column.onFooterCell, 'Function') ? column.onFooterCell(column, realRowIndex) : undefined,
             };
-            let Cell = components[type].cell;
             gridRowCell = <Cell
               key={`${realRowIndex}_${realColumnIndex}`}
               data-key={`${realRowIndex}_${realColumnIndex}`}
@@ -477,14 +482,14 @@ const Grid = (props, ref) => {
       }}
       style={{
         height: stateProps.visibleHeight,
-        ...(props.gridStyle || {})
+        ...(props.gridStyle || {}),
       }}
     >
       <div style={{
         paddingTop: grid.startVerticalOffset,
         paddingBottom: grid.endVerticalOffset,
         paddingLeft: grid.startHorizontalOffset,
-        paddingRight: grid.endHorizontalOffset
+        paddingRight: grid.endHorizontalOffset,
       }}>
         {
           // sticky header
