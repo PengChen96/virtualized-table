@@ -62,6 +62,8 @@ const Grid = (props, ref) => {
     type,
     mgType,
     //
+    shouldRowHeightSync,
+    //
     rowKey,
     rowSelection = {},
     //
@@ -316,7 +318,7 @@ const Grid = (props, ref) => {
       key={`cell_${realRowIndex}_${realColumnIndex}`}
       data-key={`cell_${realRowIndex}_${realColumnIndex}`}
       className={`vt-grid-cell ${cellFixedShadow} ${bordered} ${align} ${className}`}
-      onClick={() => __onCellTap(
+      onClick={(e) => __onCellTap(e,
         value,
         row, rowIndex, realRowIndex,
         column, columnIndex, realColumnIndex
@@ -365,11 +367,13 @@ const Grid = (props, ref) => {
 
   // 点击单元格
   const __onCellTap = (
-    value,
+    e, value,
     row, rowIndex, realRowIndex,
     column, columnIndex, realColumnIndex
   ) => {
-    console.log(realRowIndex, realColumnIndex);
+    e.stopPropagation();
+    e.preventDefault();
+    console.log(realRowIndex, realColumnIndex, e);
     if (typeof onCellTap === 'function') {
       onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
     }
@@ -378,7 +382,7 @@ const Grid = (props, ref) => {
   // 同步固定列行高
   const getRowHeight = ({type, rowIndex}) => {
     let height = undefined;
-    if (!_VTableContext.isSticky && type === 'body' && mgType !== 'mainMultiGrid') {
+    if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && mgType !== 'mainMultiGrid') {
       let rowHeightArr = getRowHeightArr({
         startRowIndex: grid.startRowIndex,
         endRowIndex: grid.endRowIndex

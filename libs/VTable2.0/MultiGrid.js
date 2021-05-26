@@ -21,6 +21,10 @@ const MultiGrid =  (props, ref) => {
     gridContainer: multiGridContainer.current.gridContainer
   }));
   //
+  const {
+    shouldRowHeightSync
+  } = props;
+  //
   const multiGridContainerLeft = useRef(null);
   const multiGridContainerRight = useRef(null);
 
@@ -42,14 +46,16 @@ const MultiGrid =  (props, ref) => {
   useEffect(() => {
     // 同步固定列的高度
     const {fixedLeftColumnCount = 0, fixedRightColumnCount = 0} = props;
-    if (!_VTableContext.isSticky && (fixedLeftColumnCount > 0 || fixedRightColumnCount > 0)) {
+    if (shouldRowHeightSync && !_VTableContext.isSticky && props.type === 'body' && (fixedLeftColumnCount > 0 || fixedRightColumnCount > 0)) {
       let timer = setTimeout(() => {
         // syncRowHeight({forceUpdate: true});
         const {current} = multiGridContainer;
-        current.gridContainer.scrollTop += 1;
-        window.requestAnimationFrame(() => {
-          current.gridContainer.scrollTop -= 1;
-        });
+        if (current) {
+          current.gridContainer.scrollTop += 1;
+          window.requestAnimationFrame(() => {
+            current.gridContainer.scrollTop -= 1;
+          });
+        }
         clearTimeout(timer);
       }, 150);
     }
@@ -221,7 +227,7 @@ const MultiGrid =  (props, ref) => {
   const syncRowHeight = ({startRowIndex, endRowIndex}) => {
     // 同步固定列的高度
     const {fixedLeftColumnCount = 0, fixedRightColumnCount = 0} = props;
-    if (!_VTableContext.isSticky && props.type === 'body' && (fixedLeftColumnCount > 0 || fixedRightColumnCount > 0)) {
+    if (shouldRowHeightSync && !_VTableContext.isSticky && props.type === 'body' && (fixedLeftColumnCount > 0 || fixedRightColumnCount > 0)) {
       const {current} = multiGridContainer;
       const gridRowCollection = current.gridContainer.getElementsByClassName('vt-grid-row');
       const gridRowHeightArr = Array.prototype.slice.call(gridRowCollection).map((item) => {
