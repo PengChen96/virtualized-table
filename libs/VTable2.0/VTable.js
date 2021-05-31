@@ -33,7 +33,7 @@ const VTable = (props) => {
     }
     return () => window.removeEventListener('resize', reSetColumns);
   }, [props.columns, bodyScrollBarWidth, props.rowSelection]);
-
+  //
   const headerColumns = useMemo(() => {
     let autoColumns = deepClone(columns);
     const scrollBarWidth = bodyScrollBarWidth || 0;
@@ -58,10 +58,6 @@ const VTable = (props) => {
       clientWidth,
     });
     let autoColumns = columnsObj.columns;
-    // 表头最后一列的宽度加上滚动条宽度
-    // if (props.type === 'header' && autoColumns.length > 0) {
-    //   autoColumns[autoColumns.length - 1].width = autoColumns[autoColumns.length - 1].width + scrollBarWidth;
-    // }
     // 加上勾选列
     if (rowSelection) {
       const {columnWidth = 60, selectedRowKeys = [], getCheckboxProps} = rowSelection;
