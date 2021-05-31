@@ -24,6 +24,59 @@
       }
     }
   }
+  // 复选框
+  .@{prefix}-selection {
+    position: relative;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    input {
+      cursor: pointer;
+    }
+    input:checked + .@{prefix}-show-box {
+      &:before {
+        border: solid #ff8040; // 勾的颜色
+        border-width: 0 2px 2px 0; // 勾的宽度
+      }
+    }
+    .@{prefix}-show-box {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+      border: 1px solid #d1d3d8;
+      background: #fff; // 这里取个巧，与下面颜色一样而已
+      &:hover {
+        border-color: #ff8040;
+      }
+      &:before { // 使用了 absolute 所以无所谓是 before 还是 after
+        content: ''; // 空白内容占位，当做盒模型处理，见下面
+        position: absolute;
+        top: 2px;
+        left: 5px;
+        width: 5px; // 勾的短边
+        height: 8px; // 勾的长边
+        border: solid #fff; // 勾的颜色
+        border-width: 0 2px 2px 0; // 勾的宽度
+        transform: rotate(45deg); // 定制宽高加上旋转可以伪装内部的白色勾
+      }
+    }
+  }
+  .@{prefix}-selection-disabled {
+    cursor: not-allowed;
+    //pointer-events: none;
+    .@{prefix}-show-box {
+      background: #eee;
+      &:hover {
+        border-color: #d1d3d8;
+      }
+      &:before {
+        border: solid transparent;
+      }
+    }
+  }
   // loading
   .@{prefix}-table-loading {
     z-index: 20;

@@ -72,13 +72,13 @@ const VTable = (props) => {
         title: () => {
           let checked = selectedRowKeys.length === originDataSource.filter((r) => getCheckboxProps ? !getCheckboxProps(r).disabled : true).length;
           return <div
-            className={'v-checkbox-container'}
+            className={'vt-selection'}
             onClick={(e) => {
               _onSelectAll(e);
             }}
           >
             <input type="checkbox" checked={checked}/>
-            <div className="show-box" />
+            <div className="vt-show-box" />
           </div>;
         },
         render: (value, row, rowIndex, realRowIndex) => {
@@ -92,8 +92,8 @@ const VTable = (props) => {
             <div
               key={1}
               className={classNames(
-                'v-checkbox-container',
-                {'v-checkbox-container-disabled': disabled}
+                'vt-selection',
+                {'vt-selection-disabled': disabled}
               )}
               onClick={(e) => {
                 if (!disabled) {
@@ -102,7 +102,7 @@ const VTable = (props) => {
               }}
             >
               <input type="checkbox" checked={checked}/>
-              <div className="show-box" />
+              <div className="vt-show-box" />
             </div>
           ];
         }
