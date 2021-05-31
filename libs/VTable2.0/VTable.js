@@ -16,23 +16,36 @@ const VTable = (props) => {
   let vtHeader = useRef(null);
   let vtBody = useRef(null);
 
+  const {
+    isSticky: isStickyProps,
+    rowKey: rowKeyProps,
+    rowSelection,
+    columns: columnsProps = [],
+    dataSource = [],
+    wrapperClassName,
+    className,
+    visibleHeight,
+    rowHeight = 40,
+    locale,
+    loading
+  } = props;
   let [isSticky, setIsSticky] = useState(false);
   let [bodyScrollBarWidth, setBodyScrollBarWidth] = useState(0);
-  let [columns, setColumns] = useState(props.columns);
+  let [columns, setColumns] = useState(columnsProps);
   let [hasFixed, setHasFixed] = useState(true);
 
   useEffect(() => {
-    let _isSticky = props.isSticky === undefined ? isSupportSticky() : props.isSticky;
+    let _isSticky = isStickyProps === undefined ? isSupportSticky() : isStickyProps;
     setIsSticky(_isSticky);
-  }, [props.isSticky]);
+  }, [isStickyProps]);
 
   useEffect(() => {
-    if ((props.columns || []).length > 0) {
+    if (columnsProps.length > 0) {
       reSetColumns();
       window.addEventListener('resize', reSetColumns);
     }
     return () => window.removeEventListener('resize', reSetColumns);
-  }, [props.columns, bodyScrollBarWidth, props.rowSelection]);
+  }, [columnsProps, bodyScrollBarWidth, rowSelection]);
   //
   const headerColumns = useMemo(() => {
     let autoColumns = deepClone(columns);
@@ -44,8 +57,6 @@ const VTable = (props) => {
   }, [columns]);
   // 设置自适应列
   const reSetColumns = () => {
-    const originDataSource = props.dataSource;
-    const {columns, rowSelection} = props;
     let {offsetWidth} = vtable.current;
     if (rowSelection) {
       const {columnWidth = 60} = rowSelection;
@@ -54,7 +65,7 @@ const VTable = (props) => {
     const scrollBarWidth = bodyScrollBarWidth || 0;
     const clientWidth = offsetWidth - scrollBarWidth;
     const columnsObj = getSelfAdaptionColumns({
-      columns,
+      columns: columnsProps,
       clientWidth,
     });
     let autoColumns = columnsObj.columns;
@@ -66,7 +77,7 @@ const VTable = (props) => {
         width: columnWidth,
         align: 'center',
         title: () => {
-          let checked = selectedRowKeys.length === originDataSource.filter((r) => getCheckboxProps ? !getCheckboxProps(r).disabled : true).length;
+          let checked = selectedRowKeys.length === dataSource.filter((r) => getCheckboxProps ? !getCheckboxProps(r).disabled : true).length;
           return <div
             className={'vt-selection'}
             onClick={(e) => {
@@ -79,8 +90,7 @@ const VTable = (props) => {
         },
         render: (value, row, rowIndex, realRowIndex) => {
           // 是否选中
-          // let rowKey = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(row) : row[props.rowKey]) : realRowIndex;
-          const rowKey = getRowKey(props.rowKey, row, realRowIndex);
+          const rowKey = getRowKey(rowKeyProps, row, realRowIndex);
           const checked = selectedRowKeys.includes(rowKey);
           // 是否禁用
           let disabled = getCheckboxProps ? getCheckboxProps(row).disabled : false;
@@ -110,11 +120,8 @@ const VTable = (props) => {
   // 勾选改变
   const _onChange = (e, row, realRowIndex) => {
     e.stopPropagation();
-    const originDataSource = props.dataSource;
-    const {rowSelection} = props;
     const {selectedRowKeys = [], onChange = ()=>{}, onSelect = () => {}} = rowSelection;
-    // let rowKey = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(row) : row[props.rowKey]) : realRowIndex;
-    const rowKey = getRowKey(props.rowKey, row, realRowIndex);
+    const rowKey = getRowKey(rowKeyProps, row, realRowIndex);
     let rowKeysSet = new Set(selectedRowKeys);
     let selected = undefined;
     if (rowKeysSet.has(rowKey)) {
@@ -125,9 +132,8 @@ const VTable = (props) => {
       selected = true;
     }
     const _selectedRowKeys = Array.from(rowKeysSet);
-    const _selectedRows = originDataSource.filter((v, i) => {
-      // const k = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(v) : v[props.rowKey]) : i;
-      const k = getRowKey(props.rowKey, v, i);
+    const _selectedRows = dataSource.filter((v, i) => {
+      const k = getRowKey(rowKeyProps, v, i);
       return _selectedRowKeys.includes(k);
     });
     onChange(_selectedRowKeys, _selectedRows);
@@ -136,17 +142,14 @@ const VTable = (props) => {
   // 勾选全部
   const _onSelectAll = (e) => {
     e.stopPropagation();
-    const originDataSource = props.dataSource;
-    const {rowSelection} = props;
     const {selectedRowKeys = [], onChange = ()=>{}, onSelectAll = ()=>{}, getCheckboxProps} = rowSelection;
-    let checkedPart = selectedRowKeys.length < originDataSource.filter((r) => getCheckboxProps ? !getCheckboxProps(r).disabled : true).length;
+    let checkedPart = selectedRowKeys.length < dataSource.filter((r) => getCheckboxProps ? !getCheckboxProps(r).disabled : true).length;
     if (checkedPart) {
       let _selectedRowKeys = [];
-      let _selectedRows = originDataSource.filter((v, i) => {
+      let _selectedRows = dataSource.filter((v, i) => {
         const disabled = getCheckboxProps ? getCheckboxProps(v).disabled : false;
         if (!disabled) {
-          // const k = props.rowKey ? (sameType(props.rowKey, 'Function') ? props.rowKey(v) : v[props.rowKey]) : i;
-          const k = getRowKey(props.rowKey, v, i);
+          const k = getRowKey(rowKeyProps, v, i);
           _selectedRowKeys.push(k);
         }
         return !disabled;
@@ -161,13 +164,12 @@ const VTable = (props) => {
   };
   // 表头
   const getHeaderTitle = useMemo(() => {
-    const {columns} = props;
     let headerData = [{}];
-    columns.forEach((column) => {
+    columnsProps.forEach((column) => {
       headerData[0][column.key || column.dataIndex] = column.title;
     });
     return headerData;
-  }, [props.columns]);
+  }, [columnsProps]);
 
   const onScroll = (e) => {
     let scrollLeft = e && e.target && e.target.scrollLeft;
@@ -190,7 +192,7 @@ const VTable = (props) => {
     }
   };
 
-  let spinning = sameType(props.loading, 'Object') ? props.loading.spinning : props.loading;
+  let spinning = sameType(loading, 'Object') ? loading.spinning : loading;
   return <>
     <VTableContext.Provider
       value={{
@@ -198,22 +200,21 @@ const VTable = (props) => {
         getBodyScrollBarWidth,
         isSticky: isSticky,
         headerTitle: getHeaderTitle,
-        originDataSource: props.dataSource,
       }}
     >
       <div
         ref={vtable}
-        className={classNames('vt-table', props.wrapperClassName)}
-        style={{height: props.visibleHeight}}
+        className={classNames('vt-table', wrapperClassName)}
+        style={{height: visibleHeight}}
       >
         {
           !isSticky && <MultiGrid
             {...props}
             ref={vtHeader}
             type={'header'}
-            className={classNames('vt-table-header', props.className)}
-            visibleHeight={props.rowHeight || 40}
-            minRowHeight={props.rowHeight}
+            className={classNames('vt-table-header', className)}
+            visibleHeight={rowHeight}
+            minRowHeight={rowHeight}
             columns={headerColumns}
             hasFixed={hasFixed}
             dataSource={getHeaderTitle}
@@ -225,17 +226,17 @@ const VTable = (props) => {
           ref={vtBody}
           type={'body'}
           mgClassName={'vt-table-body'}
-          visibleHeight={!isSticky ? props.visibleHeight - (props.rowHeight || 40) : props.visibleHeight}
-          minRowHeight={props.rowHeight}
+          visibleHeight={!isSticky ? visibleHeight - rowHeight : visibleHeight}
+          minRowHeight={rowHeight}
           columns={columns}
           hasFixed={hasFixed}
           bodyScrollBarWidth={bodyScrollBarWidth}
         />
         {
-          !spinning && props.dataSource.length < 1 ? <div className="vt-table-empty">
+          !spinning && dataSource.length < 1 ? <div className="vt-table-empty">
             <div style={{pointerEvents: 'auto'}}>
               {
-                (props.locale && props.locale.emptyText) ? props.locale.emptyText : '暂无数据'
+                (locale && locale.emptyText) ? locale.emptyText : '暂无数据'
               }
             </div>
           </div> : ''
@@ -243,7 +244,7 @@ const VTable = (props) => {
         {
           spinning ? <div className="vt-table-loading">
             {
-              (props.loading && props.loading.spinningText) ? props.loading.spinningText : '数据加载中，请稍后...'
+              (loading && loading.spinningText) ? loading.spinningText : '数据加载中，请稍后...'
             }
           </div> : ''
         }
