@@ -61,6 +61,8 @@ const Grid = (props, ref) => {
   const {
     type,
     mgType,
+    className,
+    gridStyle,
     //
     shouldRowHeightSync,
     //
@@ -472,7 +474,7 @@ const Grid = (props, ref) => {
     return gridRow;
   };
   return <>
-    <div className={classNames('vt-grid-container', props.className)}
+    <div className={classNames('vt-grid-container', className)}
       ref={gridContainer}
       onScrollCapture={(e) => {
         if (!_VTableContext.isSticky && mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
@@ -486,10 +488,12 @@ const Grid = (props, ref) => {
       }}
       style={{
         height: stateProps.visibleHeight,
-        ...(props.gridStyle || {}),
+        ...(gridStyle || {}),
       }}
     >
       <div style={{
+        // willChange: 'transform',
+        // transform: `translateY(${grid.startVerticalOffset}px)`,
         paddingTop: grid.startVerticalOffset,
         paddingBottom: grid.endVerticalOffset,
         paddingLeft: grid.startHorizontalOffset,

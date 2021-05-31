@@ -20,7 +20,15 @@ const MultiGrid =  (props, ref) => {
   }));
   //
   const {
-    shouldRowHeightSync
+    type,
+    mgClassName,
+    shouldRowHeightSync,
+    columns,
+    hasFixed,
+    dataSource,
+    fixedLeftColumnCount = 0,
+    fixedRightColumnCount = 0,
+    bodyScrollBarWidth
   } = props;
   //
   const multiGridContainerLeft = useRef(null);
@@ -28,14 +36,11 @@ const MultiGrid =  (props, ref) => {
 
   const _VTableContext = useContext(VTableContext);
 
-  const {columns, hasFixed} = props;
-
   // let [rowsHeightCacheId, setRowsHeightCacheId] = useState(null);
 
   useEffect(() => {
     // 同步固定列的高度
-    const {fixedLeftColumnCount = 0, fixedRightColumnCount = 0} = props;
-    if (shouldRowHeightSync && !_VTableContext.isSticky && props.type === 'body' && (fixedLeftColumnCount > 0 || fixedRightColumnCount > 0)) {
+    if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && (fixedLeftColumnCount > 0 || fixedRightColumnCount > 0)) {
       let timer = setTimeout(() => {
         // syncRowHeight({forceUpdate: true});
         const {current} = multiGridContainer;
@@ -48,31 +53,28 @@ const MultiGrid =  (props, ref) => {
         clearTimeout(timer);
       }, 150);
     }
-  }, [props.columns, props.dataSource]);
+  }, [columns, dataSource, fixedLeftColumnCount, fixedRightColumnCount]);
 
   // main columns
   const getColumns = useMemo(() => {
     if (!hasFixed) { return columns; }
-    const {fixedLeftColumnCount = 0, fixedRightColumnCount = 0} = props;
     const end = fixedRightColumnCount ? -fixedRightColumnCount : undefined;
     return (fixedLeftColumnCount || fixedRightColumnCount) ? deepClone(columns).slice(fixedLeftColumnCount, end) : columns;
-  }, [hasFixed, columns, props.fixedLeftColumnCount, props.fixedRightColumnCount]);
+  }, [hasFixed, columns, fixedLeftColumnCount, fixedRightColumnCount]);
 
   // fixed left columns
   const getFixedLeftColumns = useMemo(() => {
     if (!hasFixed) { return []; }
-    const {fixedLeftColumnCount = 0} = props;
     let fixedLeftColumns = fixedLeftColumnCount ? columns.slice(0, fixedLeftColumnCount) : [];
     return formatFixedLeftColumns({fixedLeftColumns});
-  }, [hasFixed, columns, props.fixedLeftColumnCount]);
+  }, [hasFixed, columns, fixedLeftColumnCount]);
 
   // fixed right columns
   const getFixedRightColumns = useMemo(() => {
     if (!hasFixed) { return []; }
-    const {fixedRightColumnCount = 0} = props;
     let fixedRightColumns = fixedRightColumnCount ? columns.slice(-fixedRightColumnCount) : [];
     return formatFixedRightColumns({fixedRightColumns, columnsLength: columns.length});
-  }, [hasFixed, columns, props.fixedRightColumnCount]);
+  }, [hasFixed, columns, fixedRightColumnCount]);
 
   //
   const onScrollTopSync = useCallback((e, {startRowIndex, endRowIndex}) => {
@@ -93,8 +95,7 @@ const MultiGrid =  (props, ref) => {
   // no isSticky
   const syncRowHeight = ({startRowIndex, endRowIndex}) => {
     // 同步固定列的高度
-    const {fixedLeftColumnCount = 0, fixedRightColumnCount = 0} = props;
-    if (shouldRowHeightSync && !_VTableContext.isSticky && props.type === 'body' && (fixedLeftColumnCount > 0 || fixedRightColumnCount > 0)) {
+    if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && (fixedLeftColumnCount > 0 || fixedRightColumnCount > 0)) {
       const {current} = multiGridContainer;
       const gridRowCollection = current.gridContainer.getElementsByClassName('vt-grid-row');
       const gridRowHeightArr = Array.prototype.slice.call(gridRowCollection).map((item) => {
@@ -109,14 +110,14 @@ const MultiGrid =  (props, ref) => {
   };
 
   return <>
-    <div className={classNames('vt-multi-grid-container', props.mgClassName)}
+    <div className={classNames('vt-multi-grid-container', mgClassName)}
       ref={_multiGridContainer}>
       {
         _VTableContext.isSticky ? <Grid
           {...props}
           ref={multiGridContainer}
           // 加这个key是因为固定列变化 列数据多渲染一列 todo 原因
-          key={`${props.fixedLeftColumnCount}_${props.fixedRightColumnCount}_${hasFixed}`}
+          key={`${fixedLeftColumnCount}_${fixedRightColumnCount}_${hasFixed}`}
           columns={getColumns}
           fixedLeftColumns={getFixedLeftColumns}
           fixedRightColumns={getFixedRightColumns}
@@ -143,14 +144,14 @@ const MultiGrid =  (props, ref) => {
                 // rowsHeightCacheId={rowsHeightCacheId}
                 mgType={'leftMultiGrid'}
                 gridStyle={{
-                  marginBottom: props.type === 'body' ? -props.bodyScrollBarWidth : undefined
+                  marginBottom: type === 'body' ? -bodyScrollBarWidth : undefined
                 }}
               />
             </div> : null
           }
           {
             getFixedRightColumns.length > 0 ? <div className="vt-multi-grid-fixed-right" style={{
-              marginRight: props.type === 'body' ? props.bodyScrollBarWidth : undefined
+              marginRight: type === 'body' ? bodyScrollBarWidth : undefined
             }}>
               <Grid
                 {...props}
@@ -161,7 +162,7 @@ const MultiGrid =  (props, ref) => {
                 // rowsHeightCacheId={rowsHeightCacheId}
                 mgType={'rightMultiGrid'}
                 gridStyle={{
-                  marginBottom: props.type === 'body' ? -props.bodyScrollBarWidth : undefined
+                  marginBottom: type === 'body' ? -bodyScrollBarWidth : undefined
                 }}
               />
             </div> : null
