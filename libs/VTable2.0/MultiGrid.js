@@ -40,7 +40,7 @@ const MultiGrid =  (props, ref) => {
 
   useEffect(() => {
     // 同步固定列的高度
-    if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && (fixedLeftColumnCount > 0 || fixedRightColumnCount > 0)) {
+    if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && hasFixed) {
       let timer = setTimeout(() => {
         // syncRowHeight({forceUpdate: true});
         const {current} = multiGridContainer;
@@ -53,7 +53,7 @@ const MultiGrid =  (props, ref) => {
         clearTimeout(timer);
       }, 150);
     }
-  }, [columns, dataSource, fixedLeftColumnCount, fixedRightColumnCount]);
+  }, [columns, dataSource, hasFixed]);
 
   // main columns
   const getColumns = useMemo(() => {
@@ -95,13 +95,13 @@ const MultiGrid =  (props, ref) => {
   // no isSticky
   const syncRowHeight = ({startRowIndex, endRowIndex}) => {
     // 同步固定列的高度
-    if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && (fixedLeftColumnCount > 0 || fixedRightColumnCount > 0)) {
+    if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && hasFixed) {
       const {current} = multiGridContainer;
       const gridRowCollection = current.gridContainer.getElementsByClassName('vt-grid-row');
       const gridRowHeightArr = Array.prototype.slice.call(gridRowCollection).map((item) => {
         return item.clientHeight;
       });
-      //
+      // TODO cache data need better way
       const cached = isRowsHeightCached({startRowIndex, endRowIndex, rowHeightArr: gridRowHeightArr});
       if (!cached) {
         setRowHeightCache({startRowIndex, endRowIndex, rowHeightArr: gridRowHeightArr});
