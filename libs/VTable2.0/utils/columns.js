@@ -31,8 +31,8 @@ export const getSelfAdaptionColumns = ({columns, clientWidth}) => {
   if (clientWidth > allColumnsWidth) {
     const columnsLen = cloneColumns.length;
     const absentAllWidth = clientWidth - allColumnsWidth;
-    // 取余
-    const remainder = absentAllWidth % columnsLen;
+    // 取余  余数向下取整
+    const remainder = Math.floor(absentAllWidth % columnsLen);
     // 向下取整
     const absentItemColumnWidth = Math.floor(absentAllWidth / columnsLen);
     cloneColumns = cloneColumns.map((item, index) => {
