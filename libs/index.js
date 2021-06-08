@@ -8,8 +8,9 @@ export {
   Grid
 } from './VTable';
 
-import {VTable as VTablePro } from './VTable2.0';
+import {VTable as VTablePro, Grid as GridPro } from './VTable2.0';
 export {
-  VTablePro
+  VTablePro,
+  GridPro
 };
 
