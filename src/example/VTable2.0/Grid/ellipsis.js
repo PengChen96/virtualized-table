@@ -18,7 +18,7 @@ export default (props) => {
         columnObj: (i) => {
           return {
             ellipsis: true,
-            width: i % 4 === 0 ? 150 : 100
+            // width: i % 4 === 0 ? 150 : 100
           };
         }
       }

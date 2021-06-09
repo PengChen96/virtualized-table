@@ -18,7 +18,7 @@ export default (props) => {
     setColumns(generateColumns(
       columnsNum,
       {
-        columnObj: (i) => {
+        columnObj: () => {
           return {
             ellipsis: true,
           };
@@ -85,6 +85,7 @@ const ResizableCell = (props) => {
   let [resizeActive, setResizeActive] = useState(false);
   const _onResize = (e, { size }) => {
     e.stopPropagation();
+    e.preventDefault();
     setW(size.width);
   };
   const _onResizeStart = (e) => {
