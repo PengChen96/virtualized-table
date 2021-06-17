@@ -2,6 +2,7 @@
 import React from 'react';
 import Grid from './Grid';
 import PropTypes from 'prop-types';
+import {deepClone} from "./utils/deepClone";
 
 class VTable extends React.Component {
 
@@ -70,7 +71,7 @@ class VTable extends React.Component {
           }
         });
         //
-        let _columns = JSON.parse(JSON.stringify(props.columns));
+        let _columns = deepClone(props.columns);
         footerColumns = this.getColumns(_columns);
         footerColumns[0] = {width: 60};
       }
@@ -128,7 +129,7 @@ class VTable extends React.Component {
         }
       });
       //
-      let _columns = JSON.parse(JSON.stringify(props.columns));
+      let _columns = deepClone(props.columns);
       footerColumns = this.getColumns(_columns);
       footerColumns[0] = {width: 60};
     }
