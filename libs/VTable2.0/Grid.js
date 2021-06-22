@@ -1,7 +1,9 @@
 
 import React, {useEffect, useState, useMemo, useRef, useImperativeHandle, useContext} from 'react';
 import PropTypes from 'prop-types';
+import Cell from './Cell';
 import './styles/grid.less';
+import {getRealGridVerticalScrollInfo, getRealGridHorizontalScrollInfo} from './utils/gridScrollInfo';
 import {getColumnsWidth} from './utils';
 import {getFixedCellInfo} from './utils/fixUtil';
 import {sameType, classNames} from './utils/base';
@@ -76,7 +78,7 @@ const Grid = (props, ref) => {
     bordered,
     //
     onScrollTopSync,
-    onCellTap
+    // onCellTap
   } = props;
   let [gridScrollTop, setGridScrollTop] = useState(null);
   let [gridScrollLeft, setGridScrollLeft] = useState(null);
@@ -148,97 +150,38 @@ const Grid = (props, ref) => {
     if (didMount || gridScrollTop !== scrollTop) {
       console.log('vertical');
       setGridScrollTop(scrollTop);
+      const {dataSource, estimatedRowHeight, rowOffsetCount, rowVisibleCount} = stateProps;
       // 当前scrollTop
-      let gridInfo = getRealGridVerticalScrollInfo({scrollTop});
+      let gridInfo = getRealGridVerticalScrollInfo({
+        scrollTop,
+        dataSource,
+        estimatedRowHeight,
+        rowOffsetCount,
+        rowVisibleCount
+      });
       // 更新渲染
       updateGrid(gridInfo);
     }
   };
-  // 计算获取网格垂直滚动对应的实时信息
-  const getRealGridVerticalScrollInfo = ({scrollTop}) => {
-    const {
-      dataSource,
-      estimatedRowHeight,
-      rowOffsetCount,
-      rowVisibleCount
-    } = stateProps;
-    // dom存在的行条数
-    let realRowsCount = rowVisibleCount + rowOffsetCount * 2;
-    // 获取垂直滚动的条数
-    let scrollTopNum = Math.floor(scrollTop / estimatedRowHeight);
-    // 获取要渲染的行开始坐标，最小坐标为0  rowOffsetCount: 行偏移量
-    let startRowIndex = (scrollTopNum - rowOffsetCount) > 0 ? (scrollTopNum - rowOffsetCount) : 0;
-    let maxStartRowIndex = dataSource.length - realRowsCount;
-    maxStartRowIndex = maxStartRowIndex > 0 ? maxStartRowIndex : 0;
-    startRowIndex = startRowIndex > maxStartRowIndex ? maxStartRowIndex : startRowIndex;
-    // 获取要渲染的行结尾坐标，最大坐标为dataSource长度  rowOffsetCount: 行偏移量
-    let endRowIndex = (startRowIndex + realRowsCount) > dataSource.length ? dataSource.length : (startRowIndex + realRowsCount);
-    // 上方未渲染数据的paddingTop值
-    let startVerticalOffset = startRowIndex * estimatedRowHeight;
-    // 上方未渲染数据的paddingBottom值
-    let endVerticalOffset = (dataSource.length - endRowIndex) * estimatedRowHeight;
-    // 需要渲染显示的行数据
-    let virtualData = dataSource.slice(startRowIndex, endRowIndex);
-    // console.table({scrollTop, scrollTopNum, startRowIndex, endRowIndex});
-    return {
-      startRowIndex,
-      endRowIndex,
-      startVerticalOffset,
-      endVerticalOffset,
-      virtualData
-    };
-  };
-
   // 水平方向滚动
   const _onHorizontalScroll = (didMount) => {
     const {scrollLeft} = gridContainer.current;
     if (didMount || gridScrollLeft !== scrollLeft) {
       console.log('horizontal');
       setGridScrollLeft(scrollLeft);
+      const {dataSource, columns, estimatedColumnWidth, columnOffsetCount, columnVisibleCount} = stateProps;
       // 当前scrollLeft
-      let gridInfo = getRealGridHorizontalScrollInfo({scrollLeft});
+      let gridInfo = getRealGridHorizontalScrollInfo({
+        scrollLeft,
+        dataSource,
+        columns,
+        estimatedColumnWidth,
+        columnOffsetCount,
+        columnVisibleCount
+      });
       // 更新渲染
       updateGrid(gridInfo);
     }
-  };
-  // 计算获取网格水平滚动对应的实时信息
-  const getRealGridHorizontalScrollInfo = ({scrollLeft}) => {
-    const {
-      dataSource,
-      columns,
-      estimatedColumnWidth,
-      columnOffsetCount,
-      columnVisibleCount
-    } = stateProps;
-    let scrollColumns = columns;
-    // dom存在的行条数
-    let realColumnsCount = columnVisibleCount + columnOffsetCount * 2;
-    // 获取水平滚动的条数
-    let scrollLeftNum = Math.floor(scrollLeft / estimatedColumnWidth);
-    // 获取要渲染的列开始坐标
-    let startColumnIndex = (scrollLeftNum - columnOffsetCount) > 0 ? (scrollLeftNum - columnOffsetCount) : 0;
-    let maxStartColumnIndex = scrollColumns.length - realColumnsCount;
-    maxStartColumnIndex = maxStartColumnIndex > 0 ? maxStartColumnIndex : 0;
-    startColumnIndex = startColumnIndex > maxStartColumnIndex ? maxStartColumnIndex : startColumnIndex;
-    // 获取要渲染的列结尾坐标
-    let endColumnIndex = (startColumnIndex + realColumnsCount) > scrollColumns.length ? scrollColumns.length : (startColumnIndex + realColumnsCount);
-    // 左边未渲染数据的paddingLeft值
-    let leftOffsetColumns = scrollColumns.slice(0, startColumnIndex);
-    let startHorizontalOffset = dataSource.length > 0 ? getColumnsWidth(leftOffsetColumns) : 0;
-    // 右边未渲染数据的paddingRight值
-    let rightOffsetColumns = scrollColumns.slice(endColumnIndex, scrollColumns.length);
-    let endHorizontalOffset = dataSource.length > 0 ? getColumnsWidth(rightOffsetColumns) : 0;
-    // 需要渲染显示的列数据
-    let virtualColumns = scrollColumns.slice(startColumnIndex, endColumnIndex);
-    // console.log(leftOffsetColumns, startHorizontalOffset, rightOffsetColumns, endHorizontalOffset, virtualColumns, getColumnsWidth(virtualColumns));
-    // console.table({scrollLeft, scrollLeftNum, startColumnIndex, endColumnIndex});
-    return {
-      startColumnIndex,
-      endColumnIndex,
-      startHorizontalOffset,
-      endHorizontalOffset,
-      virtualColumns
-    };
   };
   // cell bordered
   const getCellBordered = ({type}) => {
@@ -314,26 +257,22 @@ const Grid = (props, ref) => {
     const align = getCellAlign({type, column});
     // 固定列阴影
     const cellFixedShadow = getCellFixedShadow({column});
+    const cellFixedStyle = getFixedCellStyle({column});
     // className
-    const {className} = column;
-    return <div
-      key={`cell_${realRowIndex}_${realColumnIndex}`}
-      data-key={`cell_${realRowIndex}_${realColumnIndex}`}
-      className={`vt-grid-cell ${cellFixedShadow} ${bordered} ${align} ${className}`}
-      onClick={(e) => __onCellTap(e,
-        value,
-        row, rowIndex, realRowIndex,
-        column, columnIndex, realColumnIndex
-      )}
-      style={{
-        width: width,
-        minWidth: width,
-        minHeight: stateProps.minRowHeight,
-        display: display,
-        ...column.style,
-        ...getFixedCellStyle({column})
-      }}
-    >
+    const {className = ''} = column;
+    const cellProps = {
+      cellKey: `cell_${realRowIndex}_${realColumnIndex}`,
+      display,
+      width,
+      minRowHeight: stateProps.minRowHeight,
+      cellFixedShadow,
+      bordered,
+      align,
+      className,
+      columnStyle: column.style,
+      cellFixedStyle
+    };
+    return <Cell {...cellProps}>
       {
         /* 因flex布局下省略号不生效 故加一层div*/
         column.ellipsis ? <div className={'vt-ellipsis'} title={value}>
@@ -341,7 +280,7 @@ const Grid = (props, ref) => {
         </div>
           : _render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type})
       }
-    </div>;
+    </Cell>;
   };
   const _render = (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type}) => {
     if (type === 'header') {
@@ -368,18 +307,18 @@ const Grid = (props, ref) => {
   };
 
   // 点击单元格
-  const __onCellTap = (
-    e, value,
-    row, rowIndex, realRowIndex,
-    column, columnIndex, realColumnIndex
-  ) => {
-    e.stopPropagation();
-    e.preventDefault();
-    console.log(realRowIndex, realColumnIndex, e);
-    if (typeof onCellTap === 'function') {
-      onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
-    }
-  };
+  // const __onCellTap = (
+  //   e, value,
+  //   row, rowIndex, realRowIndex,
+  //   column, columnIndex, realColumnIndex
+  // ) => {
+  //   e.stopPropagation();
+  //   e.preventDefault();
+  //   console.log(realRowIndex, realColumnIndex, e);
+  //   if (typeof onCellTap === 'function') {
+  //     onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
+  //   }
+  // };
 
   // 同步固定列行高
   const getRowHeight = ({type, rowIndex}) => {
