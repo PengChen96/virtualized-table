@@ -1,7 +1,7 @@
 
 import React, {useEffect, useState, useMemo, useRef, useImperativeHandle, useContext} from 'react';
 import PropTypes from 'prop-types';
-import Cell, {getCellBordered, getCellAlign} from './Cell';
+import {getCellBordered, getCellAlign} from './Cell';
 import {getCellFixedShadow, getFixedCellStyle} from './utils/fixUtil';
 import './styles/grid.less';
 import {getRealGridVerticalScrollInfo, getRealGridHorizontalScrollInfo} from './utils/gridScrollInfo';
@@ -226,19 +226,24 @@ const Grid = (props, ref) => {
     const cellFixedStyle = getFixedCellStyle({column, fixedLeftColumns, fixedRightColumns});
     // className
     const {className = ''} = column;
-    const cellProps = {
-      cellKey: `cell_${realRowIndex}_${realColumnIndex}`,
-      display,
-      width,
-      minRowHeight: stateProps.minRowHeight,
-      cellFixedShadow,
-      bordered: cellBordered,
-      align,
-      className,
-      columnStyle: column.style,
-      cellFixedStyle
-    };
-    return <Cell {...cellProps}>
+    return <div
+      key={`cell_${realRowIndex}_${realColumnIndex}`}
+      data-key={`cell_${realRowIndex}_${realColumnIndex}`}
+      className={`vt-grid-cell ${cellFixedShadow} ${cellBordered} ${align} ${className}`}
+      // onClick={(e) => __onCellTap(e,
+      //   value,
+      //   row, rowIndex, realRowIndex,
+      //   column, columnIndex, realColumnIndex
+      // )}
+      style={{
+        width: width,
+        minWidth: width,
+        minHeight: stateProps.minRowHeight,
+        display: display,
+        ...column.style,
+        ...cellFixedStyle
+      }}
+    >
       {
         /* 因flex布局下省略号不生效 故加一层div*/
         column.ellipsis ? <div className={'vt-ellipsis'} title={value}>
@@ -246,7 +251,7 @@ const Grid = (props, ref) => {
         </div>
           : _render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type})
       }
-    </Cell>;
+    </div>;
   };
   const _render = (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type}) => {
     if (type === 'header') {
