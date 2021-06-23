@@ -36,6 +36,7 @@ dataIndex | 列数据在数据项中对应的路径，暂不支持通过数组�
 ellipsis | 是否显示省略号 | boolean | false
 key | 列数据的键值 | string | -
 render | 生成复杂数据的渲染函数 | function(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) | -
+onCell | 设置表头、表格、合计行属性 | function(column, realRowIndex) | -
 onHeaderCell | 设置表头属性 | function(column, realRowIndex) | -
 onBodyCell | 设置表格属性 | function(column, realRowIndex) | -
 onFooterCell | 设置合计行属性 | function(column, realRowIndex) | -

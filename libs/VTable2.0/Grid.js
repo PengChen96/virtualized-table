@@ -1,21 +1,15 @@
 
 import React, {useEffect, useState, useMemo, useRef, useImperativeHandle, useContext} from 'react';
 import PropTypes from 'prop-types';
-import Cell from './Cell';
+import Cell, {getCellBordered, getCellAlign} from './Cell';
+import {getCellFixedShadow, getFixedCellStyle} from './utils/fixUtil';
 import './styles/grid.less';
 import {getRealGridVerticalScrollInfo, getRealGridHorizontalScrollInfo} from './utils/gridScrollInfo';
 import {getColumnsWidth} from './utils';
-import {getFixedCellInfo} from './utils/fixUtil';
 import {sameType, classNames} from './utils/base';
 import VTableContext from './context/VTableContext';
 import {getRowKey} from './utils/rowKey';
 import {getRowHeightArr} from './cache/rowHeightCache';
-
-const ALIGN_TYPE = {
-  left: 'vt-align-left',
-  right: 'vt-align-right',
-  center: 'vt-align-center',
-};
 
 // const whyDidYouRender = require('@welldone-software/why-did-you-render');
 // whyDidYouRender(React, {
@@ -30,6 +24,7 @@ const Grid = (props, ref) => {
   }));
 
   const _VTableContext = useContext(VTableContext);
+  const {isSticky} = _VTableContext;
 
   let stateProps = {
     // 列 #
@@ -114,13 +109,6 @@ const Grid = (props, ref) => {
 
   useEffect(() => {
 
-    // let rowVisibleCount = Math.ceil(stateProps.visibleHeight / stateProps.estimatedRowHeight);
-    // let rowVisibleCount = stateProps.rowVisibleCount;
-    // let endRowIndex = grid.startRowIndex + rowVisibleCount + stateProps.rowOffsetCount * 2;
-    // console.log(endRowIndex);
-    // updateGrid({
-    //   virtualData: props.dataSource.slice(grid.startRowIndex, endRowIndex)
-    // });
     _onScrollEvent(true);
     console.log('dataSource change');
     //
@@ -129,6 +117,7 @@ const Grid = (props, ref) => {
         _VTableContext.getBodyScrollBarWidth({ref: gridContainer});
       }, 0);
     }
+
   }, [
     stateProps.dataSource,
     stateProps.columns,
@@ -183,30 +172,6 @@ const Grid = (props, ref) => {
       updateGrid(gridInfo);
     }
   };
-  // cell bordered
-  const getCellBordered = ({type}) => {
-    // 是否显示边框
-    let _bordered = type === 'header' ? (headerBordered || bordered) : bordered;
-    const noLastChildBorderRight = _VTableContext.isSticky ? 'vt-has-last-child-border-right' : 'vt-no-last-child-border-right';
-    _bordered = `vt-default-bordered ${_bordered ? 'vt-bordered-right' : ''} ${noLastChildBorderRight}`;
-    return _bordered;
-  };
-  // cell align
-  const getCellAlign = ({type, column}) => {
-    let headerAlign = ALIGN_TYPE[column.headerAlign] || ALIGN_TYPE.center;
-    let bodyAlign = ALIGN_TYPE[column.align] || ALIGN_TYPE.left;
-    let align = type === 'header' ? headerAlign : bodyAlign;
-    return align;
-  };
-  // cell fixed shadow
-  const getCellFixedShadow = ({column}) => {
-    const {fixedLeftColumns, fixedRightColumns} = stateProps;
-    const cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
-    const {lastFixLeft, firstFixRight} = cellInfo;
-    const lastFixLeftShadow = lastFixLeft ? 'vt-cell-fix-left-last' : '';
-    const firstFixRightShadow = firstFixRight ? 'vt-cell-fix-right-first' : '';
-    return `${lastFixLeftShadow} ${firstFixRightShadow}`;
-  };
   // 合并列
   const getCellColSpanStyle = ({column, realRowIndex, realColumnIndex, columnIndex}) => {
     const {columns} = stateProps;
@@ -246,18 +211,19 @@ const Grid = (props, ref) => {
   // 渲染单元格
   const _cellRender = (row, rowIndex, column, columnIndex, {type}) => {
 
-    let realRowIndex = rowIndex + grid.startRowIndex;
-    let realColumnIndex = column.fixed ? column.realFcIndex : columnIndex + grid.startColumnIndex;
-    let value = row[column['key'] || column['dataIndex']];
+    const realRowIndex = rowIndex + grid.startRowIndex;
+    const realColumnIndex = column.fixed ? column.realFcIndex : columnIndex + grid.startColumnIndex;
+    const value = row[column['key'] || column['dataIndex']];
     //
-    let {width, display} = getCellColSpanStyle({column, realRowIndex, realColumnIndex, columnIndex});
+    const {width, display} = getCellColSpanStyle({column, realRowIndex, realColumnIndex, columnIndex});
     // 是否显示边框
-    const bordered = getCellBordered({type});
+    const cellBordered = getCellBordered({type, isSticky, headerBordered, bordered});
     // 对齐方式 'left' | 'right' | 'center'
     const align = getCellAlign({type, column});
     // 固定列阴影
-    const cellFixedShadow = getCellFixedShadow({column});
-    const cellFixedStyle = getFixedCellStyle({column});
+    const {fixedLeftColumns, fixedRightColumns} = stateProps;
+    const cellFixedShadow = getCellFixedShadow({column, fixedLeftColumns, fixedRightColumns});
+    const cellFixedStyle = getFixedCellStyle({column, fixedLeftColumns, fixedRightColumns});
     // className
     const {className = ''} = column;
     const cellProps = {
@@ -266,7 +232,7 @@ const Grid = (props, ref) => {
       width,
       minRowHeight: stateProps.minRowHeight,
       cellFixedShadow,
-      bordered,
+      bordered: cellBordered,
       align,
       className,
       columnStyle: column.style,
@@ -293,18 +259,8 @@ const Grid = (props, ref) => {
     }
 
   };
-  // 使用sticky实现固定列
-  const getFixedCellStyle = ({column}) => {
-    const {fixedLeftColumns, fixedRightColumns} = stateProps;
-    let cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
-    const {isSticky, fixLeft, fixRight} = cellInfo;
-    return {
-      zIndex: isSticky ? 2 : undefined,
-      position: isSticky ? 'sticky' : undefined,
-      left: fixLeft,
-      right: fixRight,
-    };
-  };
+
+  //
 
   // 点击单元格
   // const __onCellTap = (
@@ -332,6 +288,7 @@ const Grid = (props, ref) => {
     }
     return height;
   };
+
   /**
    * 默认行
    * @param {Object} row 行数据
@@ -339,6 +296,7 @@ const Grid = (props, ref) => {
    * @param {String} type 类型 header|body|footer
    */
   const defaultGridRow = (row, rowIndex, {type}) => {
+    const {fixedLeftColumns, fixedRightColumns} = stateProps;
     const realRowIndex = rowIndex + grid.startRowIndex;
     // 是否选中
     const {selectedRowKeys = []} = rowSelection;
@@ -378,7 +336,7 @@ const Grid = (props, ref) => {
               key={`${realRowIndex}_${realColumnIndex}`}
               data-key={`${realRowIndex}_${realColumnIndex}`}
               {...(cellPropsMap[type] || defaultCellProps)}
-              style={{...getFixedCellStyle({column})}}
+              style={{...getFixedCellStyle({column, fixedLeftColumns, fixedRightColumns})}}
             >
               {_cellRender(row, rowIndex, column, columnIndex, {type})}
             </Cell>;
