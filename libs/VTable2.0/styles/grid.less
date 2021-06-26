@@ -15,6 +15,7 @@
   flex-wrap: wrap;
   .@{prefix}-grid-row {
     display: flex;
+    contain: layout paint; // 使row间paint不影响
     &:hover .@{prefix}-grid-cell {
       background: #ebf5ff;
     }
