@@ -2,7 +2,7 @@
 import React, {useEffect, useState, useMemo, useRef, useImperativeHandle, useContext} from 'react';
 import PropTypes from 'prop-types';
 import {getCellBordered, getCellAlign} from './Cell';
-import {getCellFixedShadow, getFixedCellStyle} from './utils/fixUtil';
+import {getCellFixedShadow, getFixedCellInfo, getFixedCellStyle} from './utils/fixUtil';
 import './styles/grid.less';
 import {getRealGridVerticalScrollInfo, getRealGridHorizontalScrollInfo} from './utils/gridScrollInfo';
 import {getColumnsWidth} from './utils';
@@ -226,8 +226,9 @@ const Grid = (props, ref) => {
     const align = getCellAlign({type, column});
     // 固定列阴影
     const {fixedLeftColumns, fixedRightColumns} = stateProps;
-    const cellFixedShadow = getCellFixedShadow({column, fixedLeftColumns, fixedRightColumns});
-    const cellFixedStyle = getFixedCellStyle({column, fixedLeftColumns, fixedRightColumns});
+    const cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
+    const cellFixedShadow = getCellFixedShadow({cellInfo});
+    const cellFixedStyle = getFixedCellStyle({cellInfo});
     // className
     const {className = ''} = column;
     return <div
@@ -333,6 +334,7 @@ const Grid = (props, ref) => {
           // 有要重写对应header|body|footer的cell
           const Cell = components && components[type] && components[type].cell;
           if (Cell) {
+            const cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
             const realColumnIndex = columnIndex + grid.startColumnIndex;
             // {width, onResize}
             const defaultCellProps = typeof column.onCell === 'function' ? column.onCell(column, realRowIndex) : {};
@@ -345,7 +347,7 @@ const Grid = (props, ref) => {
               key={`${realRowIndex}_${realColumnIndex}`}
               data-key={`${realRowIndex}_${realColumnIndex}`}
               {...(cellPropsMap[type] || defaultCellProps)}
-              style={{...getFixedCellStyle({column, fixedLeftColumns, fixedRightColumns})}}
+              style={{...getFixedCellStyle({cellInfo})}}
             >
               {_cellRender(row, rowIndex, column, columnIndex, {type})}
             </Cell>;

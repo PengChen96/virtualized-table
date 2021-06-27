@@ -68,16 +68,14 @@ export const getFixedCellInfo = ({column, fixedLeftColumns = [], fixedRightColum
   };
 };
 // cell fixed shadow
-export const getCellFixedShadow = ({column, fixedLeftColumns = [], fixedRightColumns = []}) => {
-  const cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
+export const getCellFixedShadow = ({cellInfo}) => {
   const {lastFixLeft, firstFixRight} = cellInfo;
   const lastFixLeftShadow = lastFixLeft ? 'vt-cell-fix-left-last' : '';
   const firstFixRightShadow = firstFixRight ? 'vt-cell-fix-right-first' : '';
   return `${lastFixLeftShadow} ${firstFixRightShadow}`;
 };
 // 使用sticky实现固定列
-export const getFixedCellStyle = ({column, fixedLeftColumns = [], fixedRightColumns = []}) => {
-  let cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
+export const getFixedCellStyle = ({cellInfo}) => {
   const {isSticky, fixLeft, fixRight} = cellInfo;
   return {
     zIndex: isSticky ? 2 : undefined,
