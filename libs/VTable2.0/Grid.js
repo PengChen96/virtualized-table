@@ -136,7 +136,9 @@ const Grid = (props, ref) => {
   // 垂直方向滚动
   const _onVerticalScroll = (didMount) => {
     const {scrollTop} = gridContainer.current;
-    if (didMount || gridScrollTop !== scrollTop) {
+    // const doUpdate = gridScrollLeft !== scrollTop ;
+    const doUpdate = Math.abs(scrollTop - gridScrollTop) > 40;
+    if (didMount || doUpdate) {
       console.log('vertical');
       setGridScrollTop(scrollTop);
       const {dataSource, estimatedRowHeight, rowOffsetCount, rowVisibleCount} = stateProps;
@@ -155,7 +157,9 @@ const Grid = (props, ref) => {
   // 水平方向滚动
   const _onHorizontalScroll = (didMount) => {
     const {scrollLeft} = gridContainer.current;
-    if (didMount || gridScrollLeft !== scrollLeft) {
+    // const doUpdate = gridScrollLeft !== scrollLeft;
+    const doUpdate = Math.abs(scrollLeft - gridScrollLeft) > 80;
+    if (didMount || doUpdate) {
       console.log('horizontal');
       setGridScrollLeft(scrollLeft);
       const {dataSource, columns, estimatedColumnWidth, columnOffsetCount, columnVisibleCount} = stateProps;
@@ -394,7 +398,7 @@ const Grid = (props, ref) => {
       }}
     >
       <div style={{
-        // willChange: 'transform',
+        willChange: 'transform',
         // transform: `translateY(${grid.startVerticalOffset}px)`,
         paddingTop: grid.startVerticalOffset,
         paddingBottom: grid.endVerticalOffset,
