@@ -73,7 +73,7 @@ const Grid = (props, ref) => {
     bordered,
     //
     onScrollTopSync,
-    // onCellTap
+    onCellTap
   } = props;
   let [gridScrollTop, setGridScrollTop] = useState(null);
   let [gridScrollLeft, setGridScrollLeft] = useState(null);
@@ -235,11 +235,11 @@ const Grid = (props, ref) => {
       key={`cell_${realRowIndex}_${realColumnIndex}`}
       data-key={`cell_${realRowIndex}_${realColumnIndex}`}
       className={`vt-grid-cell ${cellFixedShadow} ${cellBordered} ${align} ${className}`}
-      // onClick={(e) => __onCellTap(e,
-      //   value,
-      //   row, rowIndex, realRowIndex,
-      //   column, columnIndex, realColumnIndex
-      // )}
+      onClick={(e) => __onCellTap(e,
+        value,
+        row, rowIndex, realRowIndex,
+        column, columnIndex, realColumnIndex
+      )}
       style={{
         width: width,
         minWidth: width,
@@ -273,18 +273,18 @@ const Grid = (props, ref) => {
   //
 
   // 点击单元格
-  // const __onCellTap = (
-  //   e, value,
-  //   row, rowIndex, realRowIndex,
-  //   column, columnIndex, realColumnIndex
-  // ) => {
-  //   e.stopPropagation();
-  //   e.preventDefault();
-  //   console.log(realRowIndex, realColumnIndex, e);
-  //   if (typeof onCellTap === 'function') {
-  //     onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
-  //   }
-  // };
+  const __onCellTap = (
+    e, value,
+    row, rowIndex, realRowIndex,
+    column, columnIndex, realColumnIndex
+  ) => {
+    e.stopPropagation();
+    e.preventDefault();
+    console.log(realRowIndex, realColumnIndex, e);
+    if (typeof onCellTap === 'function') {
+      onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
+    }
+  };
 
   // 同步固定列行高
   const getRowHeight = ({type, rowIndex}) => {
