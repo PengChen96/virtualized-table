@@ -98,7 +98,7 @@ describe('Grid render', () => {
       wrapper
         .find('.vt-grid-cell')
         .at(0)
-        .hasClass('vt-bordered'),
+        .hasClass('vt-default-bordered'),
     ).toBe(true);
     expect(
       wrapper
