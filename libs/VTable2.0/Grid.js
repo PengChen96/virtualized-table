@@ -139,7 +139,7 @@ const Grid = (props, ref) => {
     // const doUpdate = gridScrollLeft !== scrollTop ;
     const doUpdate = Math.abs(scrollTop - gridScrollTop) > 40;
     if (didMount || doUpdate) {
-      console.log('vertical');
+      // console.log('vertical');
       setGridScrollTop(scrollTop);
       const {dataSource, estimatedRowHeight, rowOffsetCount, rowVisibleCount} = stateProps;
       // 当前scrollTop
@@ -160,7 +160,7 @@ const Grid = (props, ref) => {
     // const doUpdate = gridScrollLeft !== scrollLeft;
     const doUpdate = Math.abs(scrollLeft - gridScrollLeft) > 80;
     if (didMount || doUpdate) {
-      console.log('horizontal');
+      // console.log('horizontal');
       setGridScrollLeft(scrollLeft);
       const {dataSource, columns, estimatedColumnWidth, columnOffsetCount, columnVisibleCount} = stateProps;
       // 当前scrollLeft
@@ -381,19 +381,22 @@ const Grid = (props, ref) => {
     }
     return gridRow;
   };
+  //
+  const onScrollCapture = (e) => {
+    if (!_VTableContext.isSticky && mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
+    if (type === 'body' && onScrollTopSync) {
+      onScrollTopSync(e, {
+        startRowIndex: grid.startRowIndex,
+        endRowIndex: grid.endRowIndex,
+      });
+    }
+    _onScrollEvent();
+  };
+
   return <>
     <div className={classNames('vt-grid-container', className)}
       ref={gridContainer}
-      onScrollCapture={(e) => {
-        if (!_VTableContext.isSticky && mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
-        if (type === 'body' && onScrollTopSync) {
-          onScrollTopSync(e, {
-            startRowIndex: grid.startRowIndex,
-            endRowIndex: grid.endRowIndex,
-          });
-        }
-        _onScrollEvent();
-      }}
+      onScrollCapture={(e) => onScrollCapture(e)}
       style={{
         height: stateProps.visibleHeight,
         ...(gridStyle || {}),
@@ -401,6 +404,7 @@ const Grid = (props, ref) => {
     >
       <div style={{
         willChange: 'transform',
+        // pointerEvents: 'none',
         // transform: `translateY(${grid.startVerticalOffset}px)`,
         paddingTop: grid.startVerticalOffset,
         paddingBottom: grid.endVerticalOffset,
@@ -419,7 +423,7 @@ const Grid = (props, ref) => {
           </div>
         }
         {
-          [...grid.virtualData].map((row, rowIndex) => {
+          grid.virtualData.map((row, rowIndex) => {
             // 行渲染
             return _gridRowRender(row, rowIndex, {type});
           })
