@@ -5,7 +5,7 @@
 ---|---|---|---
 bordered | 是否显示边框 | boolean | false
 columns | 表格列的配置 | object[] | []
-components | 覆盖默认的Grid元素 {row, header{cell}, body{cell}} | object | -
+components | 覆盖默认的Grid元素 {header{row, cell}, body{row, cell}} | object | -
 columnOffsetCount | 表格可视区域可渲染的列数 | number | 8
 columnVisibleCount | 表格列渲染数左右偏移量 | number | 4
 dataSource | 数据数组 | object[] | []

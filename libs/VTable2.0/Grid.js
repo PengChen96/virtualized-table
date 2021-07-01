@@ -305,17 +305,21 @@ const Grid = (props, ref) => {
    * @param {Number} rowIndex 行坐标
    * @param {String} type 类型 header|body|footer
    */
-  const defaultGridRow = (row, rowIndex, {type}) => {
+  const _gridRowRender = (row, rowIndex, {type}) => {
     const {fixedLeftColumns, fixedRightColumns} = stateProps;
     const realRowIndex = rowIndex + grid.startRowIndex;
     // 是否选中
     const {selectedRowKeys = []} = rowSelection;
-    // const _rowKey = rowKey ? (sameType(rowKey, 'Function') ? rowKey(row) : row[rowKey]) : realRowIndex;
     const _rowKey = getRowKey(rowKey, row, realRowIndex);
     const selected = selectedRowKeys.includes(_rowKey);
     // isSticky:true时设置
     let height = getRowHeight({type, rowIndex});
-    return <div
+    // 有要重写对应header|body|footer的row
+    const RowComponent = components && components[type] && components[type].row || 'div';
+    // {index, moveRow}
+    const additionalRowProps = typeof onRow === 'function' ? onRow(row, realRowIndex) : {};
+    return <RowComponent
+      {...additionalRowProps}
       key={`row_${realRowIndex}`}
       data-key={`row_${realRowIndex}`}
       className={classNames(
@@ -355,32 +359,9 @@ const Grid = (props, ref) => {
           return gridRowCell;
         })
       }
-    </div>;
+    </RowComponent>;
   };
 
-  /**
-   * 渲染行
-   * @param {Object} row 行数据
-   * @param {Number} rowIndex 行坐标
-   * @param {String} type 类型 header|body|footer
-   */
-  const _gridRowRender = (row, rowIndex, {type}) => {
-    let gridRow = defaultGridRow(row, rowIndex, {type});
-    // 覆盖默认的 GridRow 元素
-    if (components && components.row) {
-      let realRowIndex = rowIndex + grid.startRowIndex;
-      // {index, moveRow}
-      let rowProps = typeof onRow === 'function' ? onRow(row, realRowIndex) : {};
-      gridRow = <components.row
-        key={realRowIndex}
-        data-key={realRowIndex}
-        {...rowProps}
-      >
-        {defaultGridRow(row, rowIndex, {type})}
-      </components.row>;
-    }
-    return gridRow;
-  };
   //
   const onScrollCapture = (e) => {
     if (!_VTableContext.isSticky && mgType === 'mainMultiGrid') _VTableContext.onScroll(e);

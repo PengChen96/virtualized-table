@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import {Grid} from '../../../../libs/VTable2.0';
+import {VTable} from '../../../../libs/VTable2.0';
 import {
   Select
 } from '../../../components';
@@ -17,7 +17,7 @@ const { Option } = Select;
 import './drag-sorting.less';
 
 const TYPE = 'DragbleBodyRow';
-const DragableBodyRow = ({index, moveRow, ...restProps}) => {
+const DragableBodyRow = ({index, moveRow, className, style, ...restProps}) => {
 
   const ref = React.useRef();
   const [{ isOver, dropClassName }, drop] = useDrop({
@@ -49,10 +49,11 @@ const DragableBodyRow = ({index, moveRow, ...restProps}) => {
   return (
     <div
       ref={ref}
-      className={`dragble-body-row${isOver ? dropClassName : ''}`}
+      className={`${className} dragble-body-row${isOver ? dropClassName : ''}`}
       style={{
         opacity: isDragging ? 0.5 : 1,
-        cursor: 'move'
+        cursor: 'move',
+        ...style
       }}
       {...restProps}
     />
@@ -126,7 +127,7 @@ class DragSortingCase extends React.Component {
         </div>
         <br/>
         <DndProvider backend={Backend}>
-          <Grid
+          <VTable
             // 可视区域高度
             visibleHeight={400}
             // 表格样式类名
@@ -139,12 +140,13 @@ class DragSortingCase extends React.Component {
             bordered={true}
             // 覆盖grid row元素
             components={{
-              row: DragableBodyRow
+              body: {
+                row: DragableBodyRow
+              }
             }}
             // 设置行属性
             onRow={(record, index) => {
               return ({
-                record,
                 index,
                 moveRow: this.moveRow.bind(this),
               });
