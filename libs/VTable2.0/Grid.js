@@ -231,7 +231,19 @@ const Grid = (props, ref) => {
     const cellFixedStyle = getFixedCellStyle({cellInfo});
     // className
     const {className = ''} = column;
-    return <div
+    //
+    // 有要重写对应header|body|footer的cell
+    const CellComponent = components && components[type] && components[type].cell || 'div';
+    // {width, onResize}
+    const defaultCellProps = typeof column.onCell === 'function' ? column.onCell(column, realRowIndex) : {};
+    const cellPropsMap = {
+      header: sameType(column.onHeaderCell, 'Function') ? column.onHeaderCell(column, realRowIndex) : undefined,
+      body: sameType(column.onBodyCell, 'Function') ? column.onBodyCell(column, realRowIndex) : undefined,
+      footer: sameType(column.onFooterCell, 'Function') ? column.onFooterCell(column, realRowIndex) : undefined,
+    };
+    const additionalCellProps = cellPropsMap[type] || defaultCellProps;
+    return <CellComponent
+      {...additionalCellProps}
       key={`cell_${realRowIndex}_${realColumnIndex}`}
       data-key={`cell_${realRowIndex}_${realColumnIndex}`}
       className={`vt-grid-cell ${cellFixedShadow} ${cellBordered} ${align} ${className}`}
@@ -256,7 +268,7 @@ const Grid = (props, ref) => {
         </div>
           : _render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type})
       }
-    </div>;
+    </CellComponent>;
   };
   const _render = (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type}) => {
     if (type === 'header') {
@@ -269,8 +281,6 @@ const Grid = (props, ref) => {
     }
 
   };
-
-  //
 
   // 点击单元格
   const __onCellTap = (
@@ -306,7 +316,7 @@ const Grid = (props, ref) => {
    * @param {String} type 类型 header|body|footer
    */
   const _gridRowRender = (row, rowIndex, {type}) => {
-    const {fixedLeftColumns, fixedRightColumns} = stateProps;
+    // const {fixedLeftColumns, fixedRightColumns} = stateProps;
     const realRowIndex = rowIndex + grid.startRowIndex;
     // 是否选中
     const {selectedRowKeys = []} = rowSelection;
@@ -334,29 +344,7 @@ const Grid = (props, ref) => {
     >
       {
         displayedColumns.map((column, columnIndex) => {
-          let gridRowCell = _cellRender(row, rowIndex, column, columnIndex, {type});
-          // 有要重写对应header|body|footer的cell
-          const Cell = components && components[type] && components[type].cell;
-          if (Cell) {
-            const cellInfo = getFixedCellInfo({column, fixedLeftColumns, fixedRightColumns});
-            const realColumnIndex = columnIndex + grid.startColumnIndex;
-            // {width, onResize}
-            const defaultCellProps = typeof column.onCell === 'function' ? column.onCell(column, realRowIndex) : {};
-            const cellPropsMap = {
-              header: sameType(column.onHeaderCell, 'Function') ? column.onHeaderCell(column, realRowIndex) : undefined,
-              body: sameType(column.onBodyCell, 'Function') ? column.onBodyCell(column, realRowIndex) : undefined,
-              footer: sameType(column.onFooterCell, 'Function') ? column.onFooterCell(column, realRowIndex) : undefined,
-            };
-            gridRowCell = <Cell
-              key={`${realRowIndex}_${realColumnIndex}`}
-              data-key={`${realRowIndex}_${realColumnIndex}`}
-              {...(cellPropsMap[type] || defaultCellProps)}
-              style={{...getFixedCellStyle({cellInfo})}}
-            >
-              {_cellRender(row, rowIndex, column, columnIndex, {type})}
-            </Cell>;
-          }
-          return gridRowCell;
+          return _cellRender(row, rowIndex, column, columnIndex, {type});
         })
       }
     </RowComponent>;
