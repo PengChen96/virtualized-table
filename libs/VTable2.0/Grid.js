@@ -15,6 +15,7 @@ import {getRowHeightArr} from './cache/rowHeightCache';
 // whyDidYouRender(React, {
 //   trackAllPureComponents: true
 // });
+
 const Grid = (props, ref) => {
 
   // 要向父MultiGrid暴露的
@@ -56,7 +57,7 @@ const Grid = (props, ref) => {
 
   };
   const {
-    type,
+    type = 'body',
     mgType,
     className,
     gridStyle,
@@ -66,7 +67,7 @@ const Grid = (props, ref) => {
     rowKey,
     rowSelection = {},
     //
-    components,
+    components = {},
     onRow,
     //
     headerBordered,
@@ -99,7 +100,24 @@ const Grid = (props, ref) => {
   const displayedColumns = useMemo(() => {
     return [...stateProps.fixedLeftColumns, ...grid.virtualColumns, ...stateProps.fixedRightColumns];
   }, [stateProps.fixedLeftColumns, grid.virtualColumns, stateProps.fixedRightColumns]);
-
+  //
+  const Components = useMemo(() => {
+    return {
+      header: {
+        row: components.header && components.header.row || 'div',
+        cell: components.header && components.header.cell || 'div'
+      },
+      body: {
+        row: components.body && components.body.row || 'div',
+        cell: components.body && components.body.cell || 'div'
+      },
+      footer: {
+        row: components.footer && components.footer.row || 'div',
+        cell: components.footer && components.footer.cell || 'div'
+      }
+    };
+  }, [components]);
+  //
   const updateGrid = (partialState) => {
     setGrid(oldState => ({
       ...oldState,
@@ -231,9 +249,8 @@ const Grid = (props, ref) => {
     const cellFixedStyle = getFixedCellStyle({cellInfo});
     // className
     const {className = ''} = column;
-    //
     // 有要重写对应header|body|footer的cell
-    const CellComponent = components && components[type] && components[type].cell || 'div';
+    const CellComponent = Components[type].cell;
     // {width, onResize}
     const defaultCellProps = typeof column.onCell === 'function' ? column.onCell(column, realRowIndex) : {};
     const cellPropsMap = {
@@ -325,7 +342,7 @@ const Grid = (props, ref) => {
     // isSticky:true时设置
     let height = getRowHeight({type, rowIndex});
     // 有要重写对应header|body|footer的row
-    const RowComponent = components && components[type] && components[type].row || 'div';
+    const RowComponent = Components[type].row;
     // {index, moveRow}
     const additionalRowProps = typeof onRow === 'function' ? onRow(row, realRowIndex) : {};
     return <RowComponent

@@ -80,7 +80,7 @@ export default (props) => {
 };
 const ResizableCell = (props) => {
 
-  const { onResize, width = 150, ...restProps } = props;
+  const { onResize, width = 150, className, ...restProps } = props;
   let [w, setW] = useState(width);
   let [resizeActive, setResizeActive] = useState(false);
   const _onResize = (e, { size }) => {
@@ -108,7 +108,7 @@ const ResizableCell = (props) => {
       handle={<span className={`custom-handle-e ${resizeActive ? 'active' : ''}`} style={{left: w - 5}} onClick={e => {e.stopPropagation();}}/>}
       // draggableOpts={{ grid: [25, 25] }}
     >
-      <div className={'my_cell'} {...restProps} />
+      <div className={`my_cell ${className}`} {...restProps} />
     </Resizable>
   );
 
