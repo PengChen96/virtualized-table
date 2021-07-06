@@ -36,15 +36,8 @@ export default (props) => {
           // 边框
           bordered={props.bordered}
           //
-          fixedLeftColumnCount={2}
-          fixedRightColumnCount={1}
-          // onSelectAll={this.onSelectAll}
-          // onSelect={this.onSelect}
-          // onCellTap={this.onCellTap}
-          // onRowRemove={this.onRowRemove}
           visibleHeight={400}
           minRowHeight={40}
-          emptyText={<div>未查询到数据</div>}
         />
       </>
   );

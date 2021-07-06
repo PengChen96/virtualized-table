@@ -76,6 +76,7 @@
     "react-dnd-html5-backend": "^10.0.2",
     "react-resizable": "^1.11.0",
     "style-loader": "0.19.1",
+    "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "4.29.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",

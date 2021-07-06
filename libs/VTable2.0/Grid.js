@@ -382,7 +382,7 @@ const Grid = (props, ref) => {
   return <>
     <div className={classNames('vt-grid-container', className)}
       ref={gridContainer}
-      onScrollCapture={(e) => onScrollCapture(e)}
+      onScrollCapture={onScrollCapture}
       style={{
         height: stateProps.visibleHeight,
         ...(gridStyle || {}),

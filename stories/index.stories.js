@@ -26,6 +26,7 @@ import GridColspanRowSpanMD from '../src/example/VTable2.0/Grid/colspan-rowspan.
 // ellipsis
 import GridEllipsis from '../src/example/VTable2.0/Grid/ellipsis';
 import GridEllipsisMd from '../src/example/VTable2.0/Grid/ellipsis.md';
+import Test from '../src/example/VTable2.0/Grid/test';
 
 storiesOf('VTable1.0|VTable', module)
   .addDecorator(storyFn => <div style={{ textAlign: 'center' }}>{storyFn()}</div>)
@@ -40,7 +41,7 @@ storiesOf('VTable2.0|VTable', module)
   .addDecorator(withKnobs)
   .add('default', () => {
     const columnsNum = number('ColumnsNum', 10, {range: true, min: 1, max: 1000, step: 1});
-    const dataNum = number('DataNum', 50, {range: true, min: 50, max: 100000, step: 50});
+    const dataNum = number('DataNum', 50, {range: true, min: 1, max: 100000, step: 1});
     const bordered = boolean('Bordered', true);
     const isSticky = boolean('IsSticky', true);
     const fixedLeftColumnCount = number('FixedLeftColumnCount', 1);
@@ -70,7 +71,7 @@ storiesOf('VTable2.0|MultiGrid', module)
   .addDecorator(withKnobs)
   .add('default', () => {
     const columnsNum = number('ColumnsNum', 10, {range: true, min: 1, max: 1000, step: 1});
-    const dataNum = number('DataNum', 50, {range: true, min: 50, max: 100000, step: 50});
+    const dataNum = number('DataNum', 50, {range: true, min: 1, max: 100000, step: 1});
     const bordered = boolean('Bordered', true);
     const fixedLeftColumnCount = number('FixedLeftColumnCount', 1);
     const fixedRightColumnCount = number('FixedRightColumnCount', 1);
@@ -142,7 +143,10 @@ storiesOf('VTable2.0|Grid', module)
     <GridEllipsis/>
   ), {
     notes: {GridEllipsisMd}
-  });
+  })
+  .add('test', () => (
+    <Test/>
+  ));
 // .add('emoji', () => (  // 这里是另一个 story
 //   <Dnd/>
 // ), {

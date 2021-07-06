@@ -2,7 +2,7 @@
 import React from 'react';
 import Grid from './Grid';
 import PropTypes from 'prop-types';
-import {deepClone} from "./utils/deepClone";
+import {deepClone} from './utils/deepClone';
 
 class VTable extends React.Component {
 

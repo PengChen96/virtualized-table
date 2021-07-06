@@ -25,6 +25,8 @@ export default (props) => {
     ));
     setDataSource(generateData(dataNum, columnsNum));
   }, [props.columnsNum, props.dataNum, props.align]);
+
+  const rowKey = (item) => `${item.rowKey}`;
   return (
       <>
         <h2>VTable</h2>
@@ -45,9 +47,10 @@ export default (props) => {
           //
           visibleHeight={400}
           minRowHeight={40}
+          rowHeight={36}
           emptyText={<div>未查询到数据</div>}
           //
-          rowKey={'rowKey'}
+          rowKey={rowKey}
           rowSelection={{
             columnWidth: 60,
             getCheckboxProps: (record) => ({
@@ -62,7 +65,6 @@ export default (props) => {
             onSelect: (record, selected, selectedRows, nativeEvent)=>{console.log(record, selected, selectedRows);},
             onSelectAll: (selected, selectedRows, changeRows) => {
               console.log(selected, selectedRows, changeRows);
-              // setSelectedRowKeys(selectedRows.map((r) => ));
             }
           }}
         />
