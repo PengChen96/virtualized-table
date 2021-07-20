@@ -141,26 +141,17 @@ class VTable extends React.Component {
       footerColumnData: props.footerColumnData,
       selected: props.dataSource.map((item) => item.checked ? item : undefined),
       selectedRows: props.dataSource.map((item, index) => item.checked ? (props.rowKey ? item[props.rowKey] : index) : undefined),
-      // 滚动条宽度
-      scrollBarWidth: this.getScrollBarWidth()
     });
 
   }
-
-  // 获取滚动条宽度
-  getScrollBarWidth() {
-    let odiv = document.createElement('div');//创建一个div
-    let styles = {
-      width: '100px',
-      height: '100px',
-      overflowY: 'scroll'//让他有滚动条
-    };
-    for (let i in styles) odiv.style[i] = styles[i];
-    document.body.appendChild(odiv);//把div添加到body中
-    let scrollbarWidth = odiv.offsetWidth - odiv.clientWidth;//相减
-    odiv.remove();//移除创建的div
-    return scrollbarWidth;//返回滚动条宽度
-  }
+  // 获取body的滚动条宽度，然后去设置header的最后一列宽度
+  getBodyScrollBarWidth = ({ref}) => {
+    if (ref) {
+      this.setState({
+        scrollBarWidth: ref.offsetWidth - ref.clientWidth
+      });
+    }
+  };
   //
   getColumns(originColumns) {
     let columns = [];
@@ -294,6 +285,7 @@ class VTable extends React.Component {
             rowActiveKey={rowActiveKey}
             rowActiveColor={rowActiveColor}
             pointerEventDisabled={pointerEventDisabled}
+            getBodyScrollBarWidth={this.getBodyScrollBarWidth.bind(this)}
             scrollBarWidth={scrollBarWidth}
           />
         </div>

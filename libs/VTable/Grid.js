@@ -140,7 +140,10 @@ class Grid extends React.Component {
       } else {
         this._scrollContainer.scrollTop = totalHeight;
       }
-
+      const {getBodyScrollBarWidth} = this.props;
+      if (getBodyScrollBarWidth) {
+        getBodyScrollBarWidth({ref: this._scrollContainer});
+      }
     }
     // 这个是保证能得到正确的可视宽度
     if (this._masterContainer && this._masterContainer.clientWidth !== this.state.visibleWidth) {
@@ -507,7 +510,7 @@ class Grid extends React.Component {
       pointerEventDisabled
     } = this.state;
 
-    const {scrollBarWidth} = this.props;
+    const {scrollBarWidth, type} = this.props;
 
     return (
       <div>
@@ -567,7 +570,7 @@ class Grid extends React.Component {
               height: visibleHeight,
               // 设置最小高度[visibleHeight计算会少滚动条的高度]
               minHeight: estimatedRowHeight,
-              marginRight: this.props.type === 'header' ? scrollBarWidth : 0
+              marginRight: (type === 'header' || type === 'footer') ? scrollBarWidth : 0
             }}
           >
             <div style={{paddingTop: startVerticalOffset, paddingBottom: endVerticalOffset}}>
