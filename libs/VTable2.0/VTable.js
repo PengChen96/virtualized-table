@@ -1,10 +1,9 @@
-
-import React, {useEffect, useState, useMemo, useRef} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import VTableContext from './context/VTableContext';
 import MultiGrid from './MultiGrid';
 import {isSupportSticky} from './utils/isSupportSticky';
-import {sameType, classNames} from './utils/base';
+import {classNames, sameType} from './utils/base';
 import {getSelfAdaptionColumns} from './utils/columns';
 import {getRowKey} from './utils/rowKey';
 import {deepClone} from './utils/deepClone';
@@ -77,7 +76,7 @@ const VTable = (props) => {
         width: columnWidth,
         align: 'center',
         title: () => {
-          let checked = selectedRowKeys.length === dataSource.filter((r) => getCheckboxProps ? !getCheckboxProps(r).disabled : true).length;
+          const checked = getCheckedAll({selectedRowKeys, getCheckboxProps});
           return <div
             className={'vt-selection'}
             onClick={(e) => {
@@ -108,7 +107,7 @@ const VTable = (props) => {
               }}
             >
               <input type="checkbox" checked={checked}/>
-              <div className="vt-show-box" />
+              <div className="vt-show-box"/>
             </div>
           ];
         }
@@ -117,10 +116,29 @@ const VTable = (props) => {
     setColumns(autoColumns);
     setHasFixed(columnsObj.hasFixed);
   };
+  // 是否全选
+  const getCheckedAll = ({
+    selectedRowKeys,
+    getCheckboxProps
+  }) => {
+    const allEffectiveRowKeys = [];
+    dataSource.forEach((r, i) => {
+      // 没有被禁用
+      if (getCheckboxProps ? !getCheckboxProps(r).disabled : true) {
+        allEffectiveRowKeys.push(getRowKey(rowKeyProps, r, i));
+      }
+    });
+    const effectiveSelectedRowKeys = selectedRowKeys.filter((v) => allEffectiveRowKeys.includes(v));
+    return allEffectiveRowKeys.length > 0 && effectiveSelectedRowKeys.length === allEffectiveRowKeys.length;
+  };
   // 勾选改变
   const _onChange = (e, row, realRowIndex) => {
     e.stopPropagation();
-    const {selectedRowKeys = [], onChange = ()=>{}, onSelect = () => {}} = rowSelection;
+    const {
+      selectedRowKeys = [], onChange = () => {
+      }, onSelect = () => {
+      }
+    } = rowSelection;
     const rowKey = getRowKey(rowKeyProps, row, realRowIndex);
     let rowKeysSet = new Set(selectedRowKeys);
     let selected = undefined;
@@ -142,9 +160,13 @@ const VTable = (props) => {
   // 勾选全部
   const _onSelectAll = (e) => {
     e.stopPropagation();
-    const {selectedRowKeys = [], onChange = ()=>{}, onSelectAll = ()=>{}, getCheckboxProps} = rowSelection;
-    let checkedPart = selectedRowKeys.length < dataSource.filter((r) => getCheckboxProps ? !getCheckboxProps(r).disabled : true).length;
-    if (checkedPart) {
+    const {
+      selectedRowKeys = [], onChange = () => {
+      }, onSelectAll = () => {
+      }, getCheckboxProps
+    } = rowSelection;
+    const checkedAll = getCheckedAll({selectedRowKeys, getCheckboxProps});
+    if (!checkedAll) {
       let _selectedRowKeys = [];
       let _selectedRows = dataSource.filter((v, i) => {
         const disabled = getCheckboxProps ? getCheckboxProps(v).disabled : false;
