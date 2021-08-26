@@ -22,6 +22,7 @@ import GridColumnResize from '../src/example/VTable2.0/Grid/column-resize';
 import GridColumnResizeMd from '../src/example/VTable2.0/Grid/column-resize.md';
 // 行/列合并示例
 import GridColspanRowSpan from '../src/example/VTable2.0/Grid/colspan-rowspan';
+import GridColspanRowSpanComplex from '../src/example/VTable2.0/Grid/colspan-rowspan-complex';
 import GridColspanRowSpanMD from '../src/example/VTable2.0/Grid/colspan-rowspan.md';
 // ellipsis
 import GridEllipsis from '../src/example/VTable2.0/Grid/ellipsis';
@@ -119,6 +120,11 @@ storiesOf('VTable2.0|Grid', module)
   })
   .add('colspan-rowspan', () => (
     <GridColspanRowSpan/>
+  ),{
+    notes: {GridColspanRowSpanMD}
+  })
+  .add('colspan-rowspan-complex', () => (
+    <GridColspanRowSpanComplex/>
   ),{
     notes: {GridColspanRowSpanMD}
   })

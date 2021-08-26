@@ -28,6 +28,7 @@ const Grid = (props, ref) => {
   const {isSticky} = _VTableContext;
 
   let stateProps = {
+    fixedRowHeight: props.fixedRowHeight,
     // 列 #
     columns: props.columns || [],
     // 源数据 #
@@ -128,7 +129,7 @@ const Grid = (props, ref) => {
   useEffect(() => {
 
     _onScrollEvent(true);
-    console.log('dataSource change');
+    // console.log('dataSource change');
     //
     if (type === 'body' && mgType === 'mainMultiGrid') {
       setTimeout(() => {
@@ -195,11 +196,18 @@ const Grid = (props, ref) => {
     }
   };
   // 合并列
-  const getCellColSpanStyle = ({column, realRowIndex, realColumnIndex, columnIndex}) => {
-    const {columns} = stateProps;
-    let width = column.width || stateProps.estimatedColumnWidth;
-    // colSpan目前方案是传方法确定哪一行需要列合并
-    const colSpan = sameType(column.colSpan, 'Function') ? column.colSpan(realRowIndex) : 1;
+  const getCellColRowSpanStyle = ({
+    column, realRowIndex, realColumnIndex, columnIndex,
+    colSpan, rowSpan,
+  }) => {
+    colSpan = colSpan === 0 ? 0 : Number(colSpan || 1);
+    rowSpan = rowSpan === 0 ? 0 : Number(rowSpan || 1);
+    const {columns, estimatedColumnWidth, minRowHeight} = stateProps;
+    // colSpan目前方案是传方法确定哪一行需要列合并 value, row, index
+    // const colSpan = sameType(column.colSpan, 'Function') ? column.colSpan(realRowIndex) : 1;
+    // const rowSpan = sameType(column.rowSpan, 'Function') ? column.rowSpan(realRowIndex) : 1;
+    const height = rowSpan * minRowHeight;
+    let width = column.width || estimatedColumnWidth;
     const rowMergeColumns = columns.slice(realColumnIndex, realColumnIndex + colSpan);
     if (rowMergeColumns.length > 1) {
       width = getColumnsWidth(rowMergeColumns);
@@ -227,7 +235,9 @@ const Grid = (props, ref) => {
     }
     return {
       width,
-      display
+      height,
+      display,
+      visibility: rowSpan < 1 ? 'hidden' : undefined, // 这个是为了隐藏跨行
     };
   };
   // 渲染单元格
@@ -236,8 +246,13 @@ const Grid = (props, ref) => {
     const realRowIndex = rowIndex + grid.startRowIndex;
     const realColumnIndex = column.fixed ? column.realFcIndex : columnIndex + grid.startColumnIndex;
     const value = row[column['key'] || column['dataIndex']];
-    //
-    const {width, display} = getCellColSpanStyle({column, realRowIndex, realColumnIndex, columnIndex});
+    const {childNode, cellProps} = _render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type});
+    const {colSpan, rowSpan} = cellProps;
+    // 获取cell信息
+    const {width, height, display, visibility} = getCellColRowSpanStyle({
+      column, realRowIndex, realColumnIndex, columnIndex,
+      colSpan, rowSpan,
+    });
     // 是否显示边框
     const cellBordered = getCellBordered({type, isSticky, headerBordered, bordered});
     // 对齐方式 'left' | 'right' | 'center'
@@ -269,34 +284,57 @@ const Grid = (props, ref) => {
         row, rowIndex, realRowIndex,
         column, columnIndex, realColumnIndex
       )}
+      colSpan={colSpan}
+      rowSpan={rowSpan}
       style={{
         width: width,
         minWidth: width,
-        minHeight: stateProps.minRowHeight,
-        display: display,
+        // minHeight: stateProps.minRowHeight,
+        height,
+        display,
+        visibility,
         ...column.style,
-        ...cellFixedStyle
+        ...cellFixedStyle,
       }}
     >
       {
         /* 因flex布局下省略号不生效 故加一层div*/
         column.ellipsis ? <div className={'vt-ellipsis'} title={value}>
-          {_render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type})}
+          { childNode }
         </div>
-          : _render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type})
+          : childNode
       }
     </CellComponent>;
   };
   const _render = (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type}) => {
+    let cellProps = {};
+    let childNode = value;
     if (type === 'header') {
       if (column.headRender) { // TODO 后续废弃
-        return sameType(column.headRender, 'Function') ? column.headRender(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) : value;
+        childNode = sameType(column.headRender, 'Function') ? column.headRender(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) : value;
       }
-      return sameType(column.title, 'Function') ? column.title(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) : value;
+      childNode = sameType(column.title, 'Function') ? column.title(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) : value;
     } else {
-      return column.render ? column.render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) : value;
+      if (column.render) {
+        const renderData = column.render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
+        if (isRenderCell(renderData)) {
+          childNode = renderData.children;
+          cellProps = renderData.props;
+        } else {
+          childNode = renderData;
+        }
+      }
+      if (typeof childNode === 'object' && !Array.isArray(childNode) && !React.isValidElement(childNode)) {
+        childNode = null;
+      }
     }
-
+    return {
+      childNode,
+      cellProps
+    };
+  };
+  const isRenderCell = (data) => {
+    return data && typeof data === 'object' && !Array.isArray(data) && !React.isValidElement(data);
   };
 
   // 点击单元格
@@ -307,7 +345,7 @@ const Grid = (props, ref) => {
   ) => {
     e.stopPropagation();
     e.preventDefault();
-    console.log(realRowIndex, realColumnIndex, e);
+    // console.log(realRowIndex, realColumnIndex, e);
     if (typeof onCellTap === 'function') {
       onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
     }
@@ -340,7 +378,7 @@ const Grid = (props, ref) => {
     const _rowKey = getRowKey(rowKey, row, realRowIndex);
     const selected = selectedRowKeys.includes(_rowKey);
     // isSticky:true时设置
-    let height = getRowHeight({type, rowIndex});
+    const height = stateProps.fixedRowHeight ? stateProps.minRowHeight : getRowHeight({type, rowIndex});
     // 有要重写对应header|body|footer的row
     const RowComponent = Components[type].row;
     // {index, moveRow}
@@ -354,7 +392,8 @@ const Grid = (props, ref) => {
         {'vt-grid-row-selected': selected}
       )}
       style={{
-        height
+        height,
+        contain: stateProps.fixedRowHeight ? 'none' : ''
         // height: stateProps.estimatedRowHeight,
         // width: stateProps.visibleWidth
       }}

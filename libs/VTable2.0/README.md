@@ -13,6 +13,7 @@ estimatedRowHeight | 一行的预估高度 | number | 40
 estimatedColumnWidth | 一列的预估宽度 | number | 40
 fixedLeftColumnCount | 左边固定列 列数 | number | 0
 fixedRightColumnCount | 右边固定列 列数 | number | 0
+fixedRowHeight | 固定行高(需要合并行时设置为true) | boolean | false
 headerBordered | 是否显示表头边框,不设置则按bordered | boolean | false
 isSticky | 是否使用粘性布局 | boolean | - 看浏览器是否支持sticky
 loading | 页面是否加载中 | boolean / Spin props | false
@@ -31,15 +32,27 @@ onRow | 设置行属性 | function(row, realRowIndex) | -
 参数 | 说明 | 类型 | 默认值
 ---|---|---|---
 align | 设置列的对齐方式 | string | 'left'，'right'，'center'
-colSpan | 列合并，设置为0时，不渲染 | function(rowIndex) | -
 dataIndex | 列数据在数据项中对应的路径，暂不支持通过数组查询嵌套路径 | string | -
 ellipsis | 是否显示省略号 | boolean | false
 key | 列数据的键值 | string | -
-render | 生成复杂数据的渲染函数 | function(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) | -
+render | 生成复杂数据的渲染函数,@return 里面可以设置表格[行/列合并](https://pengchen96.github.io/virtualized-table/?path=/story/vtable2-0-grid--colspan-rowspan) | function(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) | -
 onCell | 设置表头、表格、合计行属性 | function(column, realRowIndex) | -
 onHeaderCell | 设置表头属性 | function(column, realRowIndex) | -
 onBodyCell | 设置表格属性 | function(column, realRowIndex) | -
 onFooterCell | 设置合计行属性 | function(column, realRowIndex) | -
+
+*render @return 合并行/列*
+```javascript
+render(value) {
+  return {
+    children: value,
+    props: {
+      colSpan: 1, // 列合并，设置为0时，不渲染(设置display:none)
+      rowSpan: 1, // 行合并，设置为0时，不渲染(设置visibility:hidden)
+    } 
+  }
+}
+```
 
 
 #### rowSelection

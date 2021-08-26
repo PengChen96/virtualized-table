@@ -28,43 +28,77 @@ class GridCase extends React.Component {
         key: 'id',
         title: '复选框',
         width: 150,
-        align: 'center'
-      }, {
-        key: 'mergeColumn',
+        align: 'center',
+      },
+      {
+        key: 'mergeColumn1',
         title: '合并列',
         width: 150,
         align: 'center',
-        colSpan: (rowIndex) => {
-          let val = 1;
-          if (rowIndex === 4) {
-            val = 3;
+        render: (value, row, rowIndex, realRowIndex) => {
+          const obj = {
+            children: value,
+            props: {}
+          };
+          if (realRowIndex === 1) {
+            obj.props.rowSpan = 2;
+            obj.props.colSpan = 3;
           }
-          return val;
-        }
-      }, {
-        key: 'mergeColumn',
-        title: '合并列',
+          if (realRowIndex > 1 && realRowIndex <= 2) {
+            obj.props.rowSpan = 0;
+          }
+          if (realRowIndex === 3) {
+            obj.props.rowSpan = 2;
+          }
+          if (realRowIndex === 4) {
+            obj.props.rowSpan = 0;
+          }
+          return obj;
+        },
+      },
+      {
+        key: 'mergeColumn2',
+        title: '合并列2',
         width: 150,
         align: 'center',
-        colSpan: (rowIndex) => {
-          let val = 1;
-          if (rowIndex === 4) {
-            val = 0;
+        render: (value, row, rowIndex, realRowIndex) => {
+          const obj = {
+            children: value,
+            props: {}
+          };
+          if (realRowIndex === 1) {
+            obj.props.colSpan = 0;
           }
-          return val;
-        }
-      }, {
-        key: 'mergeColumn',
-        title: '合并列',
+          if (realRowIndex === 2) {
+            obj.props.rowSpan = 0;
+          }
+          if (realRowIndex === 3) {
+            obj.props.colSpan = 2;
+          }
+          return obj;
+        },
+      },
+      {
+        key: 'mergeColumn3',
+        title: '合并列3',
         width: 150,
         align: 'center',
-        colSpan: (rowIndex) => {
-          let val = 1;
-          if (rowIndex === 4) {
-            val = 0;
+        render: (value, row, rowIndex, realRowIndex) => {
+          const obj = {
+            children: value,
+            props: {}
+          };
+          if (realRowIndex === 1) {
+            obj.props.colSpan = 0;
           }
-          return val;
-        }
+          if (realRowIndex === 2) {
+            obj.props.rowSpan = 0;
+          }
+          if (realRowIndex === 3) {
+            obj.props.colSpan = 0;
+          }
+          return obj;
+        },
       }];
     for (let i = 0; i < num; i++) {
       columns.push({
@@ -123,7 +157,10 @@ class GridCase extends React.Component {
     for (let i = 0; i < num; i++) {
       let rowObj = {
         id: i,
-        mergeColumn: '合并列'
+        mergeColumn: '合并列',
+        mergeColumn1: '合并列1:' + i,
+        mergeColumn2: '合并列2:' + i,
+        mergeColumn3: '合并列3:' + i
       };
       for (let j = 0; j < colNum; j++) {
         rowObj[`title${j}`] = `内容${j}`;
@@ -159,6 +196,8 @@ class GridCase extends React.Component {
         </div>
         <br/>
         <Grid
+          // 固定行高
+          fixedRowHeight={true}
           // 列
           columns={columns}
           // 数据

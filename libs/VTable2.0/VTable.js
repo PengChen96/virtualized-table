@@ -135,9 +135,9 @@ const VTable = (props) => {
   const _onChange = (e, row, realRowIndex) => {
     e.stopPropagation();
     const {
-      selectedRowKeys = [], onChange = () => {
-      }, onSelect = () => {
-      }
+      selectedRowKeys = [],
+      onChange = () => {},
+      onSelect = () => {}
     } = rowSelection;
     const rowKey = getRowKey(rowKeyProps, row, realRowIndex);
     let rowKeysSet = new Set(selectedRowKeys);
