@@ -1,3 +1,4 @@
+import React from 'react';
 
 /**
  * 判断类型
@@ -33,6 +34,15 @@ export const sameType = (value, type) => {
   if (type === 'Boolean') {
     return Object.prototype.toString.call(value) === '[object Boolean]';
   }
+};
+
+/**
+ * 判断render返回的对象类型
+ * @param {any} data 传入的值
+ * @return {boolean} 比对结果
+ */
+export const isRenderCellObj = (data) => {
+  return data && sameType(data, 'Object') && !React.isValidElement(data);
 };
 
 // classNames('foo', 'bar'); // => 'foo bar'

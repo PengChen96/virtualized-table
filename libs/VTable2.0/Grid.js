@@ -6,7 +6,7 @@ import {getCellFixedShadow, getFixedCellInfo, getFixedCellStyle} from './utils/f
 import './styles/grid.less';
 import {getRealGridVerticalScrollInfo, getRealGridHorizontalScrollInfo} from './utils/gridScrollInfo';
 import {getColumnsWidth} from './utils';
-import {sameType, classNames} from './utils/base';
+import {sameType, classNames, isRenderCellObj} from './utils/base';
 import VTableContext from './context/VTableContext';
 import {getRowKey} from './utils/rowKey';
 import {getRowHeightArr} from './cache/rowHeightCache';
@@ -197,40 +197,50 @@ const Grid = (props, ref) => {
   };
   // 合并列
   const getCellColRowSpanStyle = ({
-    column, realRowIndex, realColumnIndex, columnIndex,
+    row, column, realRowIndex, realColumnIndex, rowIndex, columnIndex,
     colSpan, rowSpan,
   }) => {
     colSpan = colSpan === 0 ? 0 : Number(colSpan || 1);
     rowSpan = rowSpan === 0 ? 0 : Number(rowSpan || 1);
     const {columns, estimatedColumnWidth, minRowHeight} = stateProps;
-    // colSpan目前方案是传方法确定哪一行需要列合并 value, row, index
-    // const colSpan = sameType(column.colSpan, 'Function') ? column.colSpan(realRowIndex) : 1;
-    // const rowSpan = sameType(column.rowSpan, 'Function') ? column.rowSpan(realRowIndex) : 1;
+    // 获取宽/高
     const height = rowSpan * minRowHeight;
     let width = column.width || estimatedColumnWidth;
     const rowMergeColumns = columns.slice(realColumnIndex, realColumnIndex + colSpan);
     if (rowMergeColumns.length > 1) {
       width = getColumnsWidth(rowMergeColumns);
-      // console.log(rowMergeColumns, realColumnIndex, realColumnIndex + colSpan);
     }
-    // 改行设置colSpan=0，直接隐藏，就不设置width=0了； 不隐藏设置width=0，会显示border和value，有问题
+    // 该行设置colSpan=0，直接隐藏，就不设置width=0了； 不隐藏设置width=0，会显示border和value，有问题
     let display = colSpan === 0 ? 'none' : 'flex';
     // 如果虚拟列的第一列是合并导致隐藏的，需要让它占个位置，不然这行会错位
     // 如果是尾部列不用考虑这个问题
-    let vFirstColSpan = grid.virtualColumns[0] && grid.virtualColumns[0].colSpan;
-    if (vFirstColSpan && sameType(vFirstColSpan, 'Function') && vFirstColSpan(realRowIndex) === 0) {
-      // console.log('virtualColumns的第一列是display none的');
-      // 截取第一列到当前列
-      let startVirtualColumns = grid.virtualColumns.slice(0, columnIndex + 1);
-      // console.log(startVirtualColumns, 0, columnIndex + 1, value, realColumnIndex);
-      // 过滤出第一列到当前列display none的列
-      let svHiddenColumns = startVirtualColumns.filter((svColumn) => {
-        let svColSpan = sameType(svColumn.colSpan, 'Function') ? svColumn.colSpan(realRowIndex) : 1;
-        return svColSpan === 0;
-      });
-      // 这两个columns相等，说明第一列到当前列全是隐藏到列
-      if (startVirtualColumns.length === svHiddenColumns.length) {
-        display = 'flex';
+    const vFirstColumn = grid.virtualColumns[0] || {};
+    if (vFirstColumn.render) {
+      const vFirstValue = row[vFirstColumn['key'] || vFirstColumn['dataIndex']];
+      const vFirstRealColumnsIndex = grid.startColumnIndex;
+      const vFirstRenderData = vFirstColumn.render(vFirstValue, row, rowIndex, realRowIndex, vFirstColumn, 0, vFirstRealColumnsIndex);
+      if (isRenderCellObj(vFirstRenderData)) {
+        const vFirstCellProps = vFirstRenderData.props || {};
+        if (vFirstCellProps.colSpan === 0) {
+          // 截取第一列到当前列
+          const startVirtualColumns = grid.virtualColumns.slice(0, columnIndex + 1);
+          // 过滤出第一列到当前列display none的列
+          const svHiddenColumns = startVirtualColumns.filter((svColumn, svColumnIndex) => {
+            if (svColumn.render) {
+              const svValue = row[svColumn['key'] || svColumn['dataIndex']];
+              const svRealColumnIndex = svColumnIndex + vFirstRealColumnsIndex;
+              const svRenderData = svColumn.render(svValue, row, rowIndex, realRowIndex, svColumn, svColumnIndex, svRealColumnIndex);
+              if (isRenderCellObj(svRenderData)) {
+                const svCellProps = svRenderData.props || {};
+                return svCellProps.colSpan === 0;
+              }
+            }
+          });
+          // 这两个columns相等，说明第一列到当前列全是隐藏到列
+          if (startVirtualColumns.length === svHiddenColumns.length) {
+            display = 'flex';
+          }
+        }
       }
     }
     return {
@@ -242,15 +252,14 @@ const Grid = (props, ref) => {
   };
   // 渲染单元格
   const _cellRender = (row, rowIndex, column, columnIndex, {type}) => {
-
     const realRowIndex = rowIndex + grid.startRowIndex;
     const realColumnIndex = column.fixed ? column.realFcIndex : columnIndex + grid.startColumnIndex;
     const value = row[column['key'] || column['dataIndex']];
-    const {childNode, cellProps} = _render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type});
+    const {childNode, cellProps} = _getCellChildNode(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type});
     const {colSpan, rowSpan} = cellProps;
     // 获取cell信息
     const {width, height, display, visibility} = getCellColRowSpanStyle({
-      column, realRowIndex, realColumnIndex, columnIndex,
+      row, column, realRowIndex, realColumnIndex, rowIndex, columnIndex,
       colSpan, rowSpan,
     });
     // 是否显示边框
@@ -306,7 +315,7 @@ const Grid = (props, ref) => {
       }
     </CellComponent>;
   };
-  const _render = (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type}) => {
+  const _getCellChildNode = (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type}) => {
     let cellProps = {};
     let childNode = value;
     if (type === 'header') {
@@ -317,14 +326,15 @@ const Grid = (props, ref) => {
     } else {
       if (column.render) {
         const renderData = column.render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
-        if (isRenderCell(renderData)) {
+        if (isRenderCellObj(renderData)) {
           childNode = renderData.children;
           cellProps = renderData.props;
         } else {
           childNode = renderData;
         }
       }
-      if (typeof childNode === 'object' && !Array.isArray(childNode) && !React.isValidElement(childNode)) {
+      // Not crash if final `childNode` is not validate ReactNode
+      if (sameType(childNode, 'Object') && !React.isValidElement(childNode)) {
         childNode = null;
       }
     }
@@ -332,9 +342,6 @@ const Grid = (props, ref) => {
       childNode,
       cellProps
     };
-  };
-  const isRenderCell = (data) => {
-    return data && typeof data === 'object' && !Array.isArray(data) && !React.isValidElement(data);
   };
 
   // 点击单元格
