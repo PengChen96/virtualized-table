@@ -28,6 +28,7 @@ const Grid = (props, ref) => {
   const {isSticky} = _VTableContext;
 
   let stateProps = {
+    // 固定行高 boolean
     fixedRowHeight: props.fixedRowHeight,
     // 列 #
     columns: props.columns || [],
@@ -118,7 +119,8 @@ const Grid = (props, ref) => {
       }
     };
   }, [components]);
-  //
+
+  // 更新grid信息
   const updateGrid = (partialState) => {
     setGrid(oldState => ({
       ...oldState,
@@ -142,6 +144,11 @@ const Grid = (props, ref) => {
     stateProps.columns,
   ]);
 
+  /**
+   * 滚动事件
+   * @param {Boolean} didMount 是否didMount阶段执行
+   * @private
+   */
   const _onScrollEvent = (didMount) => {
 
     // window.requestAnimationFrame(() => {
@@ -152,7 +159,11 @@ const Grid = (props, ref) => {
     // });
 
   };
-  // 垂直方向滚动
+  /**
+   * 垂直方向滚动
+   * @param {Boolean} didMount 是否didMount阶段执行
+   * @private
+   */
   const _onVerticalScroll = (didMount) => {
     const {scrollTop} = gridContainer.current;
     // const doUpdate = gridScrollLeft !== scrollTop ;
@@ -173,8 +184,12 @@ const Grid = (props, ref) => {
       updateGrid(gridInfo);
     }
   };
-  // 水平方向滚动
-  const _onHorizontalScroll = (didMount) => {
+  /**
+   * 水平方向滚动
+   * @param {Boolean} didMount 是否didMount阶段执行
+   * @private
+   */
+  function _onHorizontalScroll (didMount) {
     const {scrollLeft} = gridContainer.current;
     // const doUpdate = gridScrollLeft !== scrollLeft;
     const doUpdate = Math.abs(scrollLeft - gridScrollLeft) > 80;
@@ -195,9 +210,22 @@ const Grid = (props, ref) => {
       updateGrid(gridInfo);
     }
   };
-  // 合并列
+  /**
+   * 获取单元格合并列信息
+   * @param {Object} row 行信息
+   * @param {Number} rowIndex 可视行坐标
+   * @param {Number} realRowIndex 真实的行坐标
+   * @param {Object} column 列信息
+   * @param {Number} columnIndex 可视列坐标
+   * @param {Number} realColumnIndex 真实的列坐标
+   * @param {Number} colSpan 跨列
+   * @param {Number} rowSpan 跨行
+   * @returns {object}
+   * @private
+   */
   const getCellColRowSpanStyle = ({
-    row, column, realRowIndex, realColumnIndex, rowIndex, columnIndex,
+    row, rowIndex, realRowIndex,
+    column, columnIndex, realColumnIndex,
     colSpan, rowSpan,
   }) => {
     colSpan = colSpan === 0 ? 0 : Number(colSpan || 1);
@@ -250,8 +278,22 @@ const Grid = (props, ref) => {
       visibility: rowSpan < 1 ? 'hidden' : undefined, // 这个是为了隐藏跨行
     };
   };
-  // 渲染单元格
-  const _cellRender = (row, rowIndex, column, columnIndex, {type}) => {
+
+  /**
+   * 单元格
+   * @param {Object} row 行信息
+   * @param {Number} rowIndex 可视行坐标
+   * @param {Object} column 列信息
+   * @param {Number} columnIndex 可视列坐标
+   * @param {String} type 类型 header|body|footer
+   * @returns Element
+   * @private
+   */
+  const _cellRender = (
+    row, rowIndex,
+    column, columnIndex,
+    {type}
+  ) => {
     const realRowIndex = rowIndex + grid.startRowIndex;
     const realColumnIndex = column.fixed ? column.realFcIndex : columnIndex + grid.startColumnIndex;
     const value = row[column['key'] || column['dataIndex']];
@@ -259,7 +301,7 @@ const Grid = (props, ref) => {
     const {colSpan, rowSpan} = cellProps;
     // 获取cell信息
     const {width, height, display, visibility} = getCellColRowSpanStyle({
-      row, column, realRowIndex, realColumnIndex, rowIndex, columnIndex,
+      row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex,
       colSpan, rowSpan,
     });
     // 是否显示边框
@@ -315,7 +357,26 @@ const Grid = (props, ref) => {
       }
     </CellComponent>;
   };
-  const _getCellChildNode = (value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex, {type}) => {
+
+  /**
+   * 获取单元格渲染信息
+   * @param {String} value 值
+   * @param {Object} row 行信息
+   * @param {Number} rowIndex 可视行坐标
+   * @param {Number} realRowIndex 真实的行坐标
+   * @param {Object} column 列信息
+   * @param {Number} columnIndex 可视列坐标
+   * @param {Number} realColumnIndex 真实的列坐标
+   * @param {String} type 类型 header|body|footer
+   * @returns {{cellProps: {}, childNode: null}}
+   * @private
+   */
+  const _getCellChildNode = (
+    value,
+    row, rowIndex, realRowIndex,
+    column, columnIndex, realColumnIndex,
+    {type}
+  ) => {
     let cellProps = {};
     let childNode = value;
     if (type === 'header') {
@@ -344,7 +405,18 @@ const Grid = (props, ref) => {
     };
   };
 
-  // 点击单元格
+  /**
+   *点击单元格函数
+   * @param {Event} e
+   * @param {String} value 值
+   * @param {Object} row 行信息
+   * @param {Number} rowIndex 可视行坐标
+   * @param {Number} realRowIndex 真实的行坐标
+   * @param {Object} column 列信息
+   * @param {Number} columnIndex 可视列坐标
+   * @param {Number} realColumnIndex 真实的列坐标
+   * @private
+   */
   const __onCellTap = (
     e, value,
     row, rowIndex, realRowIndex,
@@ -358,8 +430,13 @@ const Grid = (props, ref) => {
     }
   };
 
-  // 同步固定列行高
-  const getRowHeight = ({type, rowIndex}) => {
+  /**
+   * 获取同步固定列的行高
+   * @param {String} type 类型 header|body|footer
+   * @param {Number} rowIndex 可视行坐标
+   * @return height
+   */
+  function getRowHeight ({type, rowIndex}) {
     let height = undefined;
     if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && mgType !== 'mainMultiGrid') {
       let rowHeightArr = getRowHeightArr({
@@ -372,10 +449,11 @@ const Grid = (props, ref) => {
   };
 
   /**
-   * 默认行
+   * 行
    * @param {Object} row 行数据
-   * @param {Number} rowIndex 行坐标
+   * @param {Number} rowIndex 可视行坐标
    * @param {String} type 类型 header|body|footer
+   * @return Element
    */
   const _gridRowRender = (row, rowIndex, {type}) => {
     // const {fixedLeftColumns, fixedRightColumns} = stateProps;
@@ -413,7 +491,6 @@ const Grid = (props, ref) => {
     </RowComponent>;
   };
 
-  //
   const onScrollCapture = (e) => {
     if (!_VTableContext.isSticky && mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
     if (type === 'body' && onScrollTopSync) {

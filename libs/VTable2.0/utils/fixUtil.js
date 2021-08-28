@@ -3,7 +3,7 @@ import {deepClone} from './deepClone';
 
 /**
  * 格式化 左侧固定列
- * @param {object} { fixedLeftColumns 左侧列 }
+ * @param {Array} fixedLeftColumns 左侧列
  * @return columns
  */
 export const formatFixedLeftColumns = ({fixedLeftColumns}) => {
@@ -18,11 +18,8 @@ export const formatFixedLeftColumns = ({fixedLeftColumns}) => {
 
 /**
  * 格式化 右侧固定列
- * @param {object}
- * {
- *    fixedRightColumns 右侧列
- *    columnsLength  全部列长度
- * }
+ * @param {Array} fixedRightColumns 右侧列
+ * @param {Number} columnsLength 全部列长度
  * @return columns
  */
 export const formatFixedRightColumns = ({fixedRightColumns, columnsLength}) => {
@@ -34,15 +31,13 @@ export const formatFixedRightColumns = ({fixedRightColumns, columnsLength}) => {
     return column;
   });
 };
+
 /**
  * 格式化 右侧固定列
- * @param {object}
- * {
- *    column {object} 单列对象
- *    fixedLeftColumns {array} 左侧列
- *    fixedRightColumns {array} 右侧列
- * }
- * @return {object}
+ * @param {Object} column 单列对象
+ * @param {Array} fixedLeftColumns 左侧列
+ * @param {Array} fixedRightColumns 右侧列
+ * @return {Object}
  */
 export const getFixedCellInfo = ({column, fixedLeftColumns = [], fixedRightColumns = []}) => {
   let isSticky = false;
@@ -67,14 +62,24 @@ export const getFixedCellInfo = ({column, fixedLeftColumns = [], fixedRightColum
     firstFixRight
   };
 };
-// cell fixed shadow
+
+/**
+ * cell fixed shadow
+ * @param {Object} cellInfo 单元格信息
+ * @return {String}
+ */
 export const getCellFixedShadow = ({cellInfo}) => {
   const {lastFixLeft, firstFixRight} = cellInfo;
   const lastFixLeftShadow = lastFixLeft ? 'vt-cell-fix-left-last' : '';
   const firstFixRightShadow = firstFixRight ? 'vt-cell-fix-right-first' : '';
   return `${lastFixLeftShadow} ${firstFixRightShadow}`;
 };
-// 使用sticky实现固定列
+
+/**
+ * 使用sticky实现固定列
+ * @param {Object} cellInfo 单元格信息
+ * @return {Object}
+ */
 export const getFixedCellStyle = ({cellInfo}) => {
   const {isSticky, fixLeft, fixRight} = cellInfo;
   return {
