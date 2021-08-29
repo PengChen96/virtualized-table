@@ -5,8 +5,9 @@ import VTable from '../src/example/VTable/index';
 import VTableMD from '../README.md';
 
 // 2.0
-import VTableCase from '../src/example/VTable2.0/index';
+import VTableCase from '../src/example/VTable2.0';
 import VTable2MD from '../libs/VTable2.0/README.md';
+import VTableColSpanRowSpan from '../src/example/VTable2.0/colspan-rowspan';
 // MultiGrid
 import MultiGridCase from '../src/example/VTable2.0/MultiGridCase';
 import MultiGridMD from '../libs/VTable2.0/MultiGrid_README.md';
@@ -65,6 +66,23 @@ storiesOf('VTable2.0|VTable', module)
     />;
   },{
     notes: {VTable2MD}   // 将会渲染 markdown 内容
+  })
+  .add('colspan-rowspan', () => {
+    const columnsNum = number('ColumnsNum', 10, {range: true, min: 1, max: 1000, step: 1});
+    const dataNum = number('DataNum', 50, {range: true, min: 1, max: 100000, step: 1});
+    const bordered = boolean('Bordered', true);
+    const align = optionsKnob(
+      'Align',
+      {left: 'left', center: 'center', right: 'right'},
+      'left',
+      {display: 'inline-radio'}
+    );
+    return <VTableColSpanRowSpan
+      columnsNum={columnsNum}
+      dataNum={dataNum}
+      bordered={bordered}
+      align={align}
+    />;
   });
 
 storiesOf('VTable2.0|MultiGrid', module)

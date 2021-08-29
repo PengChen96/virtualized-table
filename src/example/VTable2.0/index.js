@@ -46,7 +46,6 @@ export default (props) => {
           fixedRightColumnCount={props.fixedRightColumnCount}
           //
           visibleHeight={400}
-          minRowHeight={40}
           rowHeight={36}
           emptyText={<div>未查询到数据</div>}
           //

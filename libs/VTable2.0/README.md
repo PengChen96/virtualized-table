@@ -71,3 +71,22 @@ onSelectAll | 用户手动选择/取消选择所有行的回调 | function(selec
 spinning | 是否为加载中状态 | boolean | false
 spinningText | 加载中内容 | string / ReactNode | -
 wrapperClassName | 包装器的类属性 | string | -
+
+
+#### VTable.utils
+- VTable.utils.formatToCellsSpan(arr)
+```
+[
+  {
+    s: {c: 0, r: 2},
+    e: {c: 1, r: 2},
+  },
+]
+
+=>
+
+{
+  '0:2': {colSpan: 2, rowSpan: 1},
+  '1:2': {colSpan: 0, rowSpan: 0},
+}
+```

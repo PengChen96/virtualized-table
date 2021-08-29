@@ -389,7 +389,7 @@ const Grid = (props, ref) => {
         const renderData = column.render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
         if (isRenderCellObj(renderData)) {
           childNode = renderData.children;
-          cellProps = renderData.props;
+          cellProps = renderData.props || {};
         } else {
           childNode = renderData;
         }
