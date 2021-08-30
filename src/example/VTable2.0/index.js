@@ -4,18 +4,19 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {VTable} from '../../../libs/VTable2.0';
+import {VTable} from '@libs/VTable2.0';
 import {generateColumns, generateData} from '../common/utils';
 
 export default (props) => {
   let {columnsNum, dataNum, align} = props;
   let [columns, setColumns] = useState([]);
   let [dataSource, setDataSource] = useState([]);
-  let [selectedRowKeys, setSelectedRowKeys] = useState(['rowKey2']);
+  let [selectedRowKeys, setSelectedRowKeys] = useState(['rowKey1', 'rowKey3']);
   useEffect(() => {
     setColumns(generateColumns(
       columnsNum,
       {
+        columns: [],
         columnObj: () => {
           return {
             align: align,
@@ -41,13 +42,12 @@ export default (props) => {
           bordered={props.bordered}
           // 是否使用sticky
           isSticky={props.isSticky}
-          //
+          // 固定列数
           fixedLeftColumnCount={props.fixedLeftColumnCount}
           fixedRightColumnCount={props.fixedRightColumnCount}
           //
           visibleHeight={400}
           rowHeight={36}
-          emptyText={<div>未查询到数据</div>}
           //
           rowKey={rowKey}
           rowSelection={{

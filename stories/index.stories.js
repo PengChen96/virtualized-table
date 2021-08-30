@@ -1,13 +1,14 @@
 import React from 'react';
-import { storiesOf } from '@storybook/react';
-import { withKnobs, number, boolean, optionsKnob } from '@storybook/addon-knobs';
+import {storiesOf} from '@storybook/react';
+import {boolean, number, optionsKnob, withKnobs} from '@storybook/addon-knobs';
 import VTable from '../src/example/VTable/index';
 import VTableMD from '../README.md';
-
 // 2.0
 import VTableCase from '../src/example/VTable2.0';
 import VTable2MD from '../libs/VTable2.0/README.md';
 import VTableColSpanRowSpan from '../src/example/VTable2.0/colspan-rowspan';
+import VTableColumnResize from '../src/example/VTable2.0/column-resize';
+import VTableDragSorting from '../src/example/VTable2.0/drag-sorting';
 // MultiGrid
 import MultiGridCase from '../src/example/VTable2.0/MultiGridCase';
 import MultiGridMD from '../libs/VTable2.0/MultiGrid_README.md';
@@ -30,58 +31,69 @@ import GridEllipsis from '../src/example/VTable2.0/Grid/ellipsis';
 import GridEllipsisMd from '../src/example/VTable2.0/Grid/ellipsis.md';
 import Test from '../src/example/VTable2.0/Grid/test';
 
-storiesOf('VTable1.0|VTable', module)
-  .addDecorator(storyFn => <div style={{ textAlign: 'center' }}>{storyFn()}</div>)
-  .add('default', () => (
-    <span>😀 😎 👍 💯<VTable/></span>
-  ),{
-    notes: {VTableMD}   // 将会渲染 markdown 内容
-  });
+const getDefaultProps = (params = {
+  fixedLeftColumnCount: false,
+  fixedRightColumnCount: false,
+  isSticky: false
+}) => {
+  // 默认显示
+  const align = optionsKnob(
+    'Align',
+    {left: 'left', center: 'center', right: 'right'},
+    'left',
+    {display: 'inline-radio'}
+  );
+  const bordered = boolean('Bordered', true);
+  const columnsNum = number('ColumnsNum', 10, {range: true, min: 1, max: 1000, step: 1});
+  const dataNum = number('DataNum', 50, {range: true, min: 1, max: 100000, step: 1});
+  // 判断显示
+  const fixedLeftColumnCount = params.fixedLeftColumnCount ? number('FixedLeftColumnCount', 1) : null;
+  const fixedRightColumnCount = params.fixedLeftColumnCount ? number('FixedRightColumnCount', 1) : null;
+  const isSticky = params.isSticky ? boolean('IsSticky', true) : null;
+
+  return {
+    align,
+    bordered,
+    columnsNum,
+    dataNum,
+    fixedLeftColumnCount,
+    fixedRightColumnCount,
+    isSticky,
+  };
+};
+
 
 storiesOf('VTable2.0|VTable', module)
-  .addDecorator(storyFn => <div style={{ padding: 16 }}>{storyFn()}</div>)
+  .addDecorator(storyFn => <div style={{padding: 16}}>{storyFn()}</div>)
   .addDecorator(withKnobs)
   .add('default', () => {
-    const columnsNum = number('ColumnsNum', 10, {range: true, min: 1, max: 1000, step: 1});
-    const dataNum = number('DataNum', 50, {range: true, min: 1, max: 100000, step: 1});
-    const bordered = boolean('Bordered', true);
-    const isSticky = boolean('IsSticky', true);
-    const fixedLeftColumnCount = number('FixedLeftColumnCount', 1);
-    const fixedRightColumnCount = number('FixedRightColumnCount', 1);
-    // column
-    const align = optionsKnob(
-      'Align',
-      {left: 'left', center: 'center', right: 'right'},
-      'left',
-      {display: 'inline-radio'}
-    );
+    const props = getDefaultProps({
+      fixedLeftColumnCount: true,
+      fixedRightColumnCount: true,
+      isSticky: true
+    });
     return <VTableCase
-      columnsNum={columnsNum}
-      dataNum={dataNum}
-      bordered={bordered}
-      isSticky={isSticky}
-      align={align}
-      fixedLeftColumnCount={fixedLeftColumnCount}
-      fixedRightColumnCount={fixedRightColumnCount}
+      {...props}
     />;
-  },{
+  }, {
     notes: {VTable2MD}   // 将会渲染 markdown 内容
   })
   .add('colspan-rowspan', () => {
-    const columnsNum = number('ColumnsNum', 10, {range: true, min: 1, max: 1000, step: 1});
-    const dataNum = number('DataNum', 50, {range: true, min: 1, max: 100000, step: 1});
-    const bordered = boolean('Bordered', true);
-    const align = optionsKnob(
-      'Align',
-      {left: 'left', center: 'center', right: 'right'},
-      'left',
-      {display: 'inline-radio'}
-    );
+    const props = getDefaultProps();
     return <VTableColSpanRowSpan
-      columnsNum={columnsNum}
-      dataNum={dataNum}
-      bordered={bordered}
-      align={align}
+      {...props}
+    />;
+  })
+  .add('column-resize', () => {
+    const props = getDefaultProps();
+    return <VTableColumnResize
+      {...props}
+    />;
+  })
+  .add('drag-sorting', () => {
+    const props = getDefaultProps();
+    return <VTableDragSorting
+      {...props}
     />;
   });
 
@@ -180,3 +192,10 @@ storiesOf('VTable2.0|Grid', module)
 //   }
 // });
 
+storiesOf('VTable1.0|VTable', module)
+  .addDecorator(storyFn => <div style={{textAlign: 'center'}}>{storyFn()}</div>)
+  .add('default', () => (
+    <span>😀 😎 👍 💯<VTable/></span>
+  ), {
+    notes: {VTableMD}   // 将会渲染 markdown 内容
+  });

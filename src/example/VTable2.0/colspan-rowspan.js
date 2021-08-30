@@ -4,7 +4,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {VTable} from '../../../libs/VTable2.0';
+import {VTable} from '@libs/VTable2.0';
 import {generateColumns, generateData} from '../common/utils';
 
 export default (props) => {
@@ -28,7 +28,7 @@ export default (props) => {
         columns: [],
         columnObj: () => {
           return {
-            align: align,
+            align,
           };
         },
       }
@@ -58,20 +58,20 @@ export default (props) => {
 
   return (
       <>
-        <h2>VTable</h2>
+        <h2>VTable colspan rowspan</h2>
         <VTable
-          // 固定行高 跨行必须
-          fixedRowHeight={true}
+          // 边框
+          bordered={props.bordered}
           // 列
           columns={columns}
           // 数据
           dataSource={dataSource}
-          // 边框
-          bordered={props.bordered}
-          // 可视高度
-          visibleHeight={400}
+          // 固定行高 跨行必须
+          fixedRowHeight={true}
           // 行高
           rowHeight={36}
+          // 可视高度
+          visibleHeight={400}
         />
       </>
   );
