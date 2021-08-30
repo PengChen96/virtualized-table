@@ -1,7 +1,12 @@
+const path = require("path");
 
 module.exports = {
   resolve: {
-    extensions: ['.ts', '.tsx']
+    extensions: ['.ts', '.tsx'],
+    alias: {
+      "@libs": path.resolve(__dirname, "../libs"),
+      "@src": path.resolve(__dirname, "../src"),
+    }
   },
   module: {
     rules: [
