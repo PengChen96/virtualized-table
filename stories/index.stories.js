@@ -40,7 +40,7 @@ const getDefaultProps = (params = {
   const align = optionsKnob(
     'Align',
     {left: 'left', center: 'center', right: 'right'},
-    'left',
+    'center',
     {display: 'inline-radio'}
   );
   const bordered = boolean('Bordered', true);
@@ -62,8 +62,7 @@ const getDefaultProps = (params = {
   };
 };
 
-
-storiesOf('VTable2.0|VTable', module)
+storiesOf('VTable2.0', module)
   .addDecorator(storyFn => <div style={{padding: 16}}>{storyFn()}</div>)
   .addDecorator(withKnobs)
   .add('default', () => {
@@ -76,7 +75,9 @@ storiesOf('VTable2.0|VTable', module)
       {...props}
     />;
   }, {
-    notes: {VTable2MD}   // 将会渲染 markdown 内容
+    docs: {
+      page: VTable2MD
+    }   // 将会渲染 markdown 内容
   })
   .add('colspan-rowspan', () => {
     const props = getDefaultProps();

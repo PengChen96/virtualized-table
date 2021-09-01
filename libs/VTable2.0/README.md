@@ -49,7 +49,7 @@ render(value) {
     props: {
       colSpan: 1, // 列合并，设置为0时，不渲染(设置display:none)
       rowSpan: 1, // 行合并，设置为0时，不渲染(设置visibility:hidden)
-    } 
+    }
   }
 }
 ```
