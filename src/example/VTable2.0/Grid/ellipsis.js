@@ -4,7 +4,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {Grid} from '../../../../libs/VTable2.0';
+import {Grid} from '@libs/VTable2.0';
 import {generateColumns, generateData} from '../../common/utils';
 
 export default (props) => {

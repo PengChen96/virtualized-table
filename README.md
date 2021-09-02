@@ -3,7 +3,7 @@
   <a href="#">
     <img width="300" src="https://raw.githubusercontent.com/PengChen96/virtualized-table/master/logo.png"/>
   </a>
-  <h1 align="center" style="margin-top: 0px">virtualized-table</h1>
+  <h1 align="center">virtualized-table</h1>
 </p>
 
 [![npm version](https://badge.fury.io/js/virtualized-table.svg)](http://badge.fury.io/js/virtualized-table)

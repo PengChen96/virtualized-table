@@ -1,5 +1,5 @@
 /**
- * Created by Administrator on 2019/10/20.
+ * 使用react-dnd实现可伸缩列
  */
 
 import React from 'react';
