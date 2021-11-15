@@ -36,6 +36,7 @@ dataIndex | 列数据在数据项中对应的路径，暂不支持通过数组�
 ellipsis | 是否显示省略号 | boolean | false
 key | 列数据的键值 | string | -
 render | 生成复杂数据的渲染函数,@return 里面可以设置表格[行/列合并](https://pengchen96.github.io/virtualized-table/?path=/story/vtable2-0-grid--colspan-rowspan) | function(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) | -
+title | 列头显示文字（函数用法暂不支持多级表头） | ReactNode/(value, row, rowIndex)=>ReactNode | -
 onCell | 设置表头、表格、合计行属性 | function(column, realRowIndex) | -
 onHeaderCell | 设置表头属性 | function(column, realRowIndex) | -
 onBodyCell | 设置表格属性 | function(column, realRowIndex) | -
@@ -53,6 +54,7 @@ render(value) {
   }
 }
 ```
+*表头分组：columns[n] 可以内嵌children，以渲染分组表头。*
 
 
 #### rowSelection

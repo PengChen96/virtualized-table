@@ -4,9 +4,10 @@ import VTableContext from './context/VTableContext';
 import MultiGrid from './MultiGrid';
 import {isSupportSticky} from './utils/isSupportSticky';
 import {classNames, sameType} from './utils/base';
-import {getSelfAdaptionColumns} from './utils/columns';
+import {flattenColumns, getHeader2dArray, getSelfAdaptionColumns} from './utils/columns';
 import {getRowKey} from './utils/rowKey';
 import {deepClone} from './utils/deepClone';
+import {formatToCellsSpan} from './utils/colSpanRowSpan';
 import './styles/vtable.less';
 
 const VTable = (props) => {
@@ -30,6 +31,8 @@ const VTable = (props) => {
   } = props;
   let [isSticky, setIsSticky] = useState(false);
   let [bodyScrollBarWidth, setBodyScrollBarWidth] = useState(0);
+  let [headerLevel, setHeaderLevel] = useState(1);
+  let [headerTitle, setHeaderTitle] = useState([]);
   let [columns, setColumns] = useState(columnsProps);
   let [hasFixed, setHasFixed] = useState(true);
 
@@ -61,13 +64,29 @@ const VTable = (props) => {
       const {columnWidth = 60} = rowSelection;
       offsetWidth = offsetWidth - columnWidth;
     }
+    const {columns: flatColumns, level: headerLevel} = flattenColumns({columns: columnsProps});
     const scrollBarWidth = bodyScrollBarWidth || 0;
     const clientWidth = offsetWidth - scrollBarWidth;
     const columnsObj = getSelfAdaptionColumns({
-      columns: columnsProps,
+      columns: flatColumns,
       clientWidth,
     });
+    // 多级表头
     let autoColumns = columnsObj.columns;
+    const {data, merges} = getHeader2dArray({
+      columns: columnsProps,
+      flatColumns,
+      headerLevel
+    });
+    const mergesObj = formatToCellsSpan(merges);
+    autoColumns = autoColumns.map((column, colIndex) => {
+      column._headerCellProps = (value, row, rowIndex) => {
+        return {
+          ...mergesObj[`${colIndex}:${rowIndex}`]
+        };
+      };
+      return column;
+    });
     // 加上勾选列
     if (rowSelection) {
       const {columnWidth = 60, selectedRowKeys = [], getCheckboxProps} = rowSelection;
@@ -75,6 +94,9 @@ const VTable = (props) => {
         type: 'checkBox',
         width: columnWidth,
         align: 'center',
+        _headerCellProps: (value, row, rowIndex) => {
+          return {rowSpan: rowIndex === 0 ? headerLevel : 0};
+        },
         title: () => {
           const checked = getCheckedAll({selectedRowKeys, getCheckboxProps});
           return <div
@@ -84,7 +106,7 @@ const VTable = (props) => {
             }}
           >
             <input type="checkbox" checked={checked}/>
-            <div className="vt-show-box" />
+            <div className="vt-show-box"/>
           </div>;
         },
         render: (value, row, rowIndex, realRowIndex) => {
@@ -113,6 +135,8 @@ const VTable = (props) => {
         }
       });
     }
+    setHeaderLevel(headerLevel); // 表头层级
+    setHeaderTitle(data); // 表头数据
     setColumns(autoColumns);
     setHasFixed(columnsObj.hasFixed);
   };
@@ -184,14 +208,6 @@ const VTable = (props) => {
       onSelectAll(false, []);
     }
   };
-  // 表头
-  const getHeaderTitle = useMemo(() => {
-    let headerData = [{}];
-    columnsProps.forEach((column) => {
-      headerData[0][column.key || column.dataIndex] = column.title;
-    });
-    return headerData;
-  }, [columnsProps]);
 
   const onScroll = (e) => {
     let scrollLeft = e && e.target && e.target.scrollLeft;
@@ -221,7 +237,7 @@ const VTable = (props) => {
         onScroll,
         getBodyScrollBarWidth,
         isSticky: isSticky,
-        headerTitle: getHeaderTitle,
+        headerTitle: headerTitle,
       }}
     >
       <div
@@ -235,11 +251,11 @@ const VTable = (props) => {
             ref={vtHeader}
             type={'header'}
             className={classNames('vt-table-header', className)}
-            visibleHeight={rowHeight}
+            visibleHeight={rowHeight * headerLevel}
             minRowHeight={rowHeight}
             columns={headerColumns}
             hasFixed={hasFixed}
-            dataSource={getHeaderTitle}
+            dataSource={headerTitle}
             bodyScrollBarWidth={bodyScrollBarWidth}
           />
         }
@@ -248,7 +264,7 @@ const VTable = (props) => {
           ref={vtBody}
           type={'body'}
           mgClassName={'vt-table-body'}
-          visibleHeight={!isSticky ? visibleHeight - rowHeight : visibleHeight}
+          visibleHeight={!isSticky ? visibleHeight - rowHeight * headerLevel : visibleHeight}
           minRowHeight={rowHeight}
           columns={columns}
           hasFixed={hasFixed}

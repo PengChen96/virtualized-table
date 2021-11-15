@@ -1,12 +1,11 @@
-
-import React, {useEffect, useState, useMemo, useRef, useImperativeHandle, useContext} from 'react';
+import React, {useContext, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
-import {getCellBordered, getCellAlign} from './Cell';
+import {getCellAlign, getCellBordered} from './Cell';
 import {getCellFixedShadow, getFixedCellInfo, getFixedCellStyle} from './utils/fixUtil';
 import './styles/grid.less';
-import {getRealGridVerticalScrollInfo, getRealGridHorizontalScrollInfo} from './utils/gridScrollInfo';
+import {getRealGridHorizontalScrollInfo, getRealGridVerticalScrollInfo} from './utils/gridScrollInfo';
 import {getColumnsWidth} from './utils';
-import {sameType, classNames, isRenderCellObj} from './utils/base';
+import {classNames, isRenderCellObj, sameType} from './utils/base';
 import VTableContext from './context/VTableContext';
 import {getRowKey} from './utils/rowKey';
 import {getRowHeightArr} from './cache/rowHeightCache';
@@ -383,7 +382,12 @@ const Grid = (props, ref) => {
       if (column.headRender) { // TODO 后续废弃
         childNode = sameType(column.headRender, 'Function') ? column.headRender(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) : value;
       }
-      childNode = sameType(column.title, 'Function') ? column.title(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) : value;
+      if (sameType(column.title, 'Function')) {
+        childNode = column.title(value, row, rowIndex);
+      }
+      if (sameType(column._headerCellProps, 'Function')) {
+        cellProps = column._headerCellProps(value, row, rowIndex);
+      }
     } else {
       if (column.render) {
         const renderData = column.render(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
@@ -394,10 +398,10 @@ const Grid = (props, ref) => {
           childNode = renderData;
         }
       }
-      // Not crash if final `childNode` is not validate ReactNode
-      if (sameType(childNode, 'Object') && !React.isValidElement(childNode)) {
-        childNode = null;
-      }
+    }
+    // Not crash if final `childNode` is not validate ReactNode
+    if (sameType(childNode, 'Object') && !React.isValidElement(childNode)) {
+      childNode = null;
     }
     return {
       childNode,

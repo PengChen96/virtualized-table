@@ -5,6 +5,7 @@ import {getDefaultProps} from './knobs';
 import VTableCase from '../src/example/VTable2.0';
 import VTable2MD from '../libs/VTable2.0/README.md';
 import VTableColSpanRowSpan from '../src/example/VTable2.0/colspan-rowspan';
+import VTableGroupColumns from '../src/example/VTable2.0/grouping-columns';
 import VTableColumnResize from '../src/example/VTable2.0/column-resize';
 import VTableDragSorting from '../src/example/VTable2.0/drag-sorting';
 import VTableEllipsis from '../src/example/VTable2.0/ellipsis';
@@ -35,6 +36,18 @@ export const ColSpanRowSpan = (args) => {
 };
 ColSpanRowSpan.storyName = 'colspan-rowspan';
 ColSpanRowSpan.parameters = {
+  docs: {
+    page: VTable2MD,
+  },
+};
+
+// 表头分组
+export const GroupColumns = (args) => {
+  const props = getDefaultProps();
+  return <VTableGroupColumns {...props} {...args} />;
+};
+GroupColumns.storyName = 'group-columns';
+GroupColumns.parameters = {
   docs: {
     page: VTable2MD,
   },

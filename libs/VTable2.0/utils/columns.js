@@ -69,3 +69,94 @@ export const getScrollBarWidth = () => {
   odiv.remove();//移除创建的div
   return scrollbarWidth;//返回滚动条宽度
 };
+
+/**
+ * 扁平化列
+ */
+export const flattenColumns = (
+  {
+    columns,
+    childrenField = 'children'
+  }
+) => {
+  const newColumns = [];
+  const level = [];
+  const flatten = (_columns, index = 0) => {
+    level[index] = true;
+    index += 1;
+    _columns.forEach((column) => {
+      const childColumns = column[childrenField];
+      if (childColumns && childColumns.length > 0) {
+        flatten(childColumns, index);
+      } else {
+        newColumns.push(column);
+      }
+    });
+  };
+  flatten(columns);
+  return {
+    level: level.length,
+    columns: newColumns
+  };
+};
+/**
+ * 获取表头二维数组
+ */
+export const getHeader2dArray = ({
+                                   columns,
+                                   flatColumns,
+                                   headerLevel,
+                                   childrenField = 'children'
+                                 }) => {
+  const arr = [];
+  const merges = [];
+  const getKey = (colIndex) => {
+    const column = flatColumns[colIndex] || {};
+    return column.key || column.dataIndex;
+  };
+  const deal = (_columns, startCol = 0, rowLevel = 0) => {
+    _columns.reduce((prevCol, currentColumn) => {
+      if (!arr[rowLevel]) {
+        arr[rowLevel] = {};
+      }
+      arr[rowLevel][getKey(prevCol)] = currentColumn.title;
+      let nextCol = prevCol;
+      const childColumns = currentColumn[childrenField];
+      if (childColumns) {
+        deal(childColumns, prevCol, rowLevel + 1);
+        const {columns: flatChildColumns} = flattenColumns({columns: childColumns, childrenField});
+        nextCol += flatChildColumns.length;
+        merges.push({
+          s: {c: prevCol, r: rowLevel},
+          e: {c: nextCol - 1, r: rowLevel},
+        });
+        // 补全值 跨行的值
+        for (let c = prevCol + 1; c < nextCol; c++) {
+          arr[rowLevel][getKey(c)] = currentColumn.title;
+        }
+      } else {
+        nextCol += 1;
+        // 有跨列
+        if (headerLevel - 1 - rowLevel > 0) {
+          merges.push({
+            s: {c: prevCol, r: rowLevel},
+            e: {c: prevCol, r: headerLevel - 1},
+          });
+          // 补全值 跨列的值
+          for (let r = rowLevel + 1; r < headerLevel; r++) {
+            if (!arr[r]) {
+              arr[r] = {};
+            }
+            arr[r][getKey(prevCol)] = currentColumn.title;
+          }
+        }
+      }
+      return nextCol;
+    }, startCol);
+  };
+  deal(columns);
+  return {
+    data: arr,
+    merges,
+  };
+};
