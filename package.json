@@ -1,6 +1,6 @@
 {
   "name": "virtualized-table",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Large data volume table",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -81,7 +81,6 @@
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "4.29.0",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0",
-    "webpack-node-externals": "1.6.0"
+    "webpack-dev-server": "^3.11.0"
   }
 }
