@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://unpkg.com/virtualized-table@0.1.2/dist/vtable.development.umd.js"></script>
+  </head>
+  <body>
+    <div id="root" />
+    <script type="text/babel">
+      'use strict';
+      const VTable = () => {
+        const dataSource = [
+          {
+            key: '1',
+            name: '胡彦斌',
+            age: 32,
+            address: '西湖区湖底公园1号',
+          },
+          {
+            key: '2',
+            name: '胡彦祖',
+            age: 42,
+            address: '西湖区湖底公园1号',
+          },
+        ];
+        const columns = [
+          {
+            title: '姓名',
+            dataIndex: 'name',
+            key: 'name',
+          },
+          {
+            title: '年龄',
+            dataIndex: 'age',
+            key: 'age',
+          },
+          {
+            title: '住址',
+            dataIndex: 'address',
+            key: 'address',
+          },
+        ];
+          return <div>
+            <h3>virtualized-table</h3>
+            <VTablePro
+              columns={columns}
+              dataSource={dataSource}
+            />
+          </div>;
+      }
+      const domContainer = document.querySelector('#root');
+      ReactDOM.render(<VTable/>, domContainer);
+    </script>
+  </body>
+</html>

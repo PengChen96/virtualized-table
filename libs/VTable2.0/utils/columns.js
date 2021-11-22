@@ -89,6 +89,7 @@ export const flattenColumns = (
       if (childColumns && childColumns.length > 0) {
         flatten(childColumns, index);
       } else {
+        column.width = column.width || 100;
         newColumns.push(column);
       }
     });
@@ -103,11 +104,11 @@ export const flattenColumns = (
  * 获取表头二维数组
  */
 export const getHeader2dArray = ({
-                                   columns,
-                                   flatColumns,
-                                   headerLevel,
-                                   childrenField = 'children'
-                                 }) => {
+  columns,
+  flatColumns,
+  headerLevel,
+  childrenField = 'children'
+}) => {
   const arr = [];
   const merges = [];
   const getKey = (colIndex) => {
