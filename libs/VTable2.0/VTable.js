@@ -15,6 +15,7 @@ const VTable = (props) => {
   let vtable = useRef(null);
   let vtHeader = useRef(null);
   let vtBody = useRef(null);
+  let vtFooter = useRef(null);
 
   const {
     isSticky: isStickyProps,
@@ -22,8 +23,9 @@ const VTable = (props) => {
     rowSelection,
     columns: columnsProps = [],
     dataSource = [],
+    summary,
     wrapperClassName,
-    className,
+    // className,
     visibleHeight,
     rowHeight = 40,
     locale,
@@ -35,6 +37,7 @@ const VTable = (props) => {
   let [headerTitle, setHeaderTitle] = useState([]);
   let [columns, setColumns] = useState(columnsProps);
   let [hasFixed, setHasFixed] = useState(true);
+  const summaryData = sameType(summary, 'Function') ? summary() : summary;
 
   useEffect(() => {
     let _isSticky = isStickyProps === undefined ? isSupportSticky() : isStickyProps;
@@ -57,6 +60,15 @@ const VTable = (props) => {
     }
     return autoColumns;
   }, [columns]);
+  //
+  const footerColumns = useMemo(() => {
+    let autoColumns = headerColumns;
+    if (headerColumns.length > 0 && headerColumns[0].type === 'checkBox') {
+      autoColumns = deepClone(headerColumns);
+      autoColumns[0].render = null;
+    }
+    return autoColumns;
+  }, [headerColumns]);
   // 设置自适应列
   const reSetColumns = () => {
     let {offsetWidth} = vtable.current;
@@ -92,6 +104,7 @@ const VTable = (props) => {
       const {columnWidth = 60, selectedRowKeys = [], getCheckboxProps} = rowSelection;
       autoColumns.unshift({
         type: 'checkBox',
+        dataIndex: 'checkBox',
         width: columnWidth,
         align: 'center',
         _headerCellProps: (value, row, rowIndex) => {
@@ -214,6 +227,9 @@ const VTable = (props) => {
     if (vtHeader.current) {
       vtHeader.current.gridContainer.scrollLeft = scrollLeft;
     }
+    if (vtFooter.current) {
+      vtFooter.current.gridContainer.scrollLeft = scrollLeft;
+    }
     // vtBody.current.scrollLeft = scrollLeft;
     // console.log(vtHeader.current);
     // console.log(vtHeader.current.scrollLeft, vtBody.current.scrollLeft);
@@ -231,6 +247,9 @@ const VTable = (props) => {
   };
 
   let spinning = sameType(loading, 'Object') ? loading.spinning : loading;
+  const headerHeight = rowHeight * headerLevel; // 表头高度
+  const footerHeight = summaryData ? rowHeight * summaryData.length : 0; // 总结栏高度
+  const bodyHeight = !isSticky ? visibleHeight - headerHeight - footerHeight : visibleHeight; // body高度
   return <>
     <VTableContext.Provider
       value={{
@@ -238,6 +257,7 @@ const VTable = (props) => {
         getBodyScrollBarWidth,
         isSticky: isSticky,
         headerTitle: headerTitle,
+        summaryData: summaryData
       }}
     >
       <div
@@ -250,12 +270,13 @@ const VTable = (props) => {
             {...props}
             ref={vtHeader}
             type={'header'}
-            className={classNames('vt-table-header', className)}
-            visibleHeight={rowHeight * headerLevel}
+            // className={classNames('vt-table-header', className)}
+            mgClassName={'vt-table-header'}
+            visibleHeight={headerHeight}
             minRowHeight={rowHeight}
             columns={headerColumns}
-            hasFixed={hasFixed}
             dataSource={headerTitle}
+            hasFixed={hasFixed}
             bodyScrollBarWidth={bodyScrollBarWidth}
           />
         }
@@ -264,12 +285,26 @@ const VTable = (props) => {
           ref={vtBody}
           type={'body'}
           mgClassName={'vt-table-body'}
-          visibleHeight={!isSticky ? visibleHeight - rowHeight * headerLevel : visibleHeight}
+          visibleHeight={bodyHeight}
           minRowHeight={rowHeight}
           columns={columns}
           hasFixed={hasFixed}
           bodyScrollBarWidth={bodyScrollBarWidth}
         />
+        {
+          !isSticky && summaryData && <MultiGrid
+            {...props}
+            ref={vtFooter}
+            type={'footer'}
+            mgClassName={'vt-table-footer'}
+            visibleHeight={footerHeight}
+            minRowHeight={rowHeight}
+            columns={footerColumns}
+            dataSource={summaryData}
+            hasFixed={hasFixed}
+            bodyScrollBarWidth={bodyScrollBarWidth}
+          />
+        }
         {
           !spinning && dataSource.length < 1 ? <div className="vt-table-empty">
             <div style={{pointerEvents: 'auto'}}>

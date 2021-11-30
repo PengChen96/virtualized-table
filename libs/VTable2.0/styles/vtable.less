@@ -2,11 +2,16 @@
 @import "./variables.less";
 
 .@{prefix}-table {
+  /* vvv todo 待优化 支持table有border*/
+  //border: @SW-1 solid @borderColor;
+  /* ^^^ */
   position: relative;
   // header
   .@{prefix}-table-header {
-    &::-webkit-scrollbar {
-      display: none;
+    .@{prefix}-grid-container {
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
     &.@{prefix}-header-sticky {
       z-index: 3;
@@ -22,6 +27,30 @@
       .@{prefix}-grid-cell {
         background: #e9ebf0;
         font-weight: 700;
+      }
+    }
+  }
+  // footer
+  .@{prefix}-table-footer {
+    margin-top: -1px;
+    .@{prefix}-grid-container {
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+    &.@{prefix}-footer-sticky {
+      z-index: 3;
+      position: sticky;
+      bottom: 0;
+    }
+    .@{prefix}-grid-row {
+      &:hover .@{prefix}-grid-cell {
+        background: #fffae6;
+      }
+      .@{prefix}-grid-cell {
+        background: #fffae6;
+        border-bottom: none;
+        border-top: @SW-1 solid @borderColor;
       }
     }
   }
@@ -47,7 +76,7 @@
       width: 16px;
       height: 16px;
       border-radius: 2px;
-      border: 1px solid #d1d3d8;
+      border: @SW-1 solid @borderColor;
       background: #fff; // 这里取个巧，与下面颜色一样而已
       &:hover {
         border-color: #ff8040;
@@ -71,7 +100,7 @@
     .@{prefix}-show-box {
       background: #eee;
       &:hover {
-        border-color: #d1d3d8;
+        border-color: @borderColor;
       }
       &:before {
         border: solid transparent;

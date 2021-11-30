@@ -9,6 +9,7 @@ import VTableGroupColumns from '../src/example/VTable2.0/grouping-columns';
 import VTableColumnResize from '../src/example/VTable2.0/column-resize';
 import VTableDragSorting from '../src/example/VTable2.0/drag-sorting';
 import VTableEllipsis from '../src/example/VTable2.0/ellipsis';
+import VTableSummary from '../src/example/VTable2.0/summary';
 
 export default {
   title: 'VTablePro/VTable2.0',
@@ -84,6 +85,22 @@ export const Ellipsis = (args) => {
 };
 Ellipsis.storyName = 'ellipsis';
 Ellipsis.parameters = {
+  docs: {
+    page: VTable2MD,
+  },
+};
+
+// 总结栏
+export const Summary = (args) => {
+  const props = getDefaultProps({
+    fixedLeftColumnCount: true,
+    fixedRightColumnCount: true,
+    isSticky: true
+  });
+  return <VTableSummary {...props} {...args} />;
+};
+Summary.storyName = 'summary';
+Summary.parameters = {
   docs: {
     page: VTable2MD,
   },

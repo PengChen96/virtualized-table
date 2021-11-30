@@ -23,6 +23,7 @@ rowKey | 表格行 key 的取值，可以是字符串或一个函数 | string/fu
 rowOffsetCount | 表格行渲染数上下偏移量 | number | 20
 rowSelection | 表格行是否可选择,rowSelection props | object | -
 rowVisibleCount | 表格可视区域可渲染的行数 | number | 20
+summary | 总结栏数据 | object[] | -
 shouldRowHeightSync | 是否要同步行高（isSticky=false,有固定列并且行高不固定时设置为true） | boolean | false
 visibleHeight | 表格可视区域高度 | number | 400
 onRow | 设置行属性 | function(row, realRowIndex) | -

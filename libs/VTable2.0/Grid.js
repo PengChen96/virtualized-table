@@ -9,6 +9,7 @@ import {classNames, isRenderCellObj, sameType} from './utils/base';
 import VTableContext from './context/VTableContext';
 import {getRowKey} from './utils/rowKey';
 import {getRowHeightArr} from './cache/rowHeightCache';
+import {deepClone} from './utils/deepClone';
 
 // const whyDidYouRender = require('@welldone-software/why-did-you-render');
 // whyDidYouRender(React, {
@@ -101,6 +102,15 @@ const Grid = (props, ref) => {
   const displayedColumns = useMemo(() => {
     return [...stateProps.fixedLeftColumns, ...grid.virtualColumns, ...stateProps.fixedRightColumns];
   }, [stateProps.fixedLeftColumns, grid.virtualColumns, stateProps.fixedRightColumns]);
+
+  const displayedFooterColumns = useMemo(() => {
+    let columns = displayedColumns;
+    if (displayedColumns.length > 0 && displayedColumns[0].type === 'checkBox') {
+      columns = deepClone(displayedColumns);
+      columns[0].render = null;
+    }
+    return columns;
+  }, [displayedColumns]);
   //
   const Components = useMemo(() => {
     return {
@@ -449,6 +459,10 @@ const Grid = (props, ref) => {
       });
       height = rowHeightArr[rowIndex];
     }
+    // todo need test
+    if (type === 'footer') {
+      height = stateProps.minRowHeight;
+    }
     return height;
   };
 
@@ -459,7 +473,7 @@ const Grid = (props, ref) => {
    * @param {String} type 类型 header|body|footer
    * @return Element
    */
-  const _gridRowRender = (row, rowIndex, {type}) => {
+  const _gridRowRender = (row, rowIndex, {type, displayedFooterColumns}) => {
     // const {fixedLeftColumns, fixedRightColumns} = stateProps;
     const realRowIndex = rowIndex + grid.startRowIndex;
     // 是否选中
@@ -488,7 +502,8 @@ const Grid = (props, ref) => {
       }}
     >
       {
-        displayedColumns.map((column, columnIndex) => {
+        // footer不展示勾选框
+        (displayedFooterColumns || displayedColumns).map((column, columnIndex) => {
           return _cellRender(row, rowIndex, column, columnIndex, {type});
         })
       }
@@ -540,6 +555,17 @@ const Grid = (props, ref) => {
             // 行渲染
             return _gridRowRender(row, rowIndex, {type});
           })
+        }
+        {
+          // sticky footer
+          _VTableContext.isSticky && _VTableContext.summaryData && <div className="vt-table-footer vt-footer-sticky">
+            {
+              _VTableContext.summaryData.map((row, rowIndex) => {
+                // 行渲染
+                return _gridRowRender(row, rowIndex, {type: 'footer', displayedFooterColumns});
+              })
+            }
+          </div>
         }
       </div>
     </div>
