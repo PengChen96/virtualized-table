@@ -28,7 +28,7 @@ const Grid = (props, ref) => {
   const {isSticky} = _VTableContext;
 
   let stateProps = {
-    // 固定行高 boolean
+    // 固定行高 boolean (需要行合并/分组表头时设置为true)
     fixedRowHeight: props.fixedRowHeight,
     // 列 #
     columns: props.columns || [],
@@ -349,8 +349,8 @@ const Grid = (props, ref) => {
       style={{
         width: width,
         minWidth: width,
-        // minHeight: stateProps.minRowHeight,
-        height,
+        minHeight: stateProps.minRowHeight,
+        height: stateProps.fixedRowHeight ? height : undefined,
         display,
         visibility,
         ...column.style,

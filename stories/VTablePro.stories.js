@@ -10,6 +10,7 @@ import VTableColumnResize from '../src/example/VTable2.0/column-resize';
 import VTableDragSorting from '../src/example/VTable2.0/drag-sorting';
 import VTableEllipsis from '../src/example/VTable2.0/ellipsis';
 import VTableSummary from '../src/example/VTable2.0/summary';
+import VTableAdaptiveRowHeight from '../src/example/VTable2.0/adaptive-row-height';
 
 export default {
   title: 'VTablePro/VTable2.0',
@@ -25,6 +26,21 @@ export const VTablePro = (args) => {
 };
 VTablePro.storyName = 'VTable default';
 VTablePro.parameters = {
+  docs: {
+    page: VTable2MD,
+  },
+};
+
+// 自适应行高
+export const AdaptiveRowHeight = (args) => {
+  const props = getDefaultProps({
+    fixedLeftColumnCount: true,
+    isSticky: true
+  });
+  return <VTableAdaptiveRowHeight {...props} {...args} />;
+};
+AdaptiveRowHeight.storyName = 'adaptive-row-height';
+AdaptiveRowHeight.parameters = {
   docs: {
     page: VTable2MD,
   },
@@ -80,7 +96,9 @@ DragSorting.parameters = {
 
 // 单元格自动省略
 export const Ellipsis = (args) => {
-  const props = getDefaultProps();
+  const props = getDefaultProps({
+    ellipsis: true
+  });
   return <VTableEllipsis {...props} {...args} />;
 };
 Ellipsis.storyName = 'ellipsis';

@@ -1,5 +1,4 @@
-
-import React, {useContext, useEffect, useImperativeHandle, useMemo, useRef, useCallback} from 'react';
+import React, {useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef} from 'react';
 import Grid from './Grid';
 import PropTypes from 'prop-types';
 import {formatFixedLeftColumns, formatFixedRightColumns} from './utils/fixUtil';
@@ -94,7 +93,7 @@ const MultiGrid =  (props, ref) => {
   }, []);
   // no isSticky
   const syncRowHeight = ({startRowIndex, endRowIndex}) => {
-    // 同步固定列的高度
+    // 同步固定列的高度 // todo 目前只能body去同步left/right, 需要left/right去同步body
     if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && hasFixed) {
       const {current} = multiGridContainer;
       const gridRowCollection = current.gridContainer.getElementsByClassName('vt-grid-row');

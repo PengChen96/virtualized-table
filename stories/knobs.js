@@ -1,4 +1,3 @@
-
 import {boolean, number, optionsKnob} from '@storybook/addon-knobs';
 
 export const getDefaultProps = (params = {
@@ -18,8 +17,9 @@ export const getDefaultProps = (params = {
   const dataNum = number('DataNum', 50, {range: true, min: 1, max: 100000, step: 1});
   // 判断显示
   const fixedLeftColumnCount = params.fixedLeftColumnCount ? number('FixedLeftColumnCount', 1) : null;
-  const fixedRightColumnCount = params.fixedLeftColumnCount ? number('FixedRightColumnCount', 1) : null;
+  const fixedRightColumnCount = params.fixedRightColumnCount ? number('FixedRightColumnCount', 1) : null;
   const isSticky = params.isSticky ? boolean('IsSticky', true) : null;
+  const ellipsis = params.ellipsis ? boolean('Ellipsis', true) : null;
 
   return {
     align,
@@ -29,5 +29,6 @@ export const getDefaultProps = (params = {
     fixedLeftColumnCount,
     fixedRightColumnCount,
     isSticky,
+    ellipsis,
   };
 };
