@@ -50,7 +50,7 @@ export function classNames () {
     if (sameType(arguments[i], 'Object')) {
       Object.keys(arguments[i]).forEach((k) => {
         className += arguments[i][k] ? ` ${k}` : '';
-      })
+      });
     }
   }
   return className.trim();

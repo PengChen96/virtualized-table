@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Grid from './Grid';
 import PropTypes from 'prop-types';
@@ -31,8 +30,8 @@ class VTable extends React.Component {
     let {state} = this;
     let {rowRemoveVisible = true} = props;
     if (props.dataSource !== state.dataSource ||
-      props.footerColumnData !== state.footerColumnData
-      // props.columns !== state.columns
+      props.footerColumnData !== state.footerColumnData ||
+      props.columns !== state.tmpColumns
     ) {
       let columns = props.columns;
       let footerColumns = this.getColumns(props.columns);
@@ -76,6 +75,7 @@ class VTable extends React.Component {
         footerColumns[0] = {width: 60};
       }
       this.setState({
+        tmpColumns: props.columns,
         columns: this.getColumns(columns),
         columnData: this.getColumnData(columns),
         dataSource: props.dataSource,
