@@ -31,9 +31,9 @@ class VTable extends React.Component {
     let {rowRemoveVisible = true} = props;
     if (props.dataSource !== state.dataSource ||
       props.footerColumnData !== state.footerColumnData ||
-      props.columns !== state.tmpColumns
+      props.propsChanged !== state.propsChanged
     ) {
-      let columns = props.columns;
+      let columns = deepClone(props.columns);
       let footerColumns = this.getColumns(props.columns);
       // 是否能勾选全选
       let selectionDisableList = props.dataSource.filter((item) => item.selectionDisable);
@@ -70,12 +70,12 @@ class VTable extends React.Component {
           }
         });
         //
-        let _columns = deepClone(props.columns);
+        let _columns = deepClone(columns);
         footerColumns = this.getColumns(_columns);
         footerColumns[0] = {width: 60};
       }
       this.setState({
-        tmpColumns: props.columns,
+        propsChanged: props.propsChanged,
         columns: this.getColumns(columns),
         columnData: this.getColumnData(columns),
         dataSource: props.dataSource,
@@ -92,7 +92,7 @@ class VTable extends React.Component {
 
     let {props} = this;
     let {rowRemoveVisible = true} = props;
-    let columns = props.columns;
+    let columns = deepClone(props.columns);
     let footerColumns = this.getColumns(props.columns);
     // 是否能勾选全选
     let selectionDisableList = props.dataSource.filter((item) => item.selectionDisable);
@@ -129,7 +129,7 @@ class VTable extends React.Component {
         }
       });
       //
-      let _columns = deepClone(props.columns);
+      let _columns = deepClone(columns);
       footerColumns = this.getColumns(_columns);
       footerColumns[0] = {width: 60};
     }
@@ -465,6 +465,8 @@ class VTable extends React.Component {
 VTable.propTypes = {
   // v-table className
   className: PropTypes.string,
+  // props变化需要更新
+  propsChanged: PropTypes.any,
   // 列
   columns: PropTypes.array,
   // 左边固定列 列数
