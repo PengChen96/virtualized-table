@@ -1422,9 +1422,8 @@ var VTable = /*#__PURE__*/function (_React$Component) {
       var _props$rowRemoveVisib = props.rowRemoveVisible,
           rowRemoveVisible = _props$rowRemoveVisib === void 0 ? true : _props$rowRemoveVisib;
 
-      if (props.dataSource !== state.dataSource || props.footerColumnData !== state.footerColumnData // props.columns !== state.columns
-      ) {
-        var columns = props.columns;
+      if (props.dataSource !== state.dataSource || props.footerColumnData !== state.footerColumnData || props.propsChanged !== state.propsChanged) {
+        var columns = Object(_utils_deepClone__WEBPACK_IMPORTED_MODULE_3__["deepClone"])(props.columns);
         var footerColumns = this.getColumns(props.columns); // 是否能勾选全选
 
         var selectionDisableList = props.dataSource.filter(function (item) {
@@ -1484,7 +1483,7 @@ var VTable = /*#__PURE__*/function (_React$Component) {
             }
           }); //
 
-          var _columns = Object(_utils_deepClone__WEBPACK_IMPORTED_MODULE_3__["deepClone"])(props.columns);
+          var _columns = Object(_utils_deepClone__WEBPACK_IMPORTED_MODULE_3__["deepClone"])(columns);
 
           footerColumns = this.getColumns(_columns);
           footerColumns[0] = {
@@ -1493,6 +1492,7 @@ var VTable = /*#__PURE__*/function (_React$Component) {
         }
 
         this.setState({
+          propsChanged: props.propsChanged,
           columns: this.getColumns(columns),
           columnData: this.getColumnData(columns),
           dataSource: props.dataSource,
@@ -1515,7 +1515,7 @@ var VTable = /*#__PURE__*/function (_React$Component) {
       var props = this.props;
       var _props$rowRemoveVisib2 = props.rowRemoveVisible,
           rowRemoveVisible = _props$rowRemoveVisib2 === void 0 ? true : _props$rowRemoveVisib2;
-      var columns = props.columns;
+      var columns = Object(_utils_deepClone__WEBPACK_IMPORTED_MODULE_3__["deepClone"])(props.columns);
       var footerColumns = this.getColumns(props.columns); // 是否能勾选全选
 
       var selectionDisableList = props.dataSource.filter(function (item) {
@@ -1566,7 +1566,7 @@ var VTable = /*#__PURE__*/function (_React$Component) {
           }
         }); //
 
-        var _columns = Object(_utils_deepClone__WEBPACK_IMPORTED_MODULE_3__["deepClone"])(props.columns);
+        var _columns = Object(_utils_deepClone__WEBPACK_IMPORTED_MODULE_3__["deepClone"])(columns);
 
         footerColumns = this.getColumns(_columns);
         footerColumns[0] = {
@@ -1951,6 +1951,8 @@ var VTable = /*#__PURE__*/function (_React$Component) {
 VTable.propTypes = {
   // v-table className
   className: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string,
+  // props变化需要更新
+  propsChanged: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.any,
   // 列
   columns: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.array,
   // 左边固定列 列数
@@ -2397,6 +2399,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _context_VTableContext__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./context/VTableContext */ "./libs/VTable2.0/context/VTableContext.js");
 /* harmony import */ var _utils_rowKey__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./utils/rowKey */ "./libs/VTable2.0/utils/rowKey.js");
 /* harmony import */ var _cache_rowHeightCache__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./cache/rowHeightCache */ "./libs/VTable2.0/cache/rowHeightCache.js");
+/* harmony import */ var _utils_deepClone__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./utils/deepClone */ "./libs/VTable2.0/utils/deepClone.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
@@ -2435,6 +2438,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
  // const whyDidYouRender = require('@welldone-software/why-did-you-render');
 // whyDidYouRender(React, {
 //   trackAllPureComponents: true
@@ -2453,7 +2457,7 @@ var Grid = function Grid(props, ref) {
 
   var isSticky = _VTableContext.isSticky;
   var stateProps = {
-    // 固定行高 boolean
+    // 固定行高 boolean (需要行合并/分组表头时设置为true)
     fixedRowHeight: props.fixedRowHeight,
     // 列 #
     columns: props.columns || [],
@@ -2531,7 +2535,17 @@ var Grid = function Grid(props, ref) {
 
   var displayedColumns = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
     return [].concat(_toConsumableArray(stateProps.fixedLeftColumns), _toConsumableArray(grid.virtualColumns), _toConsumableArray(stateProps.fixedRightColumns));
-  }, [stateProps.fixedLeftColumns, grid.virtualColumns, stateProps.fixedRightColumns]); //
+  }, [stateProps.fixedLeftColumns, grid.virtualColumns, stateProps.fixedRightColumns]);
+  var displayedFooterColumns = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    var columns = displayedColumns;
+
+    if (displayedColumns.length > 0 && displayedColumns[0].type === 'checkBox') {
+      columns = Object(_utils_deepClone__WEBPACK_IMPORTED_MODULE_11__["deepClone"])(displayedColumns);
+      columns[0].render = null;
+    }
+
+    return columns;
+  }, [displayedColumns]); //
 
   var Components = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
     return {
@@ -2672,7 +2686,8 @@ var Grid = function Grid(props, ref) {
         columnIndex = _ref.columnIndex,
         realColumnIndex = _ref.realColumnIndex,
         colSpan = _ref.colSpan,
-        rowSpan = _ref.rowSpan;
+        rowSpan = _ref.rowSpan,
+        type = _ref.type;
     colSpan = colSpan === 0 ? 0 : Number(colSpan || 1);
     rowSpan = rowSpan === 0 ? 0 : Number(rowSpan || 1);
     var columns = stateProps.columns,
@@ -2691,28 +2706,32 @@ var Grid = function Grid(props, ref) {
     var display = colSpan === 0 ? 'none' : 'flex'; // 如果虚拟列的第一列是合并导致隐藏的，需要让它占个位置，不然这行会错位
     // 如果是尾部列不用考虑这个问题
 
-    var vFirstColumn = grid.virtualColumns[0] || {};
+    var vFirstColumn = grid.virtualColumns[0] || {}; // let type === 'header'
 
-    if (vFirstColumn.render) {
+    var vFirstColumnRender = type === 'header' ? vFirstColumn._headerCellProps : vFirstColumn.render;
+
+    if (vFirstColumnRender) {
       var vFirstValue = row[vFirstColumn['key'] || vFirstColumn['dataIndex']];
       var vFirstRealColumnsIndex = grid.startColumnIndex;
-      var vFirstRenderData = vFirstColumn.render(vFirstValue, row, rowIndex, realRowIndex, vFirstColumn, 0, vFirstRealColumnsIndex);
+      var vFirstRenderData = vFirstColumnRender(vFirstValue, row, rowIndex, realRowIndex, vFirstColumn, 0, vFirstRealColumnsIndex);
 
       if (Object(_utils_base__WEBPACK_IMPORTED_MODULE_7__["isRenderCellObj"])(vFirstRenderData)) {
-        var vFirstCellProps = vFirstRenderData.props || {};
+        var vFirstCellProps = type === 'header' ? vFirstRenderData : vFirstRenderData.props || {};
 
         if (vFirstCellProps.colSpan === 0) {
           // 截取第一列到当前列
           var startVirtualColumns = grid.virtualColumns.slice(0, columnIndex + 1); // 过滤出第一列到当前列display none的列
 
           var svHiddenColumns = startVirtualColumns.filter(function (svColumn, svColumnIndex) {
-            if (svColumn.render) {
+            var svColumnRender = type === 'header' ? svColumn._headerCellProps : svColumn.render;
+
+            if (svColumnRender) {
               var svValue = row[svColumn['key'] || svColumn['dataIndex']];
               var svRealColumnIndex = svColumnIndex + vFirstRealColumnsIndex;
-              var svRenderData = svColumn.render(svValue, row, rowIndex, realRowIndex, svColumn, svColumnIndex, svRealColumnIndex);
+              var svRenderData = svColumnRender(svValue, row, rowIndex, realRowIndex, svColumn, svColumnIndex, svRealColumnIndex);
 
               if (Object(_utils_base__WEBPACK_IMPORTED_MODULE_7__["isRenderCellObj"])(svRenderData)) {
-                var svCellProps = svRenderData.props || {};
+                var svCellProps = type === 'header' ? svRenderData : svRenderData.props || {};
                 return svCellProps.colSpan === 0;
               }
             }
@@ -2768,7 +2787,8 @@ var Grid = function Grid(props, ref) {
       columnIndex: columnIndex,
       realColumnIndex: realColumnIndex,
       colSpan: colSpan,
-      rowSpan: rowSpan
+      rowSpan: rowSpan,
+      type: type
     }),
         width = _getCellColRowSpanSty.width,
         height = _getCellColRowSpanSty.height,
@@ -2826,8 +2846,8 @@ var Grid = function Grid(props, ref) {
       style: _objectSpread(_objectSpread({
         width: width,
         minWidth: width,
-        // minHeight: stateProps.minRowHeight,
-        height: height,
+        minHeight: stateProps.minRowHeight,
+        height: stateProps.fixedRowHeight ? height : undefined,
         display: display,
         visibility: visibility
       }, column.style), cellFixedStyle)
@@ -2935,6 +2955,11 @@ var Grid = function Grid(props, ref) {
         endRowIndex: grid.endRowIndex
       });
       height = rowHeightArr[rowIndex];
+    } // todo need test
+
+
+    if (type === 'footer') {
+      height = stateProps.minRowHeight;
     }
 
     return height;
@@ -2950,7 +2975,8 @@ var Grid = function Grid(props, ref) {
    */
 
   var _gridRowRender = function _gridRowRender(row, rowIndex, _ref5) {
-    var type = _ref5.type;
+    var type = _ref5.type,
+        displayedFooterColumns = _ref5.displayedFooterColumns;
     // const {fixedLeftColumns, fixedRightColumns} = stateProps;
     var realRowIndex = rowIndex + grid.startRowIndex; // 是否选中
 
@@ -2981,7 +3007,8 @@ var Grid = function Grid(props, ref) {
         // width: stateProps.visibleWidth
 
       }
-    }), displayedColumns.map(function (column, columnIndex) {
+    }), // footer不展示勾选框
+    (displayedFooterColumns || displayedColumns).map(function (column, columnIndex) {
       return _cellRender(row, rowIndex, column, columnIndex, {
         type: type
       });
@@ -3031,7 +3058,16 @@ var Grid = function Grid(props, ref) {
     return _gridRowRender(row, rowIndex, {
       type: type
     });
-  }))));
+  }), // sticky footer
+  _VTableContext.isSticky && _VTableContext.summaryData && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "vt-table-footer vt-footer-sticky"
+  }, _VTableContext.summaryData.map(function (row, rowIndex) {
+    // 行渲染
+    return _gridRowRender(row, rowIndex, {
+      type: 'footer',
+      displayedFooterColumns: displayedFooterColumns
+    });
+  })))));
 };
 
 Grid.propTypes = {
@@ -3207,7 +3243,7 @@ var MultiGrid = function MultiGrid(props, ref) {
     var startRowIndex = _ref2.startRowIndex,
         endRowIndex = _ref2.endRowIndex;
 
-    // 同步固定列的高度
+    // 同步固定列的高度 // todo 目前只能body去同步left/right, 需要left/right去同步body
     if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && hasFixed) {
       var current = multiGridContainer.current;
       var gridRowCollection = current.gridContainer.getElementsByClassName('vt-grid-row');
@@ -3349,6 +3385,7 @@ var VTable = function VTable(props) {
   var vtable = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
   var vtHeader = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
   var vtBody = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+  var vtFooter = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
   var isStickyProps = props.isSticky,
       rowKeyProps = props.rowKey,
       rowSelection = props.rowSelection,
@@ -3356,8 +3393,8 @@ var VTable = function VTable(props) {
       columnsProps = _props$columns === void 0 ? [] : _props$columns,
       _props$dataSource = props.dataSource,
       dataSource = _props$dataSource === void 0 ? [] : _props$dataSource,
+      summary = props.summary,
       wrapperClassName = props.wrapperClassName,
-      className = props.className,
       visibleHeight = props.visibleHeight,
       _props$rowHeight = props.rowHeight,
       rowHeight = _props$rowHeight === void 0 ? 40 : _props$rowHeight,
@@ -3394,6 +3431,7 @@ var VTable = function VTable(props) {
       hasFixed = _useState12[0],
       setHasFixed = _useState12[1];
 
+  var summaryData = Object(_utils_base__WEBPACK_IMPORTED_MODULE_5__["sameType"])(summary, 'Function') ? summary() : summary;
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var _isSticky = isStickyProps === undefined ? Object(_utils_isSupportSticky__WEBPACK_IMPORTED_MODULE_4__["isSupportSticky"])() : isStickyProps;
 
@@ -3419,7 +3457,18 @@ var VTable = function VTable(props) {
     }
 
     return autoColumns;
-  }, [columns]); // 设置自适应列
+  }, [columns]); //
+
+  var footerColumns = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    var autoColumns = headerColumns;
+
+    if (headerColumns.length > 0 && headerColumns[0].type === 'checkBox') {
+      autoColumns = Object(_utils_deepClone__WEBPACK_IMPORTED_MODULE_8__["deepClone"])(headerColumns);
+      autoColumns[0].render = null;
+    }
+
+    return autoColumns;
+  }, [headerColumns]); // 设置自适应列
 
   var reSetColumns = function reSetColumns() {
     var offsetWidth = vtable.current.offsetWidth;
@@ -3471,6 +3520,7 @@ var VTable = function VTable(props) {
 
       autoColumns.unshift({
         type: 'checkBox',
+        dataIndex: 'checkBox',
         width: _columnWidth,
         align: 'center',
         _headerCellProps: function _headerCellProps(value, row, rowIndex) {
@@ -3622,6 +3672,10 @@ var VTable = function VTable(props) {
 
     if (vtHeader.current) {
       vtHeader.current.gridContainer.scrollLeft = scrollLeft;
+    }
+
+    if (vtFooter.current) {
+      vtFooter.current.gridContainer.scrollLeft = scrollLeft;
     } // vtBody.current.scrollLeft = scrollLeft;
     // console.log(vtHeader.current);
     // console.log(vtHeader.current.scrollLeft, vtBody.current.scrollLeft);
@@ -3643,12 +3697,19 @@ var VTable = function VTable(props) {
   };
 
   var spinning = Object(_utils_base__WEBPACK_IMPORTED_MODULE_5__["sameType"])(loading, 'Object') ? loading.spinning : loading;
+  var headerHeight = rowHeight * headerLevel; // 表头高度
+
+  var footerHeight = summaryData ? rowHeight * summaryData.length : 0; // 总结栏高度
+
+  var bodyHeight = !isSticky ? visibleHeight - headerHeight - footerHeight : visibleHeight; // body高度
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_context_VTableContext__WEBPACK_IMPORTED_MODULE_2__["default"].Provider, {
     value: {
       onScroll: onScroll,
       getBodyScrollBarWidth: getBodyScrollBarWidth,
       isSticky: isSticky,
-      headerTitle: headerTitle
+      headerTitle: headerTitle,
+      summaryData: summaryData
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     ref: vtable,
@@ -3658,21 +3719,32 @@ var VTable = function VTable(props) {
     }
   }, !isSticky && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MultiGrid__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({}, props, {
     ref: vtHeader,
-    type: 'header',
-    className: Object(_utils_base__WEBPACK_IMPORTED_MODULE_5__["classNames"])('vt-table-header', className),
-    visibleHeight: rowHeight * headerLevel,
+    type: 'header' // className={classNames('vt-table-header', className)}
+    ,
+    mgClassName: 'vt-table-header',
+    visibleHeight: headerHeight,
     minRowHeight: rowHeight,
     columns: headerColumns,
-    hasFixed: hasFixed,
     dataSource: headerTitle,
+    hasFixed: hasFixed,
     bodyScrollBarWidth: bodyScrollBarWidth
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MultiGrid__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({}, props, {
     ref: vtBody,
     type: 'body',
     mgClassName: 'vt-table-body',
-    visibleHeight: !isSticky ? visibleHeight - rowHeight * headerLevel : visibleHeight,
+    visibleHeight: bodyHeight,
     minRowHeight: rowHeight,
     columns: columns,
+    hasFixed: hasFixed,
+    bodyScrollBarWidth: bodyScrollBarWidth
+  })), !isSticky && summaryData && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MultiGrid__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({}, props, {
+    ref: vtFooter,
+    type: 'footer',
+    mgClassName: 'vt-table-footer',
+    visibleHeight: footerHeight,
+    minRowHeight: rowHeight,
+    columns: footerColumns,
+    dataSource: summaryData,
     hasFixed: hasFixed,
     bodyScrollBarWidth: bodyScrollBarWidth
   })), !spinning && dataSource.length < 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -4719,7 +4791,7 @@ exports.push([module.i, ".vt-multi-grid-container {\n  display: flex;\n}\n.vt-mu
 
 exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".vt-table {\n  position: relative;\n}\n.vt-table .vt-table-header::-webkit-scrollbar {\n  display: none;\n}\n.vt-table .vt-table-header.vt-header-sticky {\n  z-index: 3;\n  position: sticky;\n  top: 0;\n}\n.vt-table .vt-table-header .vt-grid-row {\n  contain: none;\n}\n.vt-table .vt-table-header .vt-grid-row:hover .vt-grid-cell {\n  background: #e9ebf0;\n}\n.vt-table .vt-table-header .vt-grid-row .vt-grid-cell {\n  background: #e9ebf0;\n  font-weight: 700;\n}\n.vt-table .vt-selection {\n  position: relative;\n  cursor: pointer;\n  width: 16px;\n  height: 16px;\n}\n.vt-table .vt-selection input {\n  cursor: pointer;\n}\n.vt-table .vt-selection input:checked + .vt-show-box:before {\n  border: solid #ff8040;\n  border-width: 0 2px 2px 0;\n}\n.vt-table .vt-selection .vt-show-box {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 16px;\n  height: 16px;\n  border-radius: 2px;\n  border: 1px solid #d1d3d8;\n  background: #fff;\n}\n.vt-table .vt-selection .vt-show-box:hover {\n  border-color: #ff8040;\n}\n.vt-table .vt-selection .vt-show-box:before {\n  content: '';\n  position: absolute;\n  top: 2px;\n  left: 5px;\n  width: 5px;\n  height: 8px;\n  border: solid #fff;\n  border-width: 0 2px 2px 0;\n  transform: rotate(45deg);\n}\n.vt-table .vt-selection-disabled {\n  cursor: not-allowed;\n}\n.vt-table .vt-selection-disabled .vt-show-box {\n  background: #eee;\n}\n.vt-table .vt-selection-disabled .vt-show-box:hover {\n  border-color: #d1d3d8;\n}\n.vt-table .vt-selection-disabled .vt-show-box:before {\n  border: solid transparent;\n}\n.vt-table .vt-table-loading {\n  z-index: 20;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  opacity: 0.8;\n  background: #fff;\n}\n.vt-table .vt-table-empty {\n  z-index: 20;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  pointer-events: none;\n}\n", ""]);
+exports.push([module.i, ".vt-table {\n  /* vvv todo 待优化 支持table有border*/\n  /* ^^^ */\n  position: relative;\n}\n.vt-table .vt-table-header .vt-grid-container::-webkit-scrollbar {\n  display: none;\n}\n.vt-table .vt-table-header.vt-header-sticky {\n  z-index: 3;\n  position: sticky;\n  top: 0;\n}\n.vt-table .vt-table-header .vt-grid-row {\n  contain: none;\n}\n.vt-table .vt-table-header .vt-grid-row:hover .vt-grid-cell {\n  background: #e9ebf0;\n}\n.vt-table .vt-table-header .vt-grid-row .vt-grid-cell {\n  background: #e9ebf0;\n  font-weight: 700;\n}\n.vt-table .vt-table-footer {\n  margin-top: -1px;\n}\n.vt-table .vt-table-footer .vt-grid-container::-webkit-scrollbar {\n  display: none;\n}\n.vt-table .vt-table-footer.vt-footer-sticky {\n  z-index: 3;\n  position: sticky;\n  bottom: 0;\n}\n.vt-table .vt-table-footer .vt-grid-row:hover .vt-grid-cell {\n  background: #fffae6;\n}\n.vt-table .vt-table-footer .vt-grid-row .vt-grid-cell {\n  background: #fffae6;\n  border-bottom: none;\n  border-top: 1px solid #d1d3d8;\n}\n.vt-table .vt-selection {\n  position: relative;\n  cursor: pointer;\n  width: 16px;\n  height: 16px;\n}\n.vt-table .vt-selection input {\n  display: none;\n}\n.vt-table .vt-selection input:checked + .vt-show-box:before {\n  border: solid #ff8040;\n  border-width: 0 2px 2px 0;\n}\n.vt-table .vt-selection .vt-show-box {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 16px;\n  height: 16px;\n  border-radius: 2px;\n  border: 1px solid #d1d3d8;\n  background: #fff;\n}\n.vt-table .vt-selection .vt-show-box:hover {\n  border-color: #ff8040;\n}\n.vt-table .vt-selection .vt-show-box:before {\n  content: '';\n  position: absolute;\n  top: 2px;\n  left: 5px;\n  width: 5px;\n  height: 8px;\n  border: solid #fff;\n  border-width: 0 2px 2px 0;\n  transform: rotate(45deg);\n}\n.vt-table .vt-selection-disabled {\n  cursor: not-allowed;\n}\n.vt-table .vt-selection-disabled .vt-show-box {\n  background: #eee;\n}\n.vt-table .vt-selection-disabled .vt-show-box:hover {\n  border-color: #d1d3d8;\n}\n.vt-table .vt-selection-disabled .vt-show-box:before {\n  border: solid transparent;\n}\n.vt-table .vt-table-loading {\n  z-index: 20;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  opacity: 0.8;\n  background: #fff;\n}\n.vt-table .vt-table-empty {\n  z-index: 20;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  pointer-events: none;\n}\n", ""]);
 
 
 

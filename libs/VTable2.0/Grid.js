@@ -235,7 +235,7 @@ const Grid = (props, ref) => {
   const getCellColRowSpanStyle = ({
     row, rowIndex, realRowIndex,
     column, columnIndex, realColumnIndex,
-    colSpan, rowSpan,
+    colSpan, rowSpan, type
   }) => {
     colSpan = colSpan === 0 ? 0 : Number(colSpan || 1);
     rowSpan = rowSpan === 0 ? 0 : Number(rowSpan || 1);
@@ -252,23 +252,25 @@ const Grid = (props, ref) => {
     // 如果虚拟列的第一列是合并导致隐藏的，需要让它占个位置，不然这行会错位
     // 如果是尾部列不用考虑这个问题
     const vFirstColumn = grid.virtualColumns[0] || {};
-    if (vFirstColumn.render) {
+    const vFirstColumnRender = type === 'header' ? vFirstColumn._headerCellProps : vFirstColumn.render;
+    if (vFirstColumnRender) {
       const vFirstValue = row[vFirstColumn['key'] || vFirstColumn['dataIndex']];
       const vFirstRealColumnsIndex = grid.startColumnIndex;
-      const vFirstRenderData = vFirstColumn.render(vFirstValue, row, rowIndex, realRowIndex, vFirstColumn, 0, vFirstRealColumnsIndex);
+      const vFirstRenderData = vFirstColumnRender(vFirstValue, row, rowIndex, realRowIndex, vFirstColumn, 0, vFirstRealColumnsIndex);
       if (isRenderCellObj(vFirstRenderData)) {
-        const vFirstCellProps = vFirstRenderData.props || {};
+        const vFirstCellProps = type === 'header' ? vFirstRenderData : (vFirstRenderData.props || {});
         if (vFirstCellProps.colSpan === 0) {
           // 截取第一列到当前列
           const startVirtualColumns = grid.virtualColumns.slice(0, columnIndex + 1);
           // 过滤出第一列到当前列display none的列
           const svHiddenColumns = startVirtualColumns.filter((svColumn, svColumnIndex) => {
-            if (svColumn.render) {
+            const svColumnRender = type === 'header' ? svColumn._headerCellProps : svColumn.render;
+            if (svColumnRender) {
               const svValue = row[svColumn['key'] || svColumn['dataIndex']];
               const svRealColumnIndex = svColumnIndex + vFirstRealColumnsIndex;
-              const svRenderData = svColumn.render(svValue, row, rowIndex, realRowIndex, svColumn, svColumnIndex, svRealColumnIndex);
+              const svRenderData = svColumnRender(svValue, row, rowIndex, realRowIndex, svColumn, svColumnIndex, svRealColumnIndex);
               if (isRenderCellObj(svRenderData)) {
-                const svCellProps = svRenderData.props || {};
+                const svCellProps = type === 'header' ? svRenderData : (svRenderData.props || {});
                 return svCellProps.colSpan === 0;
               }
             }
@@ -311,7 +313,7 @@ const Grid = (props, ref) => {
     // 获取cell信息
     const {width, height, display, visibility} = getCellColRowSpanStyle({
       row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex,
-      colSpan, rowSpan,
+      colSpan, rowSpan, type
     });
     // 是否显示边框
     const cellBordered = getCellBordered({type, isSticky, headerBordered, bordered});
