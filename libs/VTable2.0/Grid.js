@@ -422,7 +422,7 @@ const Grid = (props, ref) => {
   };
 
   /**
-   *点击单元格函数
+   * 点击单元格函数
    * @param {Event} e
    * @param {String} value 值
    * @param {Object} row 行信息
@@ -443,6 +443,28 @@ const Grid = (props, ref) => {
     // console.log(realRowIndex, realColumnIndex, e);
     if (typeof onCellTap === 'function') {
       onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
+    }
+  };
+  // 移入行  新增class vt-grid-row-hover
+  const __onMouseEnter = ({type, rowKey}) => {
+    // sticky不需要下面方法，直接css：hover就能支持
+    if (type === 'body' && !isSticky) {
+      // 使用这种方式，减少hover时的重新渲染
+      const rowsCollection = document.querySelectorAll(`[data-key=row_${rowKey}]`);
+      rowsCollection.forEach((rowDom) => {
+        const className = rowDom.getAttribute('class') + ' vt-grid-row-hover';
+        rowDom.setAttribute('class', className);
+      });
+    }
+  };
+  // 移出行 移除class vt-grid-row-hover
+  const __onMouseLeave = ({type, rowKey}) => {
+    if (type === 'body' && !isSticky) {
+      const rowsCollection = document.querySelectorAll(`[data-key=row_${rowKey}]`);
+      rowsCollection.forEach((rowDom) => {
+        const className = rowDom.getAttribute('class').replace(' vt-grid-row-hover', '');
+        rowDom.setAttribute('class', className);
+      });
     }
   };
 
@@ -473,6 +495,7 @@ const Grid = (props, ref) => {
    * @param {Object} row 行数据
    * @param {Number} rowIndex 可视行坐标
    * @param {String} type 类型 header|body|footer
+   * @param {Array} displayedFooterColumns footer列 []
    * @return Element
    */
   const _gridRowRender = (row, rowIndex, {type, displayedFooterColumns}) => {
@@ -488,10 +511,21 @@ const Grid = (props, ref) => {
     const RowComponent = Components[type].row;
     // {index, moveRow}
     const additionalRowProps = typeof onRow === 'function' ? onRow(row, realRowIndex) : {};
+    const mouseEvent = {
+      onMouseEnter: (event) => {
+        __onMouseEnter({type, rowKey: _rowKey});
+        if (additionalRowProps.onMouseEnter) { additionalRowProps.onMouseEnter(event); }
+      },
+      onMouseLeave: (event) => {
+        __onMouseLeave({type, rowKey: _rowKey});
+        if (additionalRowProps.onMouseLeave) { additionalRowProps.onMouseLeave(event); }
+      }
+    };
     return <RowComponent
       {...additionalRowProps}
-      key={`row_${realRowIndex}`}
-      data-key={`row_${realRowIndex}`}
+      {...mouseEvent}
+      key={`row_${_rowKey}`}
+      data-key={`row_${_rowKey}`}
       className={classNames(
         'vt-grid-row',
         {'vt-grid-row-selected': selected}

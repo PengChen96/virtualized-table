@@ -107,6 +107,39 @@
       }
     }
   }
+  // remove
+  // 行删除图标样式
+  .@{prefix}-grid-row {
+    @RowRemove: {
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      border: 20px solid;
+      border-color: red transparent transparent transparent;
+      transform: rotate(135deg);
+      cursor: pointer;
+      &:after {
+        content: "x";
+        position: absolute;
+        top: -20px;
+        left: -2px;
+        color: #fff;
+        transform: rotate(45deg);
+      }
+    }
+    &.@{prefix}-grid-row-hover {
+      .@{prefix}-grid-cell {
+        background: #ebf5ff;
+      }
+      .@{prefix}-row-remove {
+        @RowRemove();
+      }
+    }
+    &:hover .@{prefix}-row-remove {
+      @RowRemove();
+    }
+
+  }
   // loading
   .@{prefix}-table-loading {
     z-index: 20;

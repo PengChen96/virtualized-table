@@ -11,6 +11,7 @@ import VTableDragSorting from '../src/example/VTable2.0/drag-sorting';
 import VTableEllipsis from '../src/example/VTable2.0/ellipsis';
 import VTableSummary from '../src/example/VTable2.0/summary';
 import VTableAdaptiveRowHeight from '../src/example/VTable2.0/adaptive-row-height';
+import VTableRowRemove from '../src/example/VTable2.0/row-remove';
 
 export default {
   title: 'VTablePro/VTable2.0',
@@ -119,6 +120,22 @@ export const Summary = (args) => {
 };
 Summary.storyName = 'summary';
 Summary.parameters = {
+  docs: {
+    page: VTable2MD,
+  },
+};
+
+// 行删除
+export const RowRemove = (args) => {
+  const props = getDefaultProps({
+    fixedLeftColumnCount: true,
+    fixedRightColumnCount: true,
+    isSticky: true
+  });
+  return <VTableRowRemove {...props} {...args} />;
+};
+RowRemove.storyName = 'row-remove';
+RowRemove.parameters = {
   docs: {
     page: VTable2MD,
   },

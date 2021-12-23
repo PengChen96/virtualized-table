@@ -75,6 +75,11 @@ const MultiGrid =  (props, ref) => {
     return formatFixedRightColumns({fixedRightColumns, columnsLength: columns.length});
   }, [hasFixed, columns, fixedRightColumnCount]);
 
+  // 未使用sticky的主内容列
+  const mainColumns = useMemo(
+    () => [...getFixedLeftColumns, ...getColumns, ...getFixedRightColumns],
+    [getFixedLeftColumns, getColumns, getFixedRightColumns]
+  );
   //
   const onScrollTopSync = useCallback((e, {startRowIndex, endRowIndex}) => {
     const scrollTop = e && e.target && e.target.scrollTop;
@@ -83,9 +88,11 @@ const MultiGrid =  (props, ref) => {
     const {current: rightCurrent} = multiGridContainerRight;
     //
     if (leftCurrent) {
+      e.preventDefault();
       leftCurrent.gridContainer.scrollTop = scrollTop;
     }
     if (rightCurrent) {
+      e.preventDefault();
       rightCurrent.gridContainer.scrollTop = scrollTop;
     }
     // });
@@ -126,7 +133,7 @@ const MultiGrid =  (props, ref) => {
             <Grid
               {...props}
               ref={multiGridContainer}
-              columns={[...getFixedLeftColumns, ...getColumns, ...getFixedRightColumns]}
+              columns={mainColumns}
               fixedLeftColumns={[]}
               fixedRightColumns={[]}
               mgType={'mainMultiGrid'}

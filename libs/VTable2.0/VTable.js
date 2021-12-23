@@ -101,7 +101,12 @@ const VTable = (props) => {
     });
     // 加上勾选列
     if (rowSelection) {
-      const {columnWidth = 60, selectedRowKeys = [], getCheckboxProps} = rowSelection;
+      const {columnWidth = 60, selectedRowKeys = [], getCheckboxProps, rowRemoveVisible, onRowRemove} = rowSelection;
+      //
+      const __onRowRemove = (e, row, rowIndex, realRowIndex) => {
+        e.stopPropagation();
+        onRowRemove(e, row, rowIndex, realRowIndex);
+      };
       autoColumns.unshift({
         type: 'checkBox',
         dataIndex: 'checkBox',
@@ -129,6 +134,9 @@ const VTable = (props) => {
           // 是否禁用
           let disabled = getCheckboxProps ? getCheckboxProps(row).disabled : false;
           return [
+            rowRemoveVisible && <div key={0} onClick={(e) => __onRowRemove(e, row, rowIndex, realRowIndex)}>
+              {props.rowRemoveText || <div className="vt-row-remove"/>}
+            </div>,
             <div
               key={1}
               className={classNames(
@@ -198,9 +206,10 @@ const VTable = (props) => {
   const _onSelectAll = (e) => {
     e.stopPropagation();
     const {
-      selectedRowKeys = [], onChange = () => {
-      }, onSelectAll = () => {
-      }, getCheckboxProps
+      selectedRowKeys = [],
+      onChange = () => {},
+      onSelectAll = () => {},
+      getCheckboxProps
     } = rowSelection;
     const checkedAll = getCheckedAll({selectedRowKeys, getCheckboxProps});
     if (!checkedAll) {

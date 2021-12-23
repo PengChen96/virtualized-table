@@ -28,6 +28,20 @@ shouldRowHeightSync | 是否要同步行高（isSticky=false,有固定列并且�
 visibleHeight | 表格可视区域高度 | number | 400
 onRow | 设置行属性 | function(row, realRowIndex) | -
 
+*onRow 用法*
+```javascript
+<Table
+  onRow={(record, index) => {
+    return {
+      onClick: event => {}, // 点击行
+      onDoubleClick: event => {},
+      onContextMenu: event => {},
+      onMouseEnter: event => {}, // 鼠标移入行
+      onMouseLeave: event => {},
+    };
+  }}
+/>
+```
 
 #### columns
 参数 | 说明 | 类型 | 默认值
@@ -62,11 +76,14 @@ render(value) {
 参数 | 说明 | 类型 | 默认值
 ---|---|---|---
 columnWidth | 自定义列表选择框宽度 | number | 60
+rowRemoveVisible | hover显示行删除图标 | boolean | false
 selectedRowKeys | 指定选中项的 key 数组，需要和 onChange 进行配合 | string[]/number[] | []
 getCheckboxProps | 选择框的默认属性配置 | function(record) | -
 onChange | 选中项发生变化时的回调 | function(selectedRowKeys, selectedRows) | -
 onSelect | 用户手动选择/取消选择某行的回调 | function(record, selected, selectedRows) | -
 onSelectAll | 用户手动选择/取消选择所有行的回调 | function(selected, selectedRows) | -
+onRowRemove | 点击行删除回调 | function(e, row, rowIndex, realRowIndex) | -
+
 
 #### Spin
 参数 | 说明 | 类型 | 默认值
