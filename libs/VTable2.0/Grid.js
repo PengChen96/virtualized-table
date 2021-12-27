@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {getCellAlign, getCellBordered} from './Cell';
 import {getCellFixedShadow, getFixedCellInfo, getFixedCellStyle} from './utils/fixUtil';
@@ -10,6 +10,7 @@ import VTableContext from './context/VTableContext';
 import {getRowKey} from './utils/rowKey';
 import {getRowHeightArr} from './cache/rowHeightCache';
 import {deepClone} from './utils/deepClone';
+import {cancelTimeout, requestTimeout} from './utils/timer';
 
 // const whyDidYouRender = require('@welldone-software/why-did-you-render');
 // whyDidYouRender(React, {
@@ -23,6 +24,8 @@ const Grid = (props, ref) => {
   useImperativeHandle(ref, () => ({
     gridContainer: gridContainer.current,
   }));
+  const realGridContainer = useRef(null);
+  const resetIsScrollingTimeoutIdRef = useRef(null);
 
   const _VTableContext = useContext(VTableContext);
   const {isSticky} = _VTableContext;
@@ -555,18 +558,34 @@ const Grid = (props, ref) => {
       });
     }
     _onScrollEvent();
+    // 设置元素不对指针事件做出反应
+    realGridContainer.current.style.pointerEvents = 'none';
+    _resetIsScrollingDebounced();
   };
 
+  const _resetIsScrollingDebounced = () => {
+    if (resetIsScrollingTimeoutIdRef.current !== null) {
+      cancelTimeout(resetIsScrollingTimeoutIdRef.current);
+    }
+    resetIsScrollingTimeoutIdRef.current = requestTimeout(
+      _resetIsScrolling,
+      150
+    );
+  };
+  const _resetIsScrolling = useCallback(() => {
+    resetIsScrollingTimeoutIdRef.current = null;
+    realGridContainer.current.style.pointerEvents = '';
+  }, []);
   return <>
     <div className={classNames('vt-grid-container', className)}
-      ref={gridContainer}
-      onScrollCapture={onScrollCapture}
-      style={{
-        height: stateProps.visibleHeight,
-        ...(gridStyle || {}),
-      }}
+         ref={gridContainer}
+         onScrollCapture={onScrollCapture}
+         style={{
+           height: stateProps.visibleHeight,
+           ...(gridStyle || {}),
+         }}
     >
-      <div style={{
+      <div ref={realGridContainer} style={{
         willChange: 'transform',
         // pointerEvents: 'none',
         // transform: `translateY(${grid.startVerticalOffset}px)`,
