@@ -26,11 +26,12 @@ const Grid = (props, ref) => {
   }));
   const realGridContainer = useRef(null);
   const resetIsScrollingTimeoutIdRef = useRef(null);
+  const scrollRef = useRef({gridScrollTop: 0, gridScrollLeft: 0});
 
   const _VTableContext = useContext(VTableContext);
   const {isSticky} = _VTableContext;
 
-  let stateProps = {
+  const stateProps = {
     // 固定行高 boolean (需要行合并/分组表头时设置为true)
     fixedRowHeight: props.fixedRowHeight,
     // 列 #
@@ -81,9 +82,7 @@ const Grid = (props, ref) => {
     onScrollTopSync,
     onCellTap
   } = props;
-  let [gridScrollTop, setGridScrollTop] = useState(null);
-  let [gridScrollLeft, setGridScrollLeft] = useState(null);
-  let [grid, setGrid] = useState({
+  const [grid, setGrid] = useState({
     // 虚拟列
     virtualColumns: [],
     // 虚拟数据
@@ -178,11 +177,10 @@ const Grid = (props, ref) => {
    */
   const _onVerticalScroll = (didMount) => {
     const {scrollTop} = gridContainer.current;
-    // const doUpdate = gridScrollLeft !== scrollTop ;
+    const {gridScrollTop} = scrollRef.current;
     const doUpdate = Math.abs(scrollTop - gridScrollTop) > 40;
     if (didMount || doUpdate) {
-      // console.log('vertical');
-      setGridScrollTop(scrollTop);
+      scrollRef.current.gridScrollTop = scrollTop;
       const {dataSource, estimatedRowHeight, rowOffsetCount, rowVisibleCount} = stateProps;
       // 当前scrollTop
       let gridInfo = getRealGridVerticalScrollInfo({
@@ -201,13 +199,12 @@ const Grid = (props, ref) => {
    * @param {Boolean} didMount 是否didMount阶段执行
    * @private
    */
-  function _onHorizontalScroll (didMount) {
+  const _onHorizontalScroll = (didMount) => {
     const {scrollLeft} = gridContainer.current;
-    // const doUpdate = gridScrollLeft !== scrollLeft;
+    const {gridScrollLeft} = scrollRef.current;
     const doUpdate = Math.abs(scrollLeft - gridScrollLeft) > 80;
     if (didMount || doUpdate) {
-      // console.log('horizontal');
-      setGridScrollLeft(scrollLeft);
+      scrollRef.current.gridScrollLeft = scrollLeft;
       const {dataSource, columns, estimatedColumnWidth, columnOffsetCount, columnVisibleCount} = stateProps;
       // 当前scrollLeft
       let gridInfo = getRealGridHorizontalScrollInfo({
@@ -578,12 +575,12 @@ const Grid = (props, ref) => {
   }, []);
   return <>
     <div className={classNames('vt-grid-container', className)}
-         ref={gridContainer}
-         onScrollCapture={onScrollCapture}
-         style={{
-           height: stateProps.visibleHeight,
-           ...(gridStyle || {}),
-         }}
+      ref={gridContainer}
+      onScrollCapture={onScrollCapture}
+      style={{
+        height: stateProps.visibleHeight,
+        ...(gridStyle || {}),
+      }}
     >
       <div ref={realGridContainer} style={{
         willChange: 'transform',
