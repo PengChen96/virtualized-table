@@ -123,7 +123,7 @@ const VTable = (props) => {
               _onSelectAll(e);
             }}
           >
-            <input type="checkbox" checked={checked}/>
+            <input type="checkbox" checked={checked} readOnly/>
             <div className="vt-show-box"/>
           </div>;
         },
@@ -149,7 +149,7 @@ const VTable = (props) => {
                 }
               }}
             >
-              <input type="checkbox" checked={checked}/>
+              <input type="checkbox" checked={checked} readOnly/>
               <div className="vt-show-box"/>
             </div>
           ];

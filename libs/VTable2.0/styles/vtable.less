@@ -70,6 +70,7 @@
       }
     }
     .@{prefix}-show-box {
+      box-sizing: border-box;
       position: absolute;
       top: 0;
       left: 0;
@@ -84,8 +85,8 @@
       &:before { // 使用了 absolute 所以无所谓是 before 还是 after
         content: ''; // 空白内容占位，当做盒模型处理，见下面
         position: absolute;
-        top: 2px;
-        left: 5px;
+        top: 1px;
+        left: 4px;
         width: 5px; // 勾的短边
         height: 8px; // 勾的长边
         border: solid #fff; // 勾的颜色
