@@ -8,7 +8,6 @@ import {getColumnsWidth} from './utils';
 import {classNames, isRenderCellObj, sameType} from './utils/base';
 import VTableContext from './context/VTableContext';
 import {getRowKey} from './utils/rowKey';
-import {getRowHeightArr} from './cache/rowHeightCache';
 import {deepClone} from './utils/deepClone';
 import {cancelTimeout, requestTimeout} from './utils/timer';
 
@@ -477,11 +476,8 @@ const Grid = (props, ref) => {
   function getRowHeight ({type, rowIndex}) {
     let height = undefined;
     if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && mgType !== 'mainMultiGrid') {
-      let rowHeightArr = getRowHeightArr({
-        startRowIndex: grid.startRowIndex,
-        endRowIndex: grid.endRowIndex
-      });
-      height = rowHeightArr[rowIndex];
+      const {rowsHeightArr = []} = props;
+      height = rowsHeightArr[rowIndex];
     }
     // todo need test
     if (type === 'footer') {
@@ -548,12 +544,7 @@ const Grid = (props, ref) => {
 
   const onScrollCapture = (e) => {
     if (!_VTableContext.isSticky && mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
-    if (type === 'body' && onScrollTopSync) {
-      onScrollTopSync(e, {
-        startRowIndex: grid.startRowIndex,
-        endRowIndex: grid.endRowIndex,
-      });
-    }
+    if (type === 'body' && onScrollTopSync) onScrollTopSync(e);
     _onScrollEvent();
     // 设置元素不对指针事件做出反应
     realGridContainer.current.style.pointerEvents = 'none';

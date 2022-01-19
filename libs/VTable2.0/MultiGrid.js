@@ -1,10 +1,9 @@
-import React, {useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef} from 'react';
+import React, {useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import Grid from './Grid';
 import PropTypes from 'prop-types';
 import {formatFixedLeftColumns, formatFixedRightColumns} from './utils/fixUtil';
 import {deepClone} from './utils/deepClone';
 import {classNames} from './utils/base';
-import {isRowsHeightCached, setRowHeightCache} from './cache/rowHeightCache';
 import './styles/multi-grid.less';
 import VTableContext from './context/VTableContext';
 
@@ -35,7 +34,8 @@ const MultiGrid =  (props, ref) => {
 
   const _VTableContext = useContext(VTableContext);
 
-  // let [rowsHeightCacheId, setRowsHeightCacheId] = useState(null);
+  // let [rowsHeightCacheId, setRowsHeightCacheId] = useState([]);
+  let [rowsHeightArr, setRowsHeightArr] = useState([]);
 
   useEffect(() => {
     // 同步固定列的高度
@@ -81,7 +81,7 @@ const MultiGrid =  (props, ref) => {
     [getFixedLeftColumns, getColumns, getFixedRightColumns]
   );
   //
-  const onScrollTopSync = useCallback((e, {startRowIndex, endRowIndex}) => {
+  const onScrollTopSync = useCallback((e) => {
     const scrollTop = e && e.target && e.target.scrollTop;
     // window.requestAnimationFrame(() => {
     const {current: leftCurrent} = multiGridContainerLeft;
@@ -96,22 +96,18 @@ const MultiGrid =  (props, ref) => {
       rightCurrent.gridContainer.scrollTop = scrollTop;
     }
     // });
-    syncRowHeight({startRowIndex, endRowIndex});
+    syncRowHeight();
   }, []);
   // no isSticky
-  const syncRowHeight = ({startRowIndex, endRowIndex}) => {
-    // 同步固定列的高度 // todo 目前只能body去同步left/right, 需要left/right去同步body
+  const syncRowHeight = () => {
+    // 同步固定列的高度
     if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && hasFixed) {
-      const {current} = multiGridContainer;
-      const gridRowCollection = current.gridContainer.getElementsByClassName('vt-grid-row');
+      const multiGridCurrent = multiGridContainer.current;
+      const gridRowCollection = multiGridCurrent.gridContainer.getElementsByClassName('vt-grid-row');
       const gridRowHeightArr = Array.prototype.slice.call(gridRowCollection).map((item) => {
         return item.clientHeight;
       });
-      // TODO cache data need better way
-      const cached = isRowsHeightCached({startRowIndex, endRowIndex, rowHeightArr: gridRowHeightArr});
-      if (!cached) {
-        setRowHeightCache({startRowIndex, endRowIndex, rowHeightArr: gridRowHeightArr});
-      }
+      setRowsHeightArr(gridRowHeightArr);
     }
   };
 
@@ -147,7 +143,7 @@ const MultiGrid =  (props, ref) => {
                 columns={getFixedLeftColumns}
                 fixedLeftColumns={[]}
                 fixedRightColumns={[]}
-                // rowsHeightCacheId={rowsHeightCacheId}
+                rowsHeightArr={rowsHeightArr}
                 mgType={'leftMultiGrid'}
                 gridStyle={{
                   marginBottom: type === 'body' ? -bodyScrollBarWidth : undefined
@@ -165,7 +161,7 @@ const MultiGrid =  (props, ref) => {
                 columns={getFixedRightColumns}
                 fixedLeftColumns={[]}
                 fixedRightColumns={[]}
-                // rowsHeightCacheId={rowsHeightCacheId}
+                rowsHeightArr={rowsHeightArr}
                 mgType={'rightMultiGrid'}
                 gridStyle={{
                   marginBottom: type === 'body' ? -bodyScrollBarWidth : undefined
