@@ -96,18 +96,32 @@ const MultiGrid =  (props, ref) => {
       rightCurrent.gridContainer.scrollTop = scrollTop;
     }
     // });
-    syncRowHeight();
+    syncRowHeight('setState');
   }, []);
   // no isSticky
-  const syncRowHeight = () => {
+  const syncRowHeight = (syncType = 'setDomStyle') => {
     // 同步固定列的高度
     if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && hasFixed) {
       const multiGridCurrent = multiGridContainer.current;
-      const gridRowCollection = multiGridCurrent.gridContainer.getElementsByClassName('vt-grid-row');
-      const gridRowHeightArr = Array.prototype.slice.call(gridRowCollection).map((item) => {
-        return item.clientHeight;
-      });
-      setRowsHeightArr(gridRowHeightArr);
+      const gridRowCollection = multiGridCurrent.gridContainer.querySelectorAll('.vt-grid-row');
+      // if (syncType === 'setDomStyle') {
+      //   const multiGridContainerLeftCurrent = multiGridContainerLeft.current;
+      //   const multiGridContainerRightCurrent = multiGridContainerRight.current;
+      //   gridRowCollection.forEach((gridRowDom) => {
+      //     const dataKey = gridRowDom.getAttribute('data-key');
+      //     const leftRowDom = multiGridContainerLeftCurrent && multiGridContainerLeftCurrent.gridContainer.querySelector(`[data-key=${dataKey}]`);
+      //     if (leftRowDom) leftRowDom.style.height = gridRowDom.clientHeight + 'px';
+      //
+      //     const rightRowDom = multiGridContainerRightCurrent && multiGridContainerRightCurrent.gridContainer.querySelector(`[data-key=${dataKey}]`);
+      //     if (rightRowDom) rightRowDom.style.height = gridRowDom.clientHeight + 'px';
+      //   });
+      // }
+      if (syncType === 'setState') {
+        const gridRowHeightArr = Array.prototype.slice.call(gridRowCollection).map((item) => {
+          return item.clientHeight;
+        });
+        setRowsHeightArr(gridRowHeightArr);
+      }
     }
   };
 
@@ -134,6 +148,7 @@ const MultiGrid =  (props, ref) => {
               fixedRightColumns={[]}
               mgType={'mainMultiGrid'}
               onScrollTopSync={onScrollTopSync}
+              // syncRowHeight={syncRowHeight}
             />
           {
             getFixedLeftColumns.length > 0 ? <div className="vt-multi-grid-fixed-left">

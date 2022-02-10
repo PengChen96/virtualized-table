@@ -65,3 +65,16 @@ export function classNames () {
   }
   return className.trim();
 };
+
+// 查询自定义属性的DOM
+// querySelectorAll 除ASCII 字母、数字、_、- 和 . 以外的字符可能会有兼容性问题
+export function queryCustomAttributeDOM(scopeDOM, name, value) {
+  const selectDom = [];
+  const dom = scopeDOM;
+  for (let i = 0; i < dom.length; i++) {
+    if (value === dom[i].getAttribute(name)) {
+      selectDom.push(dom[i]);
+    }
+  }
+  return selectDom;
+}

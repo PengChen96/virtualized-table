@@ -5,7 +5,7 @@ import {getCellFixedShadow, getFixedCellInfo, getFixedCellStyle} from './utils/f
 import './styles/grid.less';
 import {getRealGridHorizontalScrollInfo, getRealGridVerticalScrollInfo} from './utils/gridScrollInfo';
 import {getColumnsWidth} from './utils';
-import {classNames, isRenderCellObj, sameType} from './utils/base';
+import {classNames, isRenderCellObj, queryCustomAttributeDOM, sameType} from './utils/base';
 import VTableContext from './context/VTableContext';
 import {getRowKey} from './utils/rowKey';
 import {deepClone} from './utils/deepClone';
@@ -46,7 +46,7 @@ const Grid = (props, ref) => {
     // 可渲染的元素个数
     rowVisibleCount: props.rowVisibleCount || 20,
     // 上下偏移渲染个数
-    rowOffsetCount: props.rowOffsetCount || 20,
+    rowOffsetCount: props.rowOffsetCount || 10,
 
     // 可视区域宽度
     visibleWidth: props.visibleWidth || 1200,
@@ -449,21 +449,31 @@ const Grid = (props, ref) => {
     // sticky不需要下面方法，直接css：hover就能支持
     if (type === 'body' && !isSticky) {
       // 使用这种方式，减少hover时的重新渲染
-      const rowsCollection = document.querySelectorAll(`[data-key=row_${rowKey}]`);
-      rowsCollection.forEach((rowDom) => {
-        const className = rowDom.getAttribute('class') + ' vt-grid-row-hover';
-        rowDom.setAttribute('class', className);
-      });
+      try {
+        const scopeDOM = document.querySelectorAll('div.vt-grid-row');
+        const rowsCollection = queryCustomAttributeDOM(scopeDOM, 'data-key', `row_${rowKey}`);
+        rowsCollection.forEach((rowDom) => {
+          const className = rowDom.getAttribute('class') + ' vt-grid-row-hover';
+          rowDom.setAttribute('class', className);
+        });
+      } catch (e) {
+        console.warn(e);
+      }
     }
   };
   // 移出行 移除class vt-grid-row-hover
   const __onMouseLeave = ({type, rowKey}) => {
     if (type === 'body' && !isSticky) {
-      const rowsCollection = document.querySelectorAll(`[data-key=row_${rowKey}]`);
-      rowsCollection.forEach((rowDom) => {
-        const className = rowDom.getAttribute('class').replace(' vt-grid-row-hover', '');
-        rowDom.setAttribute('class', className);
-      });
+      try {
+        const scopeDOM = document.querySelectorAll('div.vt-grid-row');
+        const rowsCollection = queryCustomAttributeDOM(scopeDOM, 'data-key', `row_${rowKey}`);
+        rowsCollection.forEach((rowDom) => {
+          const className = rowDom.getAttribute('class').replace(' vt-grid-row-hover', '');
+          rowDom.setAttribute('class', className);
+        });
+      } catch (e) {
+        console.warn(e);
+      }
     }
   };
 
@@ -563,6 +573,7 @@ const Grid = (props, ref) => {
   const _resetIsScrolling = useCallback(() => {
     resetIsScrollingTimeoutIdRef.current = null;
     realGridContainer.current.style.pointerEvents = '';
+    // if (type === 'body' &&  props.syncRowHeight) props.syncRowHeight('setState');
   }, []);
   return <>
     <div className={classNames('vt-grid-container', className)}
