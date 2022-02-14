@@ -13,6 +13,9 @@ export const sameType = (value, type) => {
   if (type === 'Number') {
     return Object.prototype.toString.call(value) === '[object Number]';
   }
+  if (type === 'BigInt') {
+    return Object.prototype.toString.call(value) === '[object BigInt]';
+  }
   if (type === 'Symbol') {
     return Object.prototype.toString.call(value) === '[object Symbol]';
   }
