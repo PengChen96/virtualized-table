@@ -12,44 +12,27 @@
     <script type="text/babel">
       'use strict';
       const VTable = () => {
-        const dataSource = [
-          {
-            key: '1',
-            name: '胡彦斌',
-            age: 32,
-            address: '西湖区湖底公园1号',
-          },
-          {
-            key: '2',
+        const columns = [
+          { title: '姓名', dataIndex: 'name' },
+          { title: '年龄', dataIndex: 'age' },
+          { title: '住址', dataIndex: 'address' },
+        ];
+        const dataSource = [];
+        for (let i = 0; i < 1000; i++) {
+          dataSource.push({
+            key: i,
             name: '胡彦祖',
             age: 42,
             address: '西湖区湖底公园1号',
-          },
-        ];
-        const columns = [
-          {
-            title: '姓名',
-            dataIndex: 'name',
-            key: 'name',
-          },
-          {
-            title: '年龄',
-            dataIndex: 'age',
-            key: 'age',
-          },
-          {
-            title: '住址',
-            dataIndex: 'address',
-            key: 'address',
-          },
-        ];
-          return <div>
-            <h3>virtualized-table</h3>
-            <VTablePro
-              columns={columns}
-              dataSource={dataSource}
-            />
-          </div>;
+          })
+        }
+        return <div>
+          <h3>virtualized-table</h3>
+          <VTablePro
+            columns={columns}
+            dataSource={dataSource}
+          />
+        </div>;
       }
       const domContainer = document.querySelector('#root');
       ReactDOM.render(<VTable/>, domContainer);
