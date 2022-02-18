@@ -627,19 +627,33 @@ const Grid = (props, ref) => {
 };
 
 Grid.propTypes = {
-  // .vt-grid-container 样式
-  className: PropTypes.string,
+  columns: PropTypes.array,
+  dataSource: PropTypes.array,
+  visibleWidth: PropTypes.number,
+  visibleHeight: PropTypes.number,
+  estimatedRowHeight: PropTypes.number,
+  minRowHeight: PropTypes.number,
+  rowVisibleCount: PropTypes.number,
+  rowOffsetCount: PropTypes.number,
+  estimatedColumnWidth: PropTypes.number,
+  columnVisibleCount: PropTypes.number,
+  columnOffsetCount: PropTypes.number,
+  fixedRowHeight: prototype.bool,
+  fixedLeftColumns: PropTypes.array,
+  fixedRightColumns: PropTypes.array,
   // 类型 header
   type: PropTypes.string,
-  // 是否显示边框
+  mgType: PropTypes.string,
+  className: PropTypes.string, // .vt-grid-container 样式
+  gridStyle: PropTypes.object,
+  shouldRowHeightSync: PropTypes.bool,
   headerBordered: PropTypes.bool,
   bordered: PropTypes.bool,
-  // 点击每个子项的方法
+  rowKey: PropTypes.string | PropTypes.func,
+  components: PropTypes.object,
+  onRow: PropTypes.func,
+  onScrollTopSync: PropTypes.func,
   onCellTap: PropTypes.func,
-  // 左侧固定列
-  fixedLeftColumns: PropTypes.array,
-  // 右侧固定列
-  fixedRightColumns: PropTypes.array,
 };
 // Grid.whyDidYouRender = true;
 export default React.memo(React.forwardRef(Grid));

@@ -194,8 +194,14 @@ const MultiGrid =  (props, ref) => {
 MultiGrid.propTypes = {
   // 类型 header
   type: PropTypes.string,
-  // 是否显示边框
-  bordered: PropTypes.bool
+  mgClassName: PropTypes.string,
+  shouldRowHeightSync: PropTypes.bool,
+  columns: PropTypes.array,
+  dataSource: PropTypes.array,
+  hasFixed: PropTypes.bool,
+  fixedLeftColumnCount: PropTypes.number,
+  fixedRightColumnCount: PropTypes.number,
+  bodyScrollBarWidth: PropTypes.number,
 };
 
 export default React.memo(React.forwardRef(MultiGrid));
