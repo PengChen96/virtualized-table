@@ -638,7 +638,7 @@ Grid.propTypes = {
   estimatedColumnWidth: PropTypes.number,
   columnVisibleCount: PropTypes.number,
   columnOffsetCount: PropTypes.number,
-  fixedRowHeight: prototype.bool,
+  fixedRowHeight: PropTypes.bool,
   fixedLeftColumns: PropTypes.array,
   fixedRightColumns: PropTypes.array,
   // 类型 header
@@ -649,7 +649,7 @@ Grid.propTypes = {
   shouldRowHeightSync: PropTypes.bool,
   headerBordered: PropTypes.bool,
   bordered: PropTypes.bool,
-  rowKey: PropTypes.string | PropTypes.func,
+  rowKey: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
   components: PropTypes.object,
   onRow: PropTypes.func,
   onScrollTopSync: PropTypes.func,

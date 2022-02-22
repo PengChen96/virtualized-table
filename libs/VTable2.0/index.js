@@ -4,12 +4,13 @@ import MultiGrid from './MultiGrid';
 import Grid from './Grid';
 import {formatToCellsSpan} from './utils/colSpanRowSpan';
 
-VTable.utils = {
+const utils = {
   formatToCellsSpan
 };
 export default VTable;
 export {
   VTable,
   MultiGrid,
-  Grid
+  Grid,
+  utils
 };

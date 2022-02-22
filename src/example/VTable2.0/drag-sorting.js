@@ -1,5 +1,5 @@
 /**
- * 使用react-dnd实现可伸缩列
+ * 使用react-dnd实现可拖拽
  */
 
 import React from 'react';

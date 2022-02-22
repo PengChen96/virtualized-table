@@ -338,15 +338,15 @@ const VTable = (props) => {
 
 VTable.propTypes = {
   isSticky: PropTypes.bool,
-  columns: PropTypes.array,
-  dataSource: PropTypes.array,
+  columns: PropTypes.array.isRequired,
+  dataSource: PropTypes.array.isRequired,
   wrapperClassName: PropTypes.string,
   rowHeight: PropTypes.number,
-  rowKey: PropTypes.string | PropTypes.func,
+  rowKey: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
   rowSelection: PropTypes.object,
-  rowRemoveText: PropTypes.string | PropTypes.element,
-  summary: PropTypes.array | PropTypes.func,
-  loading: PropTypes.object | PropTypes.bool,
+  rowRemoveText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  summary: PropTypes.oneOfType([PropTypes.array, PropTypes.func]),
+  loading: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   locale: PropTypes.object,
 };
 export default React.memo(VTable);

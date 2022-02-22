@@ -4,7 +4,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {VTable} from '@libs/VTable2.0';
+import {VTable, utils} from '@libs/VTable2.0';
 import {generateColumns, generateData} from '../common/utils';
 
 export default (props) => {
@@ -43,7 +43,7 @@ export default (props) => {
       { s: {c: 5, r: 4}, e: {c: 6, r: 4} },
       { s: {c: 1, r: 6}, e: {c: 6, r: 7} },
     ];
-    const mergesObj = VTable.utils.formatToCellsSpan(mergesArr);
+    const mergesObj = utils.formatToCellsSpan(mergesArr);
     return dynamicColumns.map((column, colIndex) => {
       column.render = (value, row, rowIndex, realRowIndex) => {
         const obj = {
