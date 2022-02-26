@@ -119,9 +119,7 @@ const VTable = (props) => {
           const checked = getCheckedAll({selectedRowKeys, getCheckboxProps});
           return <div
             className={'vt-selection'}
-            onClick={(e) => {
-              _onSelectAll(e);
-            }}
+            onClick={_onSelectAll}
           >
             <input type="checkbox" checked={checked} readOnly/>
             <div className="vt-show-box"/>

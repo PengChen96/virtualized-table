@@ -141,7 +141,6 @@ const Grid = (props, ref) => {
   useEffect(() => {
 
     _onScrollEvent(true);
-    // console.log('dataSource change');
     //
     if (type === 'body' && mgType === 'mainMultiGrid') {
       setTimeout(() => {
@@ -437,9 +436,7 @@ const Grid = (props, ref) => {
     row, rowIndex, realRowIndex,
     column, columnIndex, realColumnIndex
   ) => {
-    e.stopPropagation();
     e.preventDefault();
-    // console.log(realRowIndex, realColumnIndex, e);
     if (typeof onCellTap === 'function') {
       onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
     }
@@ -505,7 +502,6 @@ const Grid = (props, ref) => {
    * @return Element
    */
   const _gridRowRender = (row, rowIndex, {type, displayedFooterColumns}) => {
-    // const {fixedLeftColumns, fixedRightColumns} = stateProps;
     const realRowIndex = rowIndex + grid.startRowIndex;
     // 是否选中
     const {selectedRowKeys = []} = rowSelection;

@@ -10,7 +10,7 @@ LoadedCheerio {
     "children": Array [
       Node {
         "attribs": Object {
-          "style": "will-change: transform; padding: 0px 1800px 0px 0px;",
+          "style": "will-change: transform; padding: 0px 1800px 0px 0px; pointer-events: none;",
         },
         "children": Array [
           Node {
@@ -47,7 +47,7 @@ LoadedCheerio {
                     "attribs": Object {
                       "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                       "data-key": "cell_0_1",
-                      "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                     },
                     "children": Array [],
                     "name": "div",
@@ -56,7 +56,7 @@ LoadedCheerio {
                       "attribs": Object {
                         "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                         "data-key": "cell_0_2",
-                        "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                        "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                       },
                       "children": Array [],
                       "name": "div",
@@ -680,7 +680,7 @@ LoadedCheerio {
                   "attribs": Object {
                     "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                     "data-key": "cell_0_1",
-                    "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                   },
                   "children": Array [],
                   "name": "div",
@@ -689,7 +689,7 @@ LoadedCheerio {
                     "attribs": Object {
                       "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                       "data-key": "cell_0_2",
-                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                     },
                     "children": Array [],
                     "name": "div",
@@ -1330,7 +1330,7 @@ LoadedCheerio {
                   "attribs": Object {
                     "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                     "data-key": "cell_0_2",
-                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                   },
                   "children": Array [],
                   "name": "div",
@@ -1913,7 +1913,7 @@ LoadedCheerio {
                     "attribs": Object {
                       "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                       "data-key": "cell_0_1",
-                      "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                     },
                     "children": Array [],
                     "name": "div",
@@ -2540,7 +2540,7 @@ LoadedCheerio {
                     "attribs": Object {
                       "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                       "data-key": "cell_0_2",
-                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                     },
                     "children": Array [],
                     "name": "div",
@@ -2551,7 +2551,7 @@ LoadedCheerio {
                       "attribs": Object {
                         "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                         "data-key": "cell_0_1",
-                        "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                        "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                       },
                       "children": Array [],
                       "name": "div",
@@ -3178,7 +3178,7 @@ LoadedCheerio {
                       "attribs": Object {
                         "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                         "data-key": "cell_0_2",
-                        "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                        "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                       },
                       "children": Array [],
                       "name": "div",
@@ -3189,7 +3189,7 @@ LoadedCheerio {
                         "attribs": Object {
                           "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                           "data-key": "cell_0_1",
-                          "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                          "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                         },
                         "children": Array [],
                         "name": "div",
@@ -3816,7 +3816,7 @@ LoadedCheerio {
                         "attribs": Object {
                           "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                           "data-key": "cell_0_2",
-                          "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                          "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                         },
                         "children": Array [],
                         "name": "div",
@@ -3827,7 +3827,7 @@ LoadedCheerio {
                           "attribs": Object {
                             "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                             "data-key": "cell_0_1",
-                            "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                            "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                           },
                           "children": Array [],
                           "name": "div",
@@ -4454,7 +4454,7 @@ LoadedCheerio {
                           "attribs": Object {
                             "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                             "data-key": "cell_0_2",
-                            "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                            "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                           },
                           "children": Array [],
                           "name": "div",
@@ -4465,7 +4465,7 @@ LoadedCheerio {
                             "attribs": Object {
                               "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                               "data-key": "cell_0_1",
-                              "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                              "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                             },
                             "children": Array [],
                             "name": "div",
@@ -5092,7 +5092,7 @@ LoadedCheerio {
                             "attribs": Object {
                               "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                               "data-key": "cell_0_2",
-                              "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                              "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                             },
                             "children": Array [],
                             "name": "div",
@@ -5103,7 +5103,7 @@ LoadedCheerio {
                               "attribs": Object {
                                 "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                 "data-key": "cell_0_1",
-                                "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                               },
                               "children": Array [],
                               "name": "div",
@@ -5730,7 +5730,7 @@ LoadedCheerio {
                               "attribs": Object {
                                 "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                 "data-key": "cell_0_2",
-                                "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                               },
                               "children": Array [],
                               "name": "div",
@@ -5741,7 +5741,7 @@ LoadedCheerio {
                                 "attribs": Object {
                                   "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                   "data-key": "cell_0_1",
-                                  "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                  "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                 },
                                 "children": Array [],
                                 "name": "div",
@@ -6368,7 +6368,7 @@ LoadedCheerio {
                                 "attribs": Object {
                                   "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                   "data-key": "cell_0_2",
-                                  "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                  "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                 },
                                 "children": Array [],
                                 "name": "div",
@@ -6379,7 +6379,7 @@ LoadedCheerio {
                                   "attribs": Object {
                                     "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                     "data-key": "cell_0_1",
-                                    "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                   },
                                   "children": Array [],
                                   "name": "div",
@@ -7006,7 +7006,7 @@ LoadedCheerio {
                                   "attribs": Object {
                                     "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                     "data-key": "cell_0_2",
-                                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                   },
                                   "children": Array [],
                                   "name": "div",
@@ -7017,7 +7017,7 @@ LoadedCheerio {
                                     "attribs": Object {
                                       "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                       "data-key": "cell_0_1",
-                                      "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                     },
                                     "children": Array [],
                                     "name": "div",
@@ -7644,7 +7644,7 @@ LoadedCheerio {
                                     "attribs": Object {
                                       "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                       "data-key": "cell_0_2",
-                                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                     },
                                     "children": Array [],
                                     "name": "div",
@@ -7655,7 +7655,7 @@ LoadedCheerio {
                                       "attribs": Object {
                                         "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                         "data-key": "cell_0_1",
-                                        "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                        "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                       },
                                       "children": Array [],
                                       "name": "div",
@@ -8282,7 +8282,7 @@ LoadedCheerio {
                                       "attribs": Object {
                                         "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                         "data-key": "cell_0_2",
-                                        "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                        "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                       },
                                       "children": Array [],
                                       "name": "div",
@@ -8293,7 +8293,7 @@ LoadedCheerio {
                                         "attribs": Object {
                                           "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                           "data-key": "cell_0_1",
-                                          "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                          "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                         },
                                         "children": Array [],
                                         "name": "div",
@@ -8920,7 +8920,7 @@ LoadedCheerio {
                                         "attribs": Object {
                                           "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                           "data-key": "cell_0_2",
-                                          "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                          "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                         },
                                         "children": Array [],
                                         "name": "div",
@@ -8931,7 +8931,7 @@ LoadedCheerio {
                                           "attribs": Object {
                                             "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                             "data-key": "cell_0_1",
-                                            "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                            "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                           },
                                           "children": Array [],
                                           "name": "div",
@@ -9558,7 +9558,7 @@ LoadedCheerio {
                                           "attribs": Object {
                                             "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                             "data-key": "cell_0_2",
-                                            "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                            "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                           },
                                           "children": Array [],
                                           "name": "div",
@@ -9569,7 +9569,7 @@ LoadedCheerio {
                                             "attribs": Object {
                                               "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                               "data-key": "cell_0_1",
-                                              "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                              "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                             },
                                             "children": Array [],
                                             "name": "div",
@@ -10196,7 +10196,7 @@ LoadedCheerio {
                                             "attribs": Object {
                                               "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                               "data-key": "cell_0_2",
-                                              "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                              "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                             },
                                             "children": Array [],
                                             "name": "div",
@@ -10207,7 +10207,7 @@ LoadedCheerio {
                                               "attribs": Object {
                                                 "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                                 "data-key": "cell_0_1",
-                                                "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                                "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                               },
                                               "children": Array [],
                                               "name": "div",
@@ -10479,7 +10479,7 @@ LoadedCheerio {
                   "attribs": Object {
                     "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                     "data-key": "cell_0_1",
-                    "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                   },
                   "children": Array [],
                   "name": "div",
@@ -10488,7 +10488,7 @@ LoadedCheerio {
                     "attribs": Object {
                       "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                       "data-key": "cell_0_2",
-                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                     },
                     "children": Array [],
                     "name": "div",
@@ -11112,7 +11112,7 @@ LoadedCheerio {
                 "attribs": Object {
                   "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                   "data-key": "cell_0_1",
-                  "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                  "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                 },
                 "children": Array [],
                 "name": "div",
@@ -11121,7 +11121,7 @@ LoadedCheerio {
                   "attribs": Object {
                     "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                     "data-key": "cell_0_2",
-                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                   },
                   "children": Array [],
                   "name": "div",
@@ -11762,7 +11762,7 @@ LoadedCheerio {
                 "attribs": Object {
                   "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                   "data-key": "cell_0_2",
-                  "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                  "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                 },
                 "children": Array [],
                 "name": "div",
@@ -12345,7 +12345,7 @@ LoadedCheerio {
                   "attribs": Object {
                     "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                     "data-key": "cell_0_1",
-                    "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                   },
                   "children": Array [],
                   "name": "div",
@@ -12972,7 +12972,7 @@ LoadedCheerio {
                   "attribs": Object {
                     "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                     "data-key": "cell_0_2",
-                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                   },
                   "children": Array [],
                   "name": "div",
@@ -12983,7 +12983,7 @@ LoadedCheerio {
                     "attribs": Object {
                       "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                       "data-key": "cell_0_1",
-                      "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                     },
                     "children": Array [],
                     "name": "div",
@@ -13610,7 +13610,7 @@ LoadedCheerio {
                     "attribs": Object {
                       "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                       "data-key": "cell_0_2",
-                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                     },
                     "children": Array [],
                     "name": "div",
@@ -13621,7 +13621,7 @@ LoadedCheerio {
                       "attribs": Object {
                         "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                         "data-key": "cell_0_1",
-                        "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                        "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                       },
                       "children": Array [],
                       "name": "div",
@@ -14248,7 +14248,7 @@ LoadedCheerio {
                       "attribs": Object {
                         "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                         "data-key": "cell_0_2",
-                        "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                        "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                       },
                       "children": Array [],
                       "name": "div",
@@ -14259,7 +14259,7 @@ LoadedCheerio {
                         "attribs": Object {
                           "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                           "data-key": "cell_0_1",
-                          "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                          "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                         },
                         "children": Array [],
                         "name": "div",
@@ -14886,7 +14886,7 @@ LoadedCheerio {
                         "attribs": Object {
                           "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                           "data-key": "cell_0_2",
-                          "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                          "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                         },
                         "children": Array [],
                         "name": "div",
@@ -14897,7 +14897,7 @@ LoadedCheerio {
                           "attribs": Object {
                             "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                             "data-key": "cell_0_1",
-                            "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                            "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                           },
                           "children": Array [],
                           "name": "div",
@@ -15524,7 +15524,7 @@ LoadedCheerio {
                           "attribs": Object {
                             "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                             "data-key": "cell_0_2",
-                            "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                            "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                           },
                           "children": Array [],
                           "name": "div",
@@ -15535,7 +15535,7 @@ LoadedCheerio {
                             "attribs": Object {
                               "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                               "data-key": "cell_0_1",
-                              "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                              "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                             },
                             "children": Array [],
                             "name": "div",
@@ -16162,7 +16162,7 @@ LoadedCheerio {
                             "attribs": Object {
                               "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                               "data-key": "cell_0_2",
-                              "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                              "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                             },
                             "children": Array [],
                             "name": "div",
@@ -16173,7 +16173,7 @@ LoadedCheerio {
                               "attribs": Object {
                                 "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                 "data-key": "cell_0_1",
-                                "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                               },
                               "children": Array [],
                               "name": "div",
@@ -16800,7 +16800,7 @@ LoadedCheerio {
                               "attribs": Object {
                                 "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                 "data-key": "cell_0_2",
-                                "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                               },
                               "children": Array [],
                               "name": "div",
@@ -16811,7 +16811,7 @@ LoadedCheerio {
                                 "attribs": Object {
                                   "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                   "data-key": "cell_0_1",
-                                  "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                  "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                 },
                                 "children": Array [],
                                 "name": "div",
@@ -17438,7 +17438,7 @@ LoadedCheerio {
                                 "attribs": Object {
                                   "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                   "data-key": "cell_0_2",
-                                  "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                  "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                 },
                                 "children": Array [],
                                 "name": "div",
@@ -17449,7 +17449,7 @@ LoadedCheerio {
                                   "attribs": Object {
                                     "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                     "data-key": "cell_0_1",
-                                    "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                   },
                                   "children": Array [],
                                   "name": "div",
@@ -18076,7 +18076,7 @@ LoadedCheerio {
                                   "attribs": Object {
                                     "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                     "data-key": "cell_0_2",
-                                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                    "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                   },
                                   "children": Array [],
                                   "name": "div",
@@ -18087,7 +18087,7 @@ LoadedCheerio {
                                     "attribs": Object {
                                       "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                       "data-key": "cell_0_1",
-                                      "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                     },
                                     "children": Array [],
                                     "name": "div",
@@ -18714,7 +18714,7 @@ LoadedCheerio {
                                     "attribs": Object {
                                       "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                       "data-key": "cell_0_2",
-                                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                      "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                     },
                                     "children": Array [],
                                     "name": "div",
@@ -18725,7 +18725,7 @@ LoadedCheerio {
                                       "attribs": Object {
                                         "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                         "data-key": "cell_0_1",
-                                        "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                        "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                       },
                                       "children": Array [],
                                       "name": "div",
@@ -19352,7 +19352,7 @@ LoadedCheerio {
                                       "attribs": Object {
                                         "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                         "data-key": "cell_0_2",
-                                        "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                        "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                       },
                                       "children": Array [],
                                       "name": "div",
@@ -19363,7 +19363,7 @@ LoadedCheerio {
                                         "attribs": Object {
                                           "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                           "data-key": "cell_0_1",
-                                          "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                          "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                         },
                                         "children": Array [],
                                         "name": "div",
@@ -19990,7 +19990,7 @@ LoadedCheerio {
                                         "attribs": Object {
                                           "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                           "data-key": "cell_0_2",
-                                          "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                          "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                         },
                                         "children": Array [],
                                         "name": "div",
@@ -20001,7 +20001,7 @@ LoadedCheerio {
                                           "attribs": Object {
                                             "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                             "data-key": "cell_0_1",
-                                            "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                            "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                           },
                                           "children": Array [],
                                           "name": "div",
@@ -20628,7 +20628,7 @@ LoadedCheerio {
                                           "attribs": Object {
                                             "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                             "data-key": "cell_0_2",
-                                            "style": "width: 150px; min-width: 150px; min-height: 40px; display: none;",
+                                            "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                           },
                                           "children": Array [],
                                           "name": "div",
@@ -20639,7 +20639,7 @@ LoadedCheerio {
                                             "attribs": Object {
                                               "class": "vt-grid-cell   vt-default-bordered  vt-has-last-child-border-right vt-align-center ",
                                               "data-key": "cell_0_1",
-                                              "style": "width: 300px; min-width: 300px; min-height: 40px; display: flex;",
+                                              "style": "width: 150px; min-width: 150px; min-height: 40px; display: flex;",
                                             },
                                             "children": Array [],
                                             "name": "div",
