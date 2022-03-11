@@ -25,7 +25,7 @@ export default (props) => {
       dataNum,
       columnsNum,
       (j) => {
-        return j % 2 === 1 ? `内容A内容B内容C内容D内容E内容A内容B内容C内容D内容E${j}` : `内容A${j}`;
+        return [1,2,3].includes(j % 8) ? `内容A内容B内容C内容D内容E内容A内容B内容C内容D内容E${j}` : `内容A${j}`;
       }
     ));
   }, [props.columnsNum, props.dataNum, props.align]);
