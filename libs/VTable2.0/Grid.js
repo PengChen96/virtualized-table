@@ -1,6 +1,6 @@
 import React, {useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
-import {getCellAlign, getCellBordered} from './Cell';
+import {getCellAlign, getCellBordered} from './utils/gridCell';
 import {getCellFixedShadow, getFixedCellInfo, getFixedCellStyle} from './utils/fixUtil';
 import './styles/grid.less';
 import {getRealGridHorizontalScrollInfo, getRealGridVerticalScrollInfo} from './utils/gridScrollInfo';
@@ -358,7 +358,6 @@ const Grid = (props, ref) => {
       }}
     >
       {
-        /* 因flex布局下省略号不生效 故加一层div*/
         column.ellipsis ? <div className={'vt-ellipsis'} title={value}>
           { childNode }
         </div>
@@ -486,7 +485,6 @@ const Grid = (props, ref) => {
       const {rowsHeightArr = []} = props;
       height = rowsHeightArr[rowIndex];
     }
-    // todo need test
     if (type === 'footer') {
       height = stateProps.minRowHeight;
     }
