@@ -25,6 +25,11 @@ module.exports = {
       }
     ]
   },
+  resolve: {
+    alias: {
+      '@libs': path.resolve(__dirname, '../libs'),
+    }
+  },
   devServer: {
     contentBase: path.resolve(__dirname, '../dist')
   },
