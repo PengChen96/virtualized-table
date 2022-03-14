@@ -1,5 +1,0 @@
-
-
-export {
-  getColumnsWidth
-} from './columns';

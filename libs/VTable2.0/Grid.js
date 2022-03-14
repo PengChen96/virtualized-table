@@ -4,7 +4,7 @@ import {getCellAlign, getCellBordered} from './utils/gridCell';
 import {getCellFixedShadow, getFixedCellInfo, getFixedCellStyle} from './utils/fixUtil';
 import './styles/grid.less';
 import {getRealGridHorizontalScrollInfo, getRealGridVerticalScrollInfo} from './utils/gridScrollInfo';
-import {getColumnsWidth} from './utils';
+import {getColumnsWidth} from './utils/columns';
 import {classNames, isRenderCellObj, queryCustomAttributeDOM, sameType} from './utils/base';
 import VTableContext from './context/VTableContext';
 import {getRowKey} from './utils/rowKey';
