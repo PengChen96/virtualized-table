@@ -30,6 +30,16 @@ const Grid = (props, ref) => {
   const _VTableContext = useContext(VTableContext);
   const {isSticky} = _VTableContext;
 
+  const visibleHeight = props.visibleHeight || 400;
+  const estimatedRowHeight = props.estimatedRowHeight || 40;
+  const estimatedRowVisibleCount = Math.ceil(visibleHeight / estimatedRowHeight);
+
+  const clientWidth = gridContainer.current && gridContainer.current.clientWidth;
+  const visibleWidth = props.visibleWidth || clientWidth || 1200;
+  const estimatedColumnWidth = props.estimatedColumnWidth || 150;
+  const estimatedColumnVisibleCount = Math.ceil(visibleWidth / estimatedColumnWidth);
+
+  // const
   const stateProps = {
     // 固定行高 boolean (需要行合并/分组表头时设置为true)
     fixedRowHeight: props.fixedRowHeight,
@@ -39,21 +49,21 @@ const Grid = (props, ref) => {
     dataSource: props.dataSource || [],
 
     // 可视区域高度
-    visibleHeight: props.visibleHeight || 400,
+    visibleHeight,
     // 一行的高度（预估）
-    estimatedRowHeight: props.estimatedRowHeight || 40,
+    estimatedRowHeight,
     minRowHeight: props.minRowHeight || 40,
     // 可渲染的元素个数
-    rowVisibleCount: props.rowVisibleCount || 20,
+    rowVisibleCount: props.rowVisibleCount || estimatedRowVisibleCount,
     // 上下偏移渲染个数
     rowOffsetCount: props.rowOffsetCount || 10,
 
     // 可视区域宽度
-    visibleWidth: props.visibleWidth || 1200,
+    visibleWidth,
     // 预估的每列宽度
-    estimatedColumnWidth: props.estimatedColumnWidth || 150,
+    estimatedColumnWidth,
     // 可渲染个数（水平）
-    columnVisibleCount: props.columnVisibleCount || 8,
+    columnVisibleCount: props.columnVisibleCount || estimatedColumnVisibleCount,
     // 左右偏移渲染个数
     columnOffsetCount: props.columnOffsetCount || 4,
 
