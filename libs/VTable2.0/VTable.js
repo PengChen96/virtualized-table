@@ -231,12 +231,18 @@ const VTable = (props) => {
 
   const onScroll = (e) => {
     let scrollLeft = e && e.target && e.target.scrollLeft;
-    if (vtHeader.current) {
-      vtHeader.current.gridContainer.scrollLeft = scrollLeft;
-    }
-    if (vtFooter.current) {
-      vtFooter.current.gridContainer.scrollLeft = scrollLeft;
-    }
+    window.requestAnimationFrame(() => {
+      if (vtHeader.current) {
+        vtHeader.current.gridContainer.scrollLeft = scrollLeft;
+      }
+      if (vtFooter.current) {
+        vtFooter.current.gridContainer.scrollLeft = scrollLeft;
+      }
+      if (vtBody.current) {
+        vtBody.current.gridContainer.scrollLeft = scrollLeft;
+      }
+    });
+
     // vtBody.current.scrollLeft = scrollLeft;
     // console.log(vtHeader.current);
     // console.log(vtHeader.current.scrollLeft, vtBody.current.scrollLeft);
