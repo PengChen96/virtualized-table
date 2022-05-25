@@ -231,20 +231,17 @@ const VTable = (props) => {
 
   const onScroll = (e) => {
     let scrollLeft = e && e.target && e.target.scrollLeft;
-    if (vtHeader.current) {
-      vtHeader.current.gridContainer.scrollLeft = scrollLeft;
-    }
-    if (vtFooter.current) {
-      vtFooter.current.gridContainer.scrollLeft = scrollLeft;
-    }
-    // vtBody.current.scrollLeft = scrollLeft;
-    // console.log(vtHeader.current);
-    // console.log(vtHeader.current.scrollLeft, vtBody.current.scrollLeft);
-    // [vtHeader, vtBody].forEach((vt) => {
-    //   if(vt.current.gridContainer.scrollLeft !== scrollLeft) {
-    //     vt.current.gridContainer.scrollLeft = scrollLeft;
-    //   }
-    // });
+    window.requestAnimationFrame(() => {
+      if (vtHeader.current) {
+        vtHeader.current.gridContainer.scrollLeft = scrollLeft;
+      }
+      if (vtFooter.current) {
+        vtFooter.current.gridContainer.scrollLeft = scrollLeft;
+      }
+      if (vtBody.current) {
+        vtBody.current.gridContainer.scrollLeft = scrollLeft;
+      }
+    });
   };
   // 获取body的滚动条宽度，然后去设置header的最后一列宽度
   const getBodyScrollBarWidth = ({ref}) => {
