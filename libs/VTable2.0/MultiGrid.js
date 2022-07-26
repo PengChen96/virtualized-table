@@ -26,7 +26,7 @@ const MultiGrid =  (props, ref) => {
     dataSource,
     fixedLeftColumnCount = 0,
     fixedRightColumnCount = 0,
-    bodyScrollBarWidth
+    bodyScrollBarHeight
   } = props;
   //
   const multiGridContainerLeft = useRef(null);
@@ -137,7 +137,7 @@ const MultiGrid =  (props, ref) => {
           columns={getColumns}
           fixedLeftColumns={getFixedLeftColumns}
           fixedRightColumns={getFixedRightColumns}
-          // 这里加mgType是为了getBodyScrollBarWidth
+          // 这里加mgType是为了getBodyScrollBar
           mgType={'mainMultiGrid'}
         /> : <>
             <Grid
@@ -161,14 +161,14 @@ const MultiGrid =  (props, ref) => {
                 rowsHeightArr={rowsHeightArr}
                 mgType={'leftMultiGrid'}
                 gridStyle={{
-                  marginBottom: type === 'body' ? -bodyScrollBarWidth : undefined
+                  marginBottom: type === 'body' ? -bodyScrollBarHeight : undefined
                 }}
               />
             </div> : null
           }
           {
             getFixedRightColumns.length > 0 ? <div className="vt-multi-grid-fixed-right" style={{
-              marginRight: type === 'body' ? bodyScrollBarWidth : undefined
+              marginRight: type === 'body' ? bodyScrollBarHeight : undefined
             }}>
               <Grid
                 {...props}
@@ -179,7 +179,7 @@ const MultiGrid =  (props, ref) => {
                 rowsHeightArr={rowsHeightArr}
                 mgType={'rightMultiGrid'}
                 gridStyle={{
-                  marginBottom: type === 'body' ? -bodyScrollBarWidth : undefined
+                  marginBottom: type === 'body' ? -bodyScrollBarHeight : undefined
                 }}
               />
             </div> : null
@@ -201,7 +201,7 @@ MultiGrid.propTypes = {
   hasFixed: PropTypes.bool,
   fixedLeftColumnCount: PropTypes.number,
   fixedRightColumnCount: PropTypes.number,
-  bodyScrollBarWidth: PropTypes.number,
+  bodyScrollBarHeight: PropTypes.number,
 };
 
 export default React.memo(React.forwardRef(MultiGrid));

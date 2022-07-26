@@ -33,6 +33,7 @@ const VTable = (props) => {
   } = props;
   let [isSticky, setIsSticky] = useState(false);
   let [bodyScrollBarWidth, setBodyScrollBarWidth] = useState(0);
+  let [bodyScrollBarHeight, setBodyScrollBarHeight] = useState(0);
   let [headerLevel, setHeaderLevel] = useState(1);
   let [headerTitle, setHeaderTitle] = useState([]);
   let [columns, setColumns] = useState(columnsProps);
@@ -244,9 +245,11 @@ const VTable = (props) => {
     });
   };
   // 获取body的滚动条宽度，然后去设置header的最后一列宽度
-  const getBodyScrollBarWidth = ({ref}) => {
+  const getBodyScrollBar = ({ref}) => {
     if (ref && ref.current) {
-      setBodyScrollBarWidth(ref.current.offsetWidth - ref.current.clientWidth);
+      const {offsetWidth, clientWidth, offsetHeight, clientHeight} = ref.current;
+      setBodyScrollBarWidth(offsetWidth - clientWidth);
+      setBodyScrollBarHeight(offsetHeight - clientHeight);
     }
   };
 
@@ -258,7 +261,7 @@ const VTable = (props) => {
     <VTableContext.Provider
       value={{
         onScroll,
-        getBodyScrollBarWidth,
+        getBodyScrollBar,
         isSticky: isSticky,
         headerTitle: headerTitle,
         summaryData: summaryData
@@ -281,7 +284,7 @@ const VTable = (props) => {
             columns={headerColumns}
             dataSource={headerTitle}
             hasFixed={hasFixed}
-            bodyScrollBarWidth={bodyScrollBarWidth}
+            bodyScrollBarHeight={bodyScrollBarHeight}
           />
         }
         <MultiGrid
@@ -293,7 +296,7 @@ const VTable = (props) => {
           minRowHeight={rowHeight}
           columns={columns}
           hasFixed={hasFixed}
-          bodyScrollBarWidth={bodyScrollBarWidth}
+          bodyScrollBarHeight={bodyScrollBarHeight}
         />
         {
           !isSticky && summaryData && <MultiGrid
@@ -306,7 +309,7 @@ const VTable = (props) => {
             columns={footerColumns}
             dataSource={summaryData}
             hasFixed={hasFixed}
-            bodyScrollBarWidth={bodyScrollBarWidth}
+            bodyScrollBarHeight={bodyScrollBarHeight}
           />
         }
         {
