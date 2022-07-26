@@ -96,458 +96,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ({
 
-/***/ "./libs/Table/Table.js":
-/*!*****************************!*\
-  !*** ./libs/Table/Table.js ***!
-  \*****************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _style_less__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style.less */ "./libs/Table/style.less");
-/* harmony import */ var _style_less__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_style_less__WEBPACK_IMPORTED_MODULE_2__);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
-
-
-var Table = /*#__PURE__*/function (_React$Component) {
-  _inherits(Table, _React$Component);
-
-  var _super = _createSuper(Table);
-
-  function Table(props) {
-    var _this;
-
-    _classCallCheck(this, Table);
-
-    _this = _super.call(this, props);
-    _this.state = {
-      // 列 #
-      columns: [],
-      // 虚拟列
-      virtualColumns: [],
-      // 源数据 #
-      dataSource: [],
-      // 虚拟数据
-      virtualData: [],
-      // 可视区域高度
-      visibleHeight: props.visibleHeight || 400,
-      // 一行的高度
-      estimatedRowHeight: 40,
-      // 可渲染的元素个数
-      rowVisibleCount: 10,
-      // 上下偏移渲染个数
-      rowOffsetCount: 5,
-      // 可视区坐标(rowIndex垂直)
-      startRowIndex: 0,
-      endRowIndex: 0,
-      // padding偏移量(垂直)
-      startVerticalOffset: 0,
-      endVerticalOffset: 0,
-      // 左边固定列个数
-      fixedLeftColumnCount: 1,
-      // 可视区域宽度
-      visibleWidth: props.visibleWidth || 1200,
-      // 预估的每列宽度
-      estimatedColumnWidth: 150,
-      // 可渲染个数（水平）
-      columnVisibleCount: 8,
-      // 左右偏移渲染个数
-      columnOffsetCount: 4,
-      // 可视区坐标(columnIndex水平)
-      startColumnIndex: 0,
-      endColumnIndex: 0,
-      // padding偏移量(水平)
-      startHorizontalOffset: 0,
-      endHorizontalOffset: 0,
-      // 固定列 列数
-      fixedLeftColumns: 0,
-      // 水平滚动距离
-      scrollLeft: 0
-    };
-    return _this;
-  }
-
-  _createClass(Table, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this2 = this;
-
-      this.setState({
-        visibleHeight: this._container.clientHeight,
-        visibleWidth: this._container.clientWidth
-      });
-
-      this._container.addEventListener('scroll', function () {
-        console.log(_this2._container.scrollTop, _this2._leftContainer.scrollTop);
-        _this2._leftContainer.scrollTop = _this2._container.scrollTop;
-      });
-    } // 垂直方向滚动
-
-  }, {
-    key: "_onVerticalScroll",
-    value: function _onVerticalScroll() {
-      var scrollTop = this._container.scrollTop;
-      var _this$state = this.state,
-          dataSource = _this$state.dataSource,
-          estimatedRowHeight = _this$state.estimatedRowHeight,
-          rowOffsetCount = _this$state.rowOffsetCount,
-          rowVisibleCount = _this$state.rowVisibleCount; // 获取垂直滚动的条数
-
-      var scrollTopNum = Math.floor(scrollTop / estimatedRowHeight); // 获取要渲染的行开始坐标，最小坐标为0  rowOffsetCount: 行偏移量
-
-      var startRowIndex = scrollTopNum - rowOffsetCount > 0 ? scrollTopNum - rowOffsetCount : 0; // 获取要渲染的行结尾坐标，最大坐标为dataSource长度  rowOffsetCount: 行偏移量
-
-      var endRowIndex = rowVisibleCount + scrollTopNum + rowOffsetCount > dataSource.length ? dataSource.length : rowVisibleCount + scrollTopNum + rowOffsetCount; // 上方未渲染数据的paddingTop值
-
-      var startVerticalOffset = startRowIndex * estimatedRowHeight; // 上方未渲染数据的paddingBottom值
-
-      var endVerticalOffset = (dataSource.length - endRowIndex) * estimatedRowHeight; // 需要渲染显示的行数据
-
-      var virtualData = dataSource.slice(startRowIndex, endRowIndex);
-      console.log(scrollTopNum, startRowIndex, endRowIndex, startVerticalOffset, endVerticalOffset, virtualData, '垂直滚动');
-      this.setState({
-        startRowIndex: startRowIndex,
-        endRowIndex: endRowIndex,
-        startVerticalOffset: startVerticalOffset,
-        endVerticalOffset: endVerticalOffset,
-        virtualData: virtualData
-      });
-    } // 水平方向滚动
-
-  }, {
-    key: "_onHorizontalScroll",
-    value: function _onHorizontalScroll() {
-      var scrollLeft = this._container.scrollLeft;
-      var _this$state2 = this.state,
-          columns = _this$state2.columns,
-          estimatedColumnWidth = _this$state2.estimatedColumnWidth,
-          columnOffsetCount = _this$state2.columnOffsetCount,
-          columnVisibleCount = _this$state2.columnVisibleCount; // let totalColumnLength = this.state.columns.length;
-      // 获取水平滚动的条数
-
-      var scrollLeftNum = Math.floor(scrollLeft / estimatedColumnWidth); // 获取要渲染的列开始坐标
-
-      var startColumnIndex = scrollLeftNum - columnOffsetCount > 0 ? scrollLeftNum - columnOffsetCount : 0; // let startColumnIndex = scrollLeftNum;
-      // 获取要渲染的列结尾坐标
-
-      var endColumnIndex = columnVisibleCount + scrollLeftNum + columnOffsetCount > columns.length ? columns.length : columnVisibleCount + scrollLeftNum + columnOffsetCount; // let endColumnIndex = columnVisibleCount + scrollLeftNum;
-      // 左边未渲染数据的paddingLeft值
-
-      var startHorizontalOffset = startColumnIndex * estimatedColumnWidth; // 右边未渲染数据的paddingRight值
-
-      var endHorizontalOffset = (columns.length - endColumnIndex) * estimatedColumnWidth; // 需要渲染显示的列数据
-
-      var virtualColumns = columns.slice(startColumnIndex, endColumnIndex);
-      console.table({
-        'columns.length': columns.length,
-        'scrollLeftNum水平滚动的条数': scrollLeftNum,
-        'startColumnIndex要渲染的列开始坐标': startColumnIndex,
-        'endColumnIndex要渲染的列结尾坐标': endColumnIndex,
-        'startHorizontalOffset左边未渲染数据的paddingLeft值': startHorizontalOffset,
-        'endHorizontalOffset右边未渲染数据的paddingRight值': endHorizontalOffset
-      });
-      console.log('需要渲染显示的列数据', virtualColumns);
-      console.log('总columns', columns);
-      this.setState({
-        scrollLeft: scrollLeft,
-        startColumnIndex: startColumnIndex,
-        endColumnIndex: endColumnIndex,
-        startHorizontalOffset: startHorizontalOffset,
-        endHorizontalOffset: endHorizontalOffset,
-        virtualColumns: virtualColumns
-      });
-    } // 滚动事件
-
-  }, {
-    key: "_onScrollEvent",
-    value: function _onScrollEvent() {
-      console.log(this);
-
-      this.__onScroll(this._container.scrollLeft); // 垂直方向滚动
-
-
-      this._onVerticalScroll(); // 水平方向滚动
-
-
-      this._onHorizontalScroll(); // 当前的滚动位置 减去  上一次的滚动位置
-      // 如果为true则代表向下滚动，false代表向上滚动
-
-
-      var scrollPosition = this.state.scrollPosition;
-      var flagToDirection = this._container.scrollTop - scrollPosition > 0; // 记录当前的滚动位置
-
-      this.setState({
-        scrollPosition: this._container.scrollTop
-      });
-      var height = this._container.scrollHeight - this._container.scrollTop - this._container.clientHeight; // 记录滚动位置距离底部的位置
-
-      var scrollBottom = this._container.scrollHeight - (this._container.scrollTop + this._container.clientHeight) < 100; // 如果已达到指定位置则触发 （向下滚动）
-
-      if (flagToDirection && scrollBottom) {} // 向上滚动
-
-
-      if (!flagToDirection && this._container.scrollTop < 100) {}
-
-      console.table({
-        'scrollTop 滚动的高度': this._container.scrollTop,
-        'scrollLeft 滚动的宽度': this._container.scrollLeft,
-        'clientHeight 视窗高度': this._container.clientHeight,
-        'scrollHeight 页面高度': this._container.scrollHeight,
-        'height 距离页面底部的高度': height,
-        '滚动方向': flagToDirection ? '下' : '上'
-      });
-    }
-  }, {
-    key: "_cellRender",
-    value: function _cellRender(row, rowIndex, column, columnIndex) {
-      var _this3 = this;
-
-      var realRowIndex = rowIndex + this.state.startRowIndex;
-      var realColumnIndex = columnIndex + this.state.startColumnIndex;
-      var value = row[column['key']];
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        style: {
-          minWidth: 150
-        },
-        onClick: function onClick() {
-          return _this3.__onCellTap(row);
-        }
-      }, column.render ? column.render(value) : row[column['key']], "[", realRowIndex, ", ", realColumnIndex, "]");
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this4 = this;
-
-      var _this$state3 = this.state,
-          fixedLeftColumns = _this$state3.fixedLeftColumns,
-          virtualColumns = _this$state3.virtualColumns,
-          startHorizontalOffset = _this$state3.startHorizontalOffset,
-          endHorizontalOffset = _this$state3.endHorizontalOffset,
-          visibleWidth = _this$state3.visibleWidth,
-          scrollLeft = _this$state3.scrollLeft,
-          virtualData = _this$state3.virtualData,
-          startVerticalOffset = _this$state3.startVerticalOffset,
-          endVerticalOffset = _this$state3.endVerticalOffset,
-          estimatedRowHeight = _this$state3.estimatedRowHeight,
-          visibleHeight = _this$state3.visibleHeight;
-      console.log(virtualData, '-');
-      console.log(virtualColumns, '|');
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "v-table-container"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "v-table-left-columns-container ".concat(scrollLeft > 0 && 'v-table-fixed-left'),
-        ref: function ref(lc) {
-          return _this4._leftContainer = lc;
-        },
-        style: {
-          width: 300,
-          height: visibleHeight
-        }
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        style: {
-          paddingTop: startVerticalOffset,
-          paddingBottom: endVerticalOffset
-        }
-      }, virtualData.map(function (left_row, left_row_index) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, {
-          key: left_row_index
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "v-table-row",
-          style: {
-            width: 300,
-            height: estimatedRowHeight
-          }
-        }, fixedLeftColumns.map(function (left_column, left_column_index) {
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, {
-            key: left_column_index
-          }, _this4._cellRender(left_row, left_row_index, left_column, left_column_index));
-        })));
-      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "v-table-main-container",
-        ref: function ref(c) {
-          return _this4._container = c;
-        },
-        onScrollCapture: this._onScrollEvent.bind(this),
-        style: {
-          width: visibleWidth,
-          height: visibleHeight,
-          // 设置最小高度[visibleHeight计算会少滚动条的高度]
-          minHeight: estimatedRowHeight
-        }
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        style: {
-          paddingTop: startVerticalOffset,
-          paddingBottom: endVerticalOffset
-        }
-      }, virtualData.map(function (row, rowIndex) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, {
-          key: rowIndex
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "v-table-row",
-          style: {
-            height: estimatedRowHeight,
-            width: visibleWidth,
-            paddingLeft: startHorizontalOffset,
-            paddingRight: endHorizontalOffset
-          }
-        }, virtualColumns.map(function (column, columnIndex) {
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, {
-            key: columnIndex
-          }, _this4._cellRender(row, rowIndex, column, columnIndex));
-        })));
-      }))));
-    } // 滚动
-
-  }, {
-    key: "__onScroll",
-    value: function __onScroll(scrollLeft) {
-      var onScroll = this.props.onScroll;
-
-      if (typeof onScroll === 'function') {
-        onScroll(scrollLeft);
-      }
-    } // 点击每个子项
-
-  }, {
-    key: "__onCellTap",
-    value: function __onCellTap(row) {
-      var onCellTap = this.props.onCellTap;
-
-      if (typeof onCellTap === 'function') {
-        onCellTap(row);
-      }
-    }
-  }], [{
-    key: "getDerivedStateFromProps",
-    value: function getDerivedStateFromProps(props, state) {
-      console.log(props.dataSource !== state.dataSource);
-
-      if (props.dataSource !== state.dataSource) {
-        var rowVisibleCount = Math.ceil(state.visibleHeight / state.estimatedRowHeight);
-        var endRowIndex = state.startRowIndex + rowVisibleCount + state.rowOffsetCount * 2; //
-
-        var columnVisibleCount = Math.ceil(state.visibleWidth / state.estimatedColumnWidth);
-        var endColumnIndex = state.startColumnIndex + columnVisibleCount + state.columnOffsetCount * 2;
-        var fixedLeftColumns = props.columns.slice(0, props.fixedLeftColumnCount);
-        return {
-          columns: props.columns,
-          fixedLeftColumns: fixedLeftColumns,
-          fixedLeftColumnCount: props.fixedLeftColumnCount,
-          virtualColumns: props.columns.slice(state.startColumnIndex, endColumnIndex),
-          startHorizontalOffset: state.startColumnIndex * state.estimatedColumnWidth,
-          endHorizontalOffset: (props.columns.length - endColumnIndex) * state.estimatedColumnWidth,
-          columnVisibleCount: columnVisibleCount,
-          //
-          dataSource: props.dataSource,
-          virtualData: props.dataSource.slice(state.startRowIndex, endRowIndex),
-          startVerticalOffset: state.startRowIndex * state.estimatedRowHeight,
-          endVerticalOffset: (props.dataSource.length - endRowIndex) * state.estimatedRowHeight,
-          rowVisibleCount: rowVisibleCount
-        };
-      }
-
-      return null;
-    }
-  }]);
-
-  return Table;
-}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
-
-Table.propTypes = {
-  // 标题
-  title: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
-  // 列
-  columns: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.array,
-  // 左边固定列 列数
-  fixedLeftColumnCount: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
-  // 源数据
-  dataSource: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.array,
-  // 可视区域宽度
-  visibleWidth: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
-  // 可视区域高度
-  visibleHeight: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
-  //  API
-  // 滚动
-  onScroll: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
-  // 点击每个子项
-  onCellTap: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func
-};
-/* harmony default export */ __webpack_exports__["default"] = (Table);
-
-/***/ }),
-
-/***/ "./libs/Table/index.js":
-/*!*****************************!*\
-  !*** ./libs/Table/index.js ***!
-  \*****************************/
-/*! exports provided: default, Table */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Table__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Table */ "./libs/Table/Table.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Table", function() { return _Table__WEBPACK_IMPORTED_MODULE_0__["default"]; });
-
-
-/* harmony default export */ __webpack_exports__["default"] = (_Table__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-
-/***/ }),
-
-/***/ "./libs/Table/style.less":
-/*!*******************************!*\
-  !*** ./libs/Table/style.less ***!
-  \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(/*! !../../node_modules/css-loader/dist/cjs.js!../../node_modules/less-loader/dist/cjs.js!./style.less */ "./node_modules/css-loader/dist/cjs.js!./node_modules/less-loader/dist/cjs.js!./libs/Table/style.less");
-if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
-var transform;
-
-var options = {"hmr":true}
-options.transform = transform
-// add the styles to the DOM
-var update = __webpack_require__(/*! ../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {}
-
-/***/ }),
-
 /***/ "./libs/VTable/Grid.js":
 /*!*****************************!*\
   !*** ./libs/VTable/Grid.js ***!
@@ -564,11 +112,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_calculateColumnsWidth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/calculateColumnsWidth */ "./libs/VTable/utils/calculateColumnsWidth.js");
 /* harmony import */ var _style_less__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./style.less */ "./libs/VTable/style.less");
 /* harmony import */ var _style_less__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_style_less__WEBPACK_IMPORTED_MODULE_3__);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -576,9 +124,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
@@ -1331,7 +879,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _utils_deepClone__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/deepClone */ "./libs/VTable/utils/deepClone.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
@@ -1349,9 +897,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
@@ -2171,11 +1719,11 @@ var calculateColumnsWidth = function calculateColumnsWidth() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deepClone", function() { return deepClone; });
 /* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base */ "./libs/VTable/utils/base.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -2247,9 +1795,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -2398,13 +1946,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_base__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utils/base */ "./libs/VTable2.0/utils/base.js");
 /* harmony import */ var _context_VTableContext__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./context/VTableContext */ "./libs/VTable2.0/context/VTableContext.js");
 /* harmony import */ var _utils_rowKey__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./utils/rowKey */ "./libs/VTable2.0/utils/rowKey.js");
-/* harmony import */ var _cache_rowHeightCache__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./cache/rowHeightCache */ "./libs/VTable2.0/cache/rowHeightCache.js");
-/* harmony import */ var _utils_deepClone__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./utils/deepClone */ "./libs/VTable2.0/utils/deepClone.js");
+/* harmony import */ var _utils_deepClone__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./utils/deepClone */ "./libs/VTable2.0/utils/deepClone.js");
+/* harmony import */ var _utils_timer__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./utils/timer */ "./libs/VTable2.0/utils/timer.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -2452,10 +2000,24 @@ var Grid = function Grid(props, ref) {
       gridContainer: gridContainer.current
     };
   });
+  var realGridContainer = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+  var resetIsScrollingTimeoutIdRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+  var scrollRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])({
+    gridScrollTop: 0,
+    gridScrollLeft: 0
+  });
 
   var _VTableContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_context_VTableContext__WEBPACK_IMPORTED_MODULE_8__["default"]);
 
   var isSticky = _VTableContext.isSticky;
+  var visibleHeight = props.visibleHeight || 400;
+  var estimatedRowHeight = props.estimatedRowHeight || 40;
+  var estimatedRowVisibleCount = Math.ceil(visibleHeight / estimatedRowHeight);
+  var clientWidth = gridContainer.current && gridContainer.current.clientWidth;
+  var visibleWidth = props.visibleWidth || clientWidth || 1200;
+  var estimatedColumnWidth = props.estimatedColumnWidth || 150;
+  var estimatedColumnVisibleCount = Math.ceil(visibleWidth / estimatedColumnWidth); // const
+
   var stateProps = {
     // 固定行高 boolean (需要行合并/分组表头时设置为true)
     fixedRowHeight: props.fixedRowHeight,
@@ -2464,20 +2026,20 @@ var Grid = function Grid(props, ref) {
     // 源数据 #
     dataSource: props.dataSource || [],
     // 可视区域高度
-    visibleHeight: props.visibleHeight || 400,
+    visibleHeight: visibleHeight,
     // 一行的高度（预估）
-    estimatedRowHeight: props.estimatedRowHeight || 40,
+    estimatedRowHeight: estimatedRowHeight,
     minRowHeight: props.minRowHeight || 40,
     // 可渲染的元素个数
-    rowVisibleCount: props.rowVisibleCount || 20,
+    rowVisibleCount: props.rowVisibleCount || estimatedRowVisibleCount,
     // 上下偏移渲染个数
-    rowOffsetCount: props.rowOffsetCount || 20,
+    rowOffsetCount: props.rowOffsetCount || 10,
     // 可视区域宽度
-    visibleWidth: props.visibleWidth || 1200,
+    visibleWidth: visibleWidth,
     // 预估的每列宽度
-    estimatedColumnWidth: props.estimatedColumnWidth || 150,
+    estimatedColumnWidth: estimatedColumnWidth,
     // 可渲染个数（水平）
-    columnVisibleCount: props.columnVisibleCount || 8,
+    columnVisibleCount: props.columnVisibleCount || estimatedColumnVisibleCount,
     // 左右偏移渲染个数
     columnOffsetCount: props.columnOffsetCount || 4,
     fixedLeftColumns: props.fixedLeftColumns || [],
@@ -2500,17 +2062,7 @@ var Grid = function Grid(props, ref) {
       onScrollTopSync = props.onScrollTopSync,
       onCellTap = props.onCellTap;
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
-      _useState2 = _slicedToArray(_useState, 2),
-      gridScrollTop = _useState2[0],
-      setGridScrollTop = _useState2[1];
-
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
-      _useState4 = _slicedToArray(_useState3, 2),
-      gridScrollLeft = _useState4[0],
-      setGridScrollLeft = _useState4[1];
-
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
     // 虚拟列
     virtualColumns: [],
     // 虚拟数据
@@ -2528,9 +2080,9 @@ var Grid = function Grid(props, ref) {
     startHorizontalOffset: 0,
     endHorizontalOffset: 0
   }),
-      _useState6 = _slicedToArray(_useState5, 2),
-      grid = _useState6[0],
-      setGrid = _useState6[1]; // 真实展示的列
+      _useState2 = _slicedToArray(_useState, 2),
+      grid = _useState2[0],
+      setGrid = _useState2[1]; // 真实展示的列
 
 
   var displayedColumns = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
@@ -2540,7 +2092,7 @@ var Grid = function Grid(props, ref) {
     var columns = displayedColumns;
 
     if (displayedColumns.length > 0 && displayedColumns[0].type === 'checkBox') {
-      columns = Object(_utils_deepClone__WEBPACK_IMPORTED_MODULE_11__["deepClone"])(displayedColumns);
+      columns = Object(_utils_deepClone__WEBPACK_IMPORTED_MODULE_10__["deepClone"])(displayedColumns);
       columns[0].render = null;
     }
 
@@ -2571,13 +2123,12 @@ var Grid = function Grid(props, ref) {
   };
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    _onScrollEvent(true); // console.log('dataSource change');
-    //
+    _onScrollEvent(true); //
 
 
     if (type === 'body' && mgType === 'mainMultiGrid') {
       setTimeout(function () {
-        _VTableContext.getBodyScrollBarWidth({
+        _VTableContext.getBodyScrollBar({
           ref: gridContainer
         });
       }, 0);
@@ -2606,22 +2157,21 @@ var Grid = function Grid(props, ref) {
 
 
   var _onVerticalScroll = function _onVerticalScroll(didMount) {
-    var scrollTop = gridContainer.current.scrollTop; // const doUpdate = gridScrollLeft !== scrollTop ;
-
+    var scrollTop = gridContainer.current.scrollTop;
+    var gridScrollTop = scrollRef.current.gridScrollTop;
     var doUpdate = Math.abs(scrollTop - gridScrollTop) > 40;
 
     if (didMount || doUpdate) {
-      // console.log('vertical');
-      setGridScrollTop(scrollTop);
+      scrollRef.current.gridScrollTop = scrollTop;
       var dataSource = stateProps.dataSource,
-          estimatedRowHeight = stateProps.estimatedRowHeight,
+          _estimatedRowHeight = stateProps.estimatedRowHeight,
           rowOffsetCount = stateProps.rowOffsetCount,
           rowVisibleCount = stateProps.rowVisibleCount; // 当前scrollTop
 
       var gridInfo = Object(_utils_gridScrollInfo__WEBPACK_IMPORTED_MODULE_5__["getRealGridVerticalScrollInfo"])({
         scrollTop: scrollTop,
         dataSource: dataSource,
-        estimatedRowHeight: estimatedRowHeight,
+        estimatedRowHeight: _estimatedRowHeight,
         rowOffsetCount: rowOffsetCount,
         rowVisibleCount: rowVisibleCount
       }); // 更新渲染
@@ -2636,17 +2186,16 @@ var Grid = function Grid(props, ref) {
    */
 
 
-  function _onHorizontalScroll(didMount) {
-    var scrollLeft = gridContainer.current.scrollLeft; // const doUpdate = gridScrollLeft !== scrollLeft;
-
+  var _onHorizontalScroll = function _onHorizontalScroll(didMount) {
+    var scrollLeft = gridContainer.current.scrollLeft;
+    var gridScrollLeft = scrollRef.current.gridScrollLeft;
     var doUpdate = Math.abs(scrollLeft - gridScrollLeft) > 80;
 
     if (didMount || doUpdate) {
-      // console.log('horizontal');
-      setGridScrollLeft(scrollLeft);
+      scrollRef.current.gridScrollLeft = scrollLeft;
       var dataSource = stateProps.dataSource,
           columns = stateProps.columns,
-          estimatedColumnWidth = stateProps.estimatedColumnWidth,
+          _estimatedColumnWidth = stateProps.estimatedColumnWidth,
           columnOffsetCount = stateProps.columnOffsetCount,
           columnVisibleCount = stateProps.columnVisibleCount; // 当前scrollLeft
 
@@ -2654,16 +2203,14 @@ var Grid = function Grid(props, ref) {
         scrollLeft: scrollLeft,
         dataSource: dataSource,
         columns: columns,
-        estimatedColumnWidth: estimatedColumnWidth,
+        estimatedColumnWidth: _estimatedColumnWidth,
         columnOffsetCount: columnOffsetCount,
         columnVisibleCount: columnVisibleCount
       }); // 更新渲染
 
       updateGrid(gridInfo);
     }
-  }
-
-  ;
+  };
   /**
    * 获取单元格合并列信息
    * @param {Object} row 行信息
@@ -2677,6 +2224,7 @@ var Grid = function Grid(props, ref) {
    * @returns {object}
    * @private
    */
+
 
   var getCellColRowSpanStyle = function getCellColRowSpanStyle(_ref) {
     var row = _ref.row,
@@ -2706,8 +2254,7 @@ var Grid = function Grid(props, ref) {
     var display = colSpan === 0 ? 'none' : 'flex'; // 如果虚拟列的第一列是合并导致隐藏的，需要让它占个位置，不然这行会错位
     // 如果是尾部列不用考虑这个问题
 
-    var vFirstColumn = grid.virtualColumns[0] || {}; // let type === 'header'
-
+    var vFirstColumn = grid.virtualColumns[0] || {};
     var vFirstColumnRender = type === 'header' ? vFirstColumn._headerCellProps : vFirstColumn.render;
 
     if (vFirstColumnRender) {
@@ -2915,7 +2462,7 @@ var Grid = function Grid(props, ref) {
     };
   };
   /**
-   *点击单元格函数
+   * 点击单元格函数
    * @param {Event} e
    * @param {String} value 值
    * @param {Object} row 行信息
@@ -2929,11 +2476,50 @@ var Grid = function Grid(props, ref) {
 
 
   var __onCellTap = function __onCellTap(e, value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) {
-    e.stopPropagation();
-    e.preventDefault(); // console.log(realRowIndex, realColumnIndex, e);
+    e.preventDefault();
 
     if (typeof onCellTap === 'function') {
       onCellTap(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
+    }
+  }; // 移入行  新增class vt-grid-row-hover
+
+
+  var __onMouseEnter = function __onMouseEnter(_ref4) {
+    var type = _ref4.type,
+        rowKey = _ref4.rowKey;
+
+    // sticky不需要下面方法，直接css：hover就能支持
+    if (type === 'body' && !isSticky) {
+      // 使用这种方式，减少hover时的重新渲染
+      try {
+        var scopeDOM = document.querySelectorAll('div.vt-grid-row');
+        var rowsCollection = Object(_utils_base__WEBPACK_IMPORTED_MODULE_7__["queryCustomAttributeDOM"])(scopeDOM, 'data-key', "row_".concat(rowKey));
+        rowsCollection.forEach(function (rowDom) {
+          var className = rowDom.getAttribute('class') + ' vt-grid-row-hover';
+          rowDom.setAttribute('class', className);
+        });
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+  }; // 移出行 移除class vt-grid-row-hover
+
+
+  var __onMouseLeave = function __onMouseLeave(_ref5) {
+    var type = _ref5.type,
+        rowKey = _ref5.rowKey;
+
+    if (type === 'body' && !isSticky) {
+      try {
+        var scopeDOM = document.querySelectorAll('div.vt-grid-row');
+        var rowsCollection = Object(_utils_base__WEBPACK_IMPORTED_MODULE_7__["queryCustomAttributeDOM"])(scopeDOM, 'data-key', "row_".concat(rowKey));
+        rowsCollection.forEach(function (rowDom) {
+          var className = rowDom.getAttribute('class').replace(' vt-grid-row-hover', '');
+          rowDom.setAttribute('class', className);
+        });
+      } catch (e) {
+        console.warn(e);
+      }
     }
   };
   /**
@@ -2944,17 +2530,15 @@ var Grid = function Grid(props, ref) {
    */
 
 
-  function getRowHeight(_ref4) {
-    var type = _ref4.type,
-        rowIndex = _ref4.rowIndex;
+  function getRowHeight(_ref6) {
+    var type = _ref6.type,
+        rowIndex = _ref6.rowIndex;
     var height = undefined;
 
     if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && mgType !== 'mainMultiGrid') {
-      var rowHeightArr = Object(_cache_rowHeightCache__WEBPACK_IMPORTED_MODULE_10__["getRowHeightArr"])({
-        startRowIndex: grid.startRowIndex,
-        endRowIndex: grid.endRowIndex
-      });
-      height = rowHeightArr[rowIndex];
+      var _props$rowsHeightArr = props.rowsHeightArr,
+          rowsHeightArr = _props$rowsHeightArr === void 0 ? [] : _props$rowsHeightArr;
+      height = rowsHeightArr[rowIndex];
     } // todo need test
 
 
@@ -2971,13 +2555,13 @@ var Grid = function Grid(props, ref) {
    * @param {Object} row 行数据
    * @param {Number} rowIndex 可视行坐标
    * @param {String} type 类型 header|body|footer
+   * @param {Array} displayedFooterColumns footer列 []
    * @return Element
    */
 
-  var _gridRowRender = function _gridRowRender(row, rowIndex, _ref5) {
-    var type = _ref5.type,
-        displayedFooterColumns = _ref5.displayedFooterColumns;
-    // const {fixedLeftColumns, fixedRightColumns} = stateProps;
+  var _gridRowRender = function _gridRowRender(row, rowIndex, _ref7) {
+    var type = _ref7.type,
+        displayedFooterColumns = _ref7.displayedFooterColumns;
     var realRowIndex = rowIndex + grid.startRowIndex; // 是否选中
 
     var _rowSelection$selecte = rowSelection.selectedRowKeys,
@@ -2995,9 +2579,31 @@ var Grid = function Grid(props, ref) {
     var RowComponent = Components[type].row; // {index, moveRow}
 
     var additionalRowProps = typeof onRow === 'function' ? onRow(row, realRowIndex) : {};
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(RowComponent, _extends({}, additionalRowProps, {
-      key: "row_".concat(realRowIndex),
-      "data-key": "row_".concat(realRowIndex),
+    var mouseEvent = {
+      onMouseEnter: function onMouseEnter(event) {
+        __onMouseEnter({
+          type: type,
+          rowKey: _rowKey
+        });
+
+        if (additionalRowProps.onMouseEnter) {
+          additionalRowProps.onMouseEnter(event);
+        }
+      },
+      onMouseLeave: function onMouseLeave(event) {
+        __onMouseLeave({
+          type: type,
+          rowKey: _rowKey
+        });
+
+        if (additionalRowProps.onMouseLeave) {
+          additionalRowProps.onMouseLeave(event);
+        }
+      }
+    };
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(RowComponent, _extends({}, additionalRowProps, mouseEvent, {
+      key: "row_".concat(_rowKey),
+      "data-key": "row_".concat(_rowKey),
       className: Object(_utils_base__WEBPACK_IMPORTED_MODULE_7__["classNames"])('vt-grid-row', {
         'vt-grid-row-selected': selected
       }),
@@ -3017,16 +2623,28 @@ var Grid = function Grid(props, ref) {
 
   var onScrollCapture = function onScrollCapture(e) {
     if (!_VTableContext.isSticky && mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
+    if (type === 'body' && onScrollTopSync) onScrollTopSync(e);
 
-    if (type === 'body' && onScrollTopSync) {
-      onScrollTopSync(e, {
-        startRowIndex: grid.startRowIndex,
-        endRowIndex: grid.endRowIndex
-      });
+    _onScrollEvent(); // 设置元素不对指针事件做出反应
+
+
+    realGridContainer.current.style.pointerEvents = 'none';
+
+    _resetIsScrollingDebounced();
+  };
+
+  var _resetIsScrollingDebounced = function _resetIsScrollingDebounced() {
+    if (resetIsScrollingTimeoutIdRef.current !== null) {
+      Object(_utils_timer__WEBPACK_IMPORTED_MODULE_11__["cancelTimeout"])(resetIsScrollingTimeoutIdRef.current);
     }
 
-    _onScrollEvent();
+    resetIsScrollingTimeoutIdRef.current = Object(_utils_timer__WEBPACK_IMPORTED_MODULE_11__["requestTimeout"])(_resetIsScrolling, 150);
   };
+
+  var _resetIsScrolling = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function () {
+    resetIsScrollingTimeoutIdRef.current = null;
+    realGridContainer.current.style.pointerEvents = ''; // if (type === 'body' &&  props.syncRowHeight) props.syncRowHeight('setState');
+  }, []);
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: Object(_utils_base__WEBPACK_IMPORTED_MODULE_7__["classNames"])('vt-grid-container', className),
@@ -3036,6 +2654,7 @@ var Grid = function Grid(props, ref) {
       height: stateProps.visibleHeight
     }, gridStyle || {})
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    ref: realGridContainer,
     style: {
       willChange: 'transform',
       // pointerEvents: 'none',
@@ -3071,19 +2690,34 @@ var Grid = function Grid(props, ref) {
 };
 
 Grid.propTypes = {
-  // .vt-grid-container 样式
-  className: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
+  columns: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.array,
+  dataSource: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.array,
+  visibleWidth: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
+  visibleHeight: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
+  estimatedRowHeight: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
+  minRowHeight: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
+  rowVisibleCount: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
+  rowOffsetCount: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
+  estimatedColumnWidth: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
+  columnVisibleCount: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
+  columnOffsetCount: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
+  fixedRowHeight: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
+  fixedLeftColumns: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.array,
+  fixedRightColumns: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.array,
   // 类型 header
   type: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
-  // 是否显示边框
+  mgType: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
+  className: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
+  // .vt-grid-container 样式
+  gridStyle: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object,
+  shouldRowHeightSync: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
   headerBordered: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
   bordered: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
-  // 点击每个子项的方法
-  onCellTap: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
-  // 左侧固定列
-  fixedLeftColumns: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.array,
-  // 右侧固定列
-  fixedRightColumns: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.array
+  rowKey: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func]),
+  components: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object,
+  onRow: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
+  onScrollTopSync: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
+  onCellTap: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func
 }; // Grid.whyDidYouRender = true;
 
 /* harmony default export */ __webpack_exports__["default"] = (react__WEBPACK_IMPORTED_MODULE_0___default.a.memo(react__WEBPACK_IMPORTED_MODULE_0___default.a.forwardRef(Grid)));
@@ -3107,24 +2741,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_fixUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/fixUtil */ "./libs/VTable2.0/utils/fixUtil.js");
 /* harmony import */ var _utils_deepClone__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utils/deepClone */ "./libs/VTable2.0/utils/deepClone.js");
 /* harmony import */ var _utils_base__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils/base */ "./libs/VTable2.0/utils/base.js");
-/* harmony import */ var _cache_rowHeightCache__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./cache/rowHeightCache */ "./libs/VTable2.0/cache/rowHeightCache.js");
-/* harmony import */ var _styles_multi_grid_less__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./styles/multi-grid.less */ "./libs/VTable2.0/styles/multi-grid.less");
-/* harmony import */ var _styles_multi_grid_less__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_styles_multi_grid_less__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _context_VTableContext__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./context/VTableContext */ "./libs/VTable2.0/context/VTableContext.js");
+/* harmony import */ var _styles_multi_grid_less__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./styles/multi-grid.less */ "./libs/VTable2.0/styles/multi-grid.less");
+/* harmony import */ var _styles_multi_grid_less__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_styles_multi_grid_less__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _context_VTableContext__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./context/VTableContext */ "./libs/VTable2.0/context/VTableContext.js");
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -3157,13 +2797,18 @@ var MultiGrid = function MultiGrid(props, ref) {
       fixedLeftColumnCount = _props$fixedLeftColum === void 0 ? 0 : _props$fixedLeftColum,
       _props$fixedRightColu = props.fixedRightColumnCount,
       fixedRightColumnCount = _props$fixedRightColu === void 0 ? 0 : _props$fixedRightColu,
-      bodyScrollBarWidth = props.bodyScrollBarWidth; //
+      bodyScrollBarHeight = props.bodyScrollBarHeight; //
 
   var multiGridContainerLeft = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
   var multiGridContainerRight = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
 
-  var _VTableContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_context_VTableContext__WEBPACK_IMPORTED_MODULE_8__["default"]); // let [rowsHeightCacheId, setRowsHeightCacheId] = useState(null);
+  var _VTableContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(_context_VTableContext__WEBPACK_IMPORTED_MODULE_7__["default"]); // let [rowsHeightCacheId, setRowsHeightCacheId] = useState([]);
 
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState2 = _slicedToArray(_useState, 2),
+      rowsHeightArr = _useState2[0],
+      setRowsHeightArr = _useState2[1];
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     // 同步固定列的高度
@@ -3214,55 +2859,56 @@ var MultiGrid = function MultiGrid(props, ref) {
       fixedRightColumns: fixedRightColumns,
       columnsLength: columns.length
     });
-  }, [hasFixed, columns, fixedRightColumnCount]); //
+  }, [hasFixed, columns, fixedRightColumnCount]); // 未使用sticky的主内容列
 
-  var onScrollTopSync = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (e, _ref) {
-    var startRowIndex = _ref.startRowIndex,
-        endRowIndex = _ref.endRowIndex;
+  var mainColumns = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return [].concat(_toConsumableArray(getFixedLeftColumns), _toConsumableArray(getColumns), _toConsumableArray(getFixedRightColumns));
+  }, [getFixedLeftColumns, getColumns, getFixedRightColumns]); //
+
+  var onScrollTopSync = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (e) {
     var scrollTop = e && e.target && e.target.scrollTop; // window.requestAnimationFrame(() => {
 
     var leftCurrent = multiGridContainerLeft.current;
     var rightCurrent = multiGridContainerRight.current; //
 
     if (leftCurrent) {
+      e.preventDefault();
       leftCurrent.gridContainer.scrollTop = scrollTop;
     }
 
     if (rightCurrent) {
+      e.preventDefault();
       rightCurrent.gridContainer.scrollTop = scrollTop;
     } // });
 
 
-    syncRowHeight({
-      startRowIndex: startRowIndex,
-      endRowIndex: endRowIndex
-    });
+    syncRowHeight('setState');
   }, []); // no isSticky
 
-  var syncRowHeight = function syncRowHeight(_ref2) {
-    var startRowIndex = _ref2.startRowIndex,
-        endRowIndex = _ref2.endRowIndex;
+  var syncRowHeight = function syncRowHeight() {
+    var syncType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'setDomStyle';
 
-    // 同步固定列的高度 // todo 目前只能body去同步left/right, 需要left/right去同步body
+    // 同步固定列的高度
     if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && hasFixed) {
-      var current = multiGridContainer.current;
-      var gridRowCollection = current.gridContainer.getElementsByClassName('vt-grid-row');
-      var gridRowHeightArr = Array.prototype.slice.call(gridRowCollection).map(function (item) {
-        return item.clientHeight;
-      }); // TODO cache data need better way
+      var multiGridCurrent = multiGridContainer.current;
+      var gridRowCollection = multiGridCurrent.gridContainer.querySelectorAll('.vt-grid-row'); // if (syncType === 'setDomStyle') {
+      //   const multiGridContainerLeftCurrent = multiGridContainerLeft.current;
+      //   const multiGridContainerRightCurrent = multiGridContainerRight.current;
+      //   gridRowCollection.forEach((gridRowDom) => {
+      //     const dataKey = gridRowDom.getAttribute('data-key');
+      //     const leftRowDom = multiGridContainerLeftCurrent && multiGridContainerLeftCurrent.gridContainer.querySelector(`[data-key=${dataKey}]`);
+      //     if (leftRowDom) leftRowDom.style.height = gridRowDom.clientHeight + 'px';
+      //
+      //     const rightRowDom = multiGridContainerRightCurrent && multiGridContainerRightCurrent.gridContainer.querySelector(`[data-key=${dataKey}]`);
+      //     if (rightRowDom) rightRowDom.style.height = gridRowDom.clientHeight + 'px';
+      //   });
+      // }
 
-      var cached = Object(_cache_rowHeightCache__WEBPACK_IMPORTED_MODULE_6__["isRowsHeightCached"])({
-        startRowIndex: startRowIndex,
-        endRowIndex: endRowIndex,
-        rowHeightArr: gridRowHeightArr
-      });
-
-      if (!cached) {
-        Object(_cache_rowHeightCache__WEBPACK_IMPORTED_MODULE_6__["setRowHeightCache"])({
-          startRowIndex: startRowIndex,
-          endRowIndex: endRowIndex,
-          rowHeightArr: gridRowHeightArr
+      if (syncType === 'setState') {
+        var gridRowHeightArr = Array.prototype.slice.call(gridRowCollection).map(function (item) {
+          return item.clientHeight;
         });
+        setRowsHeightArr(gridRowHeightArr);
       }
     }
   };
@@ -3276,42 +2922,43 @@ var MultiGrid = function MultiGrid(props, ref) {
     key: "".concat(fixedLeftColumnCount, "_").concat(fixedRightColumnCount, "_").concat(hasFixed),
     columns: getColumns,
     fixedLeftColumns: getFixedLeftColumns,
-    fixedRightColumns: getFixedRightColumns // 这里加mgType是为了getBodyScrollBarWidth
+    fixedRightColumns: getFixedRightColumns // 这里加mgType是为了getBodyScrollBar
     ,
     mgType: 'mainMultiGrid'
   })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Grid__WEBPACK_IMPORTED_MODULE_1__["default"], _extends({}, props, {
     ref: multiGridContainer,
-    columns: [].concat(_toConsumableArray(getFixedLeftColumns), _toConsumableArray(getColumns), _toConsumableArray(getFixedRightColumns)),
+    columns: mainColumns,
     fixedLeftColumns: [],
     fixedRightColumns: [],
     mgType: 'mainMultiGrid',
-    onScrollTopSync: onScrollTopSync
+    onScrollTopSync: onScrollTopSync // syncRowHeight={syncRowHeight}
+
   })), getFixedLeftColumns.length > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "vt-multi-grid-fixed-left"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Grid__WEBPACK_IMPORTED_MODULE_1__["default"], _extends({}, props, {
     ref: multiGridContainerLeft,
     columns: getFixedLeftColumns,
     fixedLeftColumns: [],
-    fixedRightColumns: [] // rowsHeightCacheId={rowsHeightCacheId}
-    ,
+    fixedRightColumns: [],
+    rowsHeightArr: rowsHeightArr,
     mgType: 'leftMultiGrid',
     gridStyle: {
-      marginBottom: type === 'body' ? -bodyScrollBarWidth : undefined
+      marginBottom: type === 'body' ? -bodyScrollBarHeight : undefined
     }
   }))) : null, getFixedRightColumns.length > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "vt-multi-grid-fixed-right",
     style: {
-      marginRight: type === 'body' ? bodyScrollBarWidth : undefined
+      marginRight: type === 'body' ? bodyScrollBarHeight : undefined
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Grid__WEBPACK_IMPORTED_MODULE_1__["default"], _extends({}, props, {
     ref: multiGridContainerRight,
     columns: getFixedRightColumns,
     fixedLeftColumns: [],
-    fixedRightColumns: [] // rowsHeightCacheId={rowsHeightCacheId}
-    ,
+    fixedRightColumns: [],
+    rowsHeightArr: rowsHeightArr,
     mgType: 'rightMultiGrid',
     gridStyle: {
-      marginBottom: type === 'body' ? -bodyScrollBarWidth : undefined
+      marginBottom: type === 'body' ? -bodyScrollBarHeight : undefined
     }
   }))) : null)));
 };
@@ -3319,8 +2966,14 @@ var MultiGrid = function MultiGrid(props, ref) {
 MultiGrid.propTypes = {
   // 类型 header
   type: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string,
-  // 是否显示边框
-  bordered: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.bool
+  mgClassName: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string,
+  shouldRowHeightSync: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.bool,
+  columns: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.array,
+  dataSource: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.array,
+  hasFixed: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.bool,
+  fixedLeftColumnCount: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.number,
+  fixedRightColumnCount: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.number,
+  bodyScrollBarHeight: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.number
 };
 /* harmony default export */ __webpack_exports__["default"] = (react__WEBPACK_IMPORTED_MODULE_0___default.a.memo(react__WEBPACK_IMPORTED_MODULE_0___default.a.forwardRef(MultiGrid)));
 
@@ -3351,9 +3004,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _styles_vtable_less__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_styles_vtable_less__WEBPACK_IMPORTED_MODULE_10__);
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -3411,25 +3064,30 @@ var VTable = function VTable(props) {
       bodyScrollBarWidth = _useState4[0],
       setBodyScrollBarWidth = _useState4[1];
 
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(1),
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
       _useState6 = _slicedToArray(_useState5, 2),
-      headerLevel = _useState6[0],
-      setHeaderLevel = _useState6[1];
+      bodyScrollBarHeight = _useState6[0],
+      setBodyScrollBarHeight = _useState6[1];
 
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(1),
       _useState8 = _slicedToArray(_useState7, 2),
-      headerTitle = _useState8[0],
-      setHeaderTitle = _useState8[1];
+      headerLevel = _useState8[0],
+      setHeaderLevel = _useState8[1];
 
-  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(columnsProps),
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       _useState10 = _slicedToArray(_useState9, 2),
-      columns = _useState10[0],
-      setColumns = _useState10[1];
+      headerTitle = _useState10[0],
+      setHeaderTitle = _useState10[1];
 
-  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(columnsProps),
       _useState12 = _slicedToArray(_useState11, 2),
-      hasFixed = _useState12[0],
-      setHasFixed = _useState12[1];
+      columns = _useState12[0],
+      setColumns = _useState12[1];
+
+  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
+      _useState14 = _slicedToArray(_useState13, 2),
+      hasFixed = _useState14[0],
+      setHasFixed = _useState14[1];
 
   var summaryData = Object(_utils_base__WEBPACK_IMPORTED_MODULE_5__["sameType"])(summary, 'Function') ? summary() : summary;
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
@@ -3516,7 +3174,15 @@ var VTable = function VTable(props) {
           _columnWidth = _rowSelection$columnW2 === void 0 ? 60 : _rowSelection$columnW2,
           _rowSelection$selecte = rowSelection.selectedRowKeys,
           selectedRowKeys = _rowSelection$selecte === void 0 ? [] : _rowSelection$selecte,
-          getCheckboxProps = rowSelection.getCheckboxProps;
+          getCheckboxProps = rowSelection.getCheckboxProps,
+          rowRemoveVisible = rowSelection.rowRemoveVisible,
+          onRowRemove = rowSelection.onRowRemove; //
+
+
+      var __onRowRemove = function __onRowRemove(e, row, rowIndex, realRowIndex) {
+        e.stopPropagation();
+        onRowRemove(e, row, rowIndex, realRowIndex);
+      };
 
       autoColumns.unshift({
         type: 'checkBox',
@@ -3535,12 +3201,11 @@ var VTable = function VTable(props) {
           });
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             className: 'vt-selection',
-            onClick: function onClick(e) {
-              _onSelectAll(e);
-            }
+            onClick: _onSelectAll
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
             type: "checkbox",
-            checked: checked
+            checked: checked,
+            readOnly: true
           }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             className: "vt-show-box"
           }));
@@ -3551,7 +3216,14 @@ var VTable = function VTable(props) {
           var checked = selectedRowKeys.includes(rowKey); // 是否禁用
 
           var disabled = getCheckboxProps ? getCheckboxProps(row).disabled : false;
-          return [/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          return [rowRemoveVisible && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            key: 0,
+            onClick: function onClick(e) {
+              return __onRowRemove(e, row, rowIndex, realRowIndex);
+            }
+          }, props.rowRemoveText || /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "vt-row-remove"
+          })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             key: 1,
             className: Object(_utils_base__WEBPACK_IMPORTED_MODULE_5__["classNames"])('vt-selection', {
               'vt-selection-disabled': disabled
@@ -3563,7 +3235,8 @@ var VTable = function VTable(props) {
             }
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
             type: "checkbox",
-            checked: checked
+            checked: checked,
+            readOnly: true
           }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             className: "vt-show-box"
           }))];
@@ -3669,14 +3342,19 @@ var VTable = function VTable(props) {
 
   var onScroll = function onScroll(e) {
     var scrollLeft = e && e.target && e.target.scrollLeft;
+    window.requestAnimationFrame(function () {
+      if (vtHeader.current) {
+        vtHeader.current.gridContainer.scrollLeft = scrollLeft;
+      }
 
-    if (vtHeader.current) {
-      vtHeader.current.gridContainer.scrollLeft = scrollLeft;
-    }
+      if (vtFooter.current) {
+        vtFooter.current.gridContainer.scrollLeft = scrollLeft;
+      }
 
-    if (vtFooter.current) {
-      vtFooter.current.gridContainer.scrollLeft = scrollLeft;
-    } // vtBody.current.scrollLeft = scrollLeft;
+      if (vtBody.current) {
+        vtBody.current.gridContainer.scrollLeft = scrollLeft;
+      }
+    }); // vtBody.current.scrollLeft = scrollLeft;
     // console.log(vtHeader.current);
     // console.log(vtHeader.current.scrollLeft, vtBody.current.scrollLeft);
     // [vtHeader, vtBody].forEach((vt) => {
@@ -3684,15 +3362,20 @@ var VTable = function VTable(props) {
     //     vt.current.gridContainer.scrollLeft = scrollLeft;
     //   }
     // });
-
   }; // 获取body的滚动条宽度，然后去设置header的最后一列宽度
 
 
-  var getBodyScrollBarWidth = function getBodyScrollBarWidth(_ref2) {
+  var getBodyScrollBar = function getBodyScrollBar(_ref2) {
     var ref = _ref2.ref;
 
     if (ref && ref.current) {
-      setBodyScrollBarWidth(ref.current.offsetWidth - ref.current.clientWidth);
+      var _ref$current = ref.current,
+          offsetWidth = _ref$current.offsetWidth,
+          clientWidth = _ref$current.clientWidth,
+          offsetHeight = _ref$current.offsetHeight,
+          clientHeight = _ref$current.clientHeight;
+      setBodyScrollBarWidth(offsetWidth - clientWidth);
+      setBodyScrollBarHeight(offsetHeight - clientHeight);
     }
   };
 
@@ -3706,7 +3389,7 @@ var VTable = function VTable(props) {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_context_VTableContext__WEBPACK_IMPORTED_MODULE_2__["default"].Provider, {
     value: {
       onScroll: onScroll,
-      getBodyScrollBarWidth: getBodyScrollBarWidth,
+      getBodyScrollBar: getBodyScrollBar,
       isSticky: isSticky,
       headerTitle: headerTitle,
       summaryData: summaryData
@@ -3727,7 +3410,7 @@ var VTable = function VTable(props) {
     columns: headerColumns,
     dataSource: headerTitle,
     hasFixed: hasFixed,
-    bodyScrollBarWidth: bodyScrollBarWidth
+    bodyScrollBarHeight: bodyScrollBarHeight
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MultiGrid__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({}, props, {
     ref: vtBody,
     type: 'body',
@@ -3736,7 +3419,7 @@ var VTable = function VTable(props) {
     minRowHeight: rowHeight,
     columns: columns,
     hasFixed: hasFixed,
-    bodyScrollBarWidth: bodyScrollBarWidth
+    bodyScrollBarHeight: bodyScrollBarHeight
   })), !isSticky && summaryData && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MultiGrid__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({}, props, {
     ref: vtFooter,
     type: 'footer',
@@ -3746,7 +3429,7 @@ var VTable = function VTable(props) {
     columns: footerColumns,
     dataSource: summaryData,
     hasFixed: hasFixed,
-    bodyScrollBarWidth: bodyScrollBarWidth
+    bodyScrollBarHeight: bodyScrollBarHeight
   })), !spinning && dataSource.length < 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "vt-table-empty"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -3759,58 +3442,19 @@ var VTable = function VTable(props) {
 };
 
 VTable.propTypes = {
-  loading: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.any,
-  locale: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object,
+  isSticky: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
+  columns: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.array.isRequired,
+  dataSource: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.array.isRequired,
   wrapperClassName: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
-  rowHeight: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number
+  rowHeight: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.number,
+  rowKey: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func]),
+  rowSelection: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object,
+  rowRemoveText: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.element]),
+  summary: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.array, prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func]),
+  loading: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object, prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool]),
+  locale: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object
 };
 /* harmony default export */ __webpack_exports__["default"] = (react__WEBPACK_IMPORTED_MODULE_0___default.a.memo(VTable));
-
-/***/ }),
-
-/***/ "./libs/VTable2.0/cache/rowHeightCache.js":
-/*!************************************************!*\
-  !*** ./libs/VTable2.0/cache/rowHeightCache.js ***!
-  \************************************************/
-/*! exports provided: setRowHeightCache, isRowsHeightCached, getRowHeightArr, rowsHeightCache */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setRowHeightCache", function() { return setRowHeightCache; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isRowsHeightCached", function() { return isRowsHeightCached; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRowHeightArr", function() { return getRowHeightArr; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rowsHeightCache", function() { return rowsHeightCache; });
-var rowsHeightCache = {
-  rowsHeight: []
-};
-var cacheId = 0;
-var setRowHeightCache = function setRowHeightCache(_ref) {
-  var startRowIndex = _ref.startRowIndex,
-      endRowIndex = _ref.endRowIndex,
-      rowHeightArr = _ref.rowHeightArr;
-  var key = "rows_".concat(startRowIndex, "_").concat(endRowIndex);
-  rowsHeightCache[key] = rowHeightArr;
-  cacheId += 1;
-  return cacheId;
-};
-var isRowsHeightCached = function isRowsHeightCached(_ref2) {
-  var startRowIndex = _ref2.startRowIndex,
-      endRowIndex = _ref2.endRowIndex,
-      rowHeightArr = _ref2.rowHeightArr;
-  var key = "rows_".concat(startRowIndex, "_").concat(endRowIndex);
-  var rowHeightCacheArr = rowsHeightCache[key] || [];
-  var cached = rowHeightCacheArr.join() === rowHeightArr.join();
-  return cached;
-};
-var getRowHeightArr = function getRowHeightArr(_ref3) {
-  var startRowIndex = _ref3.startRowIndex,
-      endRowIndex = _ref3.endRowIndex;
-  var key = "rows_".concat(startRowIndex, "_").concat(endRowIndex);
-  var rowHeightArr = rowsHeightCache[key] || [];
-  return rowHeightArr;
-};
-
 
 /***/ }),
 
@@ -3845,11 +3489,12 @@ var VTableContext = react__WEBPACK_IMPORTED_MODULE_0___default.a.createContext({
 /*!*********************************!*\
   !*** ./libs/VTable2.0/index.js ***!
   \*********************************/
-/*! exports provided: default, VTable, MultiGrid, Grid */
+/*! exports provided: default, VTable, MultiGrid, Grid, utils */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "utils", function() { return utils; });
 /* harmony import */ var _VTable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./VTable */ "./libs/VTable2.0/VTable.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTable", function() { return _VTable__WEBPACK_IMPORTED_MODULE_0__["default"]; });
 
@@ -3864,7 +3509,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-_VTable__WEBPACK_IMPORTED_MODULE_0__["default"].utils = {
+var utils = {
   formatToCellsSpan: _utils_colSpanRowSpan__WEBPACK_IMPORTED_MODULE_3__["formatToCellsSpan"]
 };
 /* harmony default export */ __webpack_exports__["default"] = (_VTable__WEBPACK_IMPORTED_MODULE_0__["default"]);
@@ -3951,7 +3596,7 @@ if(false) {}
 /*!**************************************!*\
   !*** ./libs/VTable2.0/utils/base.js ***!
   \**************************************/
-/*! exports provided: sameType, isRenderCellObj, classNames */
+/*! exports provided: sameType, isRenderCellObj, classNames, queryCustomAttributeDOM */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3959,6 +3604,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sameType", function() { return sameType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isRenderCellObj", function() { return isRenderCellObj; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "classNames", function() { return classNames; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "queryCustomAttributeDOM", function() { return queryCustomAttributeDOM; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -3976,6 +3622,10 @@ var sameType = function sameType(value, type) {
 
   if (type === 'Number') {
     return Object.prototype.toString.call(value) === '[object Number]';
+  }
+
+  if (type === 'BigInt') {
+    return Object.prototype.toString.call(value) === '[object BigInt]';
   }
 
   if (type === 'Symbol') {
@@ -4043,7 +3693,21 @@ function classNames() {
 
   return className.trim();
 }
-;
+; // 查询自定义属性的DOM
+// querySelectorAll 除ASCII 字母、数字、_、- 和 . 以外的字符可能会有兼容性问题
+
+function queryCustomAttributeDOM(scopeDOM, name, value) {
+  var selectDom = [];
+  var dom = scopeDOM;
+
+  for (var i = 0; i < dom.length; i++) {
+    if (value === dom[i].getAttribute(name)) {
+      selectDom.push(dom[i]);
+    }
+  }
+
+  return selectDom;
+}
 
 /***/ }),
 
@@ -4341,11 +4005,9 @@ var getHeader2dArray = function getHeader2dArray(_ref3) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deepClone", function() { return deepClone; });
 /* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base */ "./libs/VTable2.0/utils/base.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -4361,6 +4023,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
 
 /**
  * @param {*} value The value to recursively clone.
@@ -4371,30 +4035,30 @@ var deepClone = function deepClone(value) {
   // 记录被拷贝的值，避免循环引用的出现
   var memo = new WeakMap();
 
-  function baseClone(value) {
-    var res;
+  function baseClone(data) {
+    if (_typeof(data) !== 'object' || data === null) {
+      return data;
+    }
 
-    if (Object(_base__WEBPACK_IMPORTED_MODULE_0__["sameType"])(value, 'Number') || Object(_base__WEBPACK_IMPORTED_MODULE_0__["sameType"])(value, 'String') || Object(_base__WEBPACK_IMPORTED_MODULE_0__["sameType"])(value, 'Symbol') || Object(_base__WEBPACK_IMPORTED_MODULE_0__["sameType"])(value, 'Boolean')) {
-      return value;
-    } else if (Object(_base__WEBPACK_IMPORTED_MODULE_0__["sameType"])(value, 'Array')) {
-      res = _toConsumableArray(value);
-    } else if (Object(_base__WEBPACK_IMPORTED_MODULE_0__["sameType"])(value, 'Object')) {
-      res = _objectSpread({}, value);
-    } // 检测我们浅拷贝的这个对象的属性值有没有是引用数据类型。如果是，则递归拷贝
+    if (memo.get(data)) {
+      return memo.get(data);
+    }
 
+    var newData;
 
-    Reflect.ownKeys(res).forEach(function (key) {
-      if (_typeof(res[key]) === 'object' && res[key] !== null) {
-        // 此处我们用memo来记录已经被拷贝过的引用地址。以此来解决循环引用的问题
-        if (memo.get(res[key])) {
-          res[key] = memo[res[key]];
-        } else {
-          memo.set(res[key], true);
-          res[key] = baseClone(res[key]);
-        }
+    if (Object(_base__WEBPACK_IMPORTED_MODULE_0__["sameType"])(data, 'Array')) {
+      newData = _toConsumableArray(data);
+    } else if (Object(_base__WEBPACK_IMPORTED_MODULE_0__["sameType"])(data, 'Object')) {
+      newData = _objectSpread({}, data);
+    }
+
+    memo.set(data, newData);
+    Reflect.ownKeys(data).forEach(function (key) {
+      if (_typeof(data[key]) === 'object' && data[key] !== null) {
+        newData[key] = baseClone(data[key]);
       }
     });
-    return res;
+    return newData;
   }
 
   return baseClone(value);
@@ -4693,45 +4357,69 @@ var getRowKey = function getRowKey(rowKey, row, index) {
 
 /***/ }),
 
-/***/ "./libs/index.js":
-/*!***********************!*\
-  !*** ./libs/index.js ***!
-  \***********************/
-/*! exports provided: Table, VTable, Grid, VTablePro, GridPro */
+/***/ "./libs/VTable2.0/utils/timer.js":
+/*!***************************************!*\
+  !*** ./libs/VTable2.0/utils/timer.js ***!
+  \***************************************/
+/*! exports provided: cancelTimeout, requestTimeout */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Table__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Table */ "./libs/Table/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Table", function() { return _Table__WEBPACK_IMPORTED_MODULE_0__["Table"]; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cancelTimeout", function() { return cancelTimeout; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "requestTimeout", function() { return requestTimeout; });
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
-/* harmony import */ var _VTable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./VTable */ "./libs/VTable/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTable", function() { return _VTable__WEBPACK_IMPORTED_MODULE_1__["VTable"]; });
+var hasNativePerformanceNow = (typeof performance === "undefined" ? "undefined" : _typeof(performance)) === 'object' && typeof performance.now === 'function';
+var now = hasNativePerformanceNow ? function () {
+  return performance.now();
+} : function () {
+  return Date.now();
+};
+function cancelTimeout(timeoutID) {
+  cancelAnimationFrame(timeoutID.id);
+}
+function requestTimeout(callback, delay) {
+  var start = now();
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Grid", function() { return _VTable__WEBPACK_IMPORTED_MODULE_1__["Grid"]; });
+  function tick() {
+    if (now() - start >= delay) {
+      callback.call(null);
+    } else {
+      timeoutID.id = requestAnimationFrame(tick);
+    }
+  }
 
-/* harmony import */ var _VTable2_0__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./VTable2.0 */ "./libs/VTable2.0/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTablePro", function() { return _VTable2_0__WEBPACK_IMPORTED_MODULE_2__["VTable"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GridPro", function() { return _VTable2_0__WEBPACK_IMPORTED_MODULE_2__["Grid"]; });
-
-
-
-
-
+  var timeoutID = {
+    id: requestAnimationFrame(tick)
+  };
+  return timeoutID;
+}
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/less-loader/dist/cjs.js!./libs/Table/style.less":
-/*!************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/less-loader/dist/cjs.js!./libs/Table/style.less ***!
-  \************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ "./libs/index.js":
+/*!***********************!*\
+  !*** ./libs/index.js ***!
+  \***********************/
+/*! exports provided: VTable, Grid, VTablePro, GridPro, utils */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
-// Module
-exports.push([module.i, ".v-table-header .v-table-container .v-table-main-container {\n  overflow-y: hidden;\n}\n.v-table-container {\n  display: flex;\n  border: 1px solid #e3e4e8;\n}\n.v-table-container .v-table-left-columns-container {\n  overflow: hidden;\n}\n.v-table-container .v-table-left-columns-container .v-table-row {\n  display: flex;\n}\n.v-table-container .v-table-main-container {\n  overflow: auto;\n}\n.v-table-container .v-table-main-container .v-table-row {\n  display: flex;\n}\n.v-table-container .v-table-fixed-left {\n  box-shadow: 6px 0 6px -4px rgba(0, 0, 0, 0.15);\n}\n.v-table-container .v-table-fixed-right {\n  box-shadow: -6px 0 6px -4px rgba(0, 0, 0, 0.15);\n}\n", ""]);
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _VTable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./VTable */ "./libs/VTable/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTable", function() { return _VTable__WEBPACK_IMPORTED_MODULE_0__["VTable"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Grid", function() { return _VTable__WEBPACK_IMPORTED_MODULE_0__["Grid"]; });
+
+/* harmony import */ var _VTable2_0__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./VTable2.0 */ "./libs/VTable2.0/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTablePro", function() { return _VTable2_0__WEBPACK_IMPORTED_MODULE_1__["VTable"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GridPro", function() { return _VTable2_0__WEBPACK_IMPORTED_MODULE_1__["Grid"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "utils", function() { return _VTable2_0__WEBPACK_IMPORTED_MODULE_1__["utils"]; });
+
+
 
 
 
@@ -4761,7 +4449,7 @@ exports.push([module.i, "/* VTable*/\n.v-table-header .v-grid-container {\n  bac
 
 exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".vt-grid-container {\n  flex-grow: 1;\n  position: relative;\n  overflow: auto;\n  display: flex;\n  flex-wrap: wrap;\n  font-size: 14px;\n  color: #333333;\n}\n.vt-grid-container .vt-grid-row {\n  display: flex;\n  contain: layout paint;\n}\n.vt-grid-container .vt-grid-row:hover .vt-grid-cell {\n  background: #ebf5ff;\n}\n.vt-grid-container .vt-grid-row.vt-grid-row-selected .vt-grid-cell {\n  background: #ebf5ff;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell {\n  display: flex;\n  align-items: center;\n  background: #fff;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-align-left {\n  justify-content: flex-start;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-align-right {\n  justify-content: flex-end;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-align-center {\n  justify-content: center;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-default-bordered {\n  box-sizing: border-box;\n  border-bottom: 1px solid #d1d3d8;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-default-bordered.vt-bordered-right {\n  border-right: 1px solid #d1d3d8;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-default-bordered.vt-has-last-child-border-right:last-child {\n  border-right: 1px solid #d1d3d8;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-default-bordered.vt-no-last-child-border-right:last-child {\n  border-right: none;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-cell-fix-left-last {\n  border-right: none !important;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-cell-fix-left-last:after,\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-cell-fix-right-first:after {\n  position: absolute;\n  top: 0;\n  bottom: -1px;\n  width: 30px;\n  transition: box-shadow 0.3s, -webkit-box-shadow 0.3s;\n  content: \"\";\n  pointer-events: none;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-cell-fix-left-last:after {\n  right: 0;\n  box-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.15);\n  transform: translateX(100%);\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-cell-fix-right-first:after {\n  left: 0;\n  box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.15);\n  transform: translateX(-100%);\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell .vt-ellipsis {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n", ""]);
+exports.push([module.i, ".vt-grid-container {\n  flex-grow: 1;\n  position: relative;\n  overflow: auto;\n  display: flex;\n  flex-wrap: wrap;\n  font-size: 14px;\n  color: #333333;\n}\n.vt-grid-container .vt-grid-row {\n  position: relative;\n  display: flex;\n  contain: layout paint;\n}\n.vt-grid-container .vt-grid-row:hover .vt-grid-cell {\n  background: #ebf5ff;\n}\n.vt-grid-container .vt-grid-row.vt-grid-row-selected .vt-grid-cell {\n  background: #ebf5ff;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell {\n  display: flex;\n  align-items: center;\n  background: #fff;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-align-left {\n  justify-content: flex-start;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-align-right {\n  justify-content: flex-end;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-align-center {\n  justify-content: center;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-default-bordered {\n  box-sizing: border-box;\n  border-bottom: 1px solid #d1d3d8;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-default-bordered.vt-bordered-right {\n  border-right: 1px solid #d1d3d8;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-default-bordered.vt-has-last-child-border-right:last-child {\n  border-right: 1px solid #d1d3d8;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-default-bordered.vt-no-last-child-border-right:last-child {\n  border-right: none;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-cell-fix-left-last {\n  border-right: none !important;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-cell-fix-left-last:after,\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-cell-fix-right-first:after {\n  position: absolute;\n  top: 0;\n  bottom: -1px;\n  width: 30px;\n  transition: box-shadow 0.3s, -webkit-box-shadow 0.3s;\n  content: \"\";\n  pointer-events: none;\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-cell-fix-left-last:after {\n  right: 0;\n  box-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.15);\n  transform: translateX(100%);\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell.vt-cell-fix-right-first:after {\n  left: 0;\n  box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.15);\n  transform: translateX(-100%);\n}\n.vt-grid-container .vt-grid-row .vt-grid-cell .vt-ellipsis {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n", ""]);
 
 
 
@@ -4791,7 +4479,7 @@ exports.push([module.i, ".vt-multi-grid-container {\n  display: flex;\n}\n.vt-mu
 
 exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".vt-table {\n  /* vvv todo 待优化 支持table有border*/\n  /* ^^^ */\n  position: relative;\n}\n.vt-table .vt-table-header .vt-grid-container::-webkit-scrollbar {\n  display: none;\n}\n.vt-table .vt-table-header.vt-header-sticky {\n  z-index: 3;\n  position: sticky;\n  top: 0;\n}\n.vt-table .vt-table-header .vt-grid-row {\n  contain: none;\n}\n.vt-table .vt-table-header .vt-grid-row:hover .vt-grid-cell {\n  background: #e9ebf0;\n}\n.vt-table .vt-table-header .vt-grid-row .vt-grid-cell {\n  background: #e9ebf0;\n  font-weight: 700;\n}\n.vt-table .vt-table-footer {\n  margin-top: -1px;\n}\n.vt-table .vt-table-footer .vt-grid-container::-webkit-scrollbar {\n  display: none;\n}\n.vt-table .vt-table-footer.vt-footer-sticky {\n  z-index: 3;\n  position: sticky;\n  bottom: 0;\n}\n.vt-table .vt-table-footer .vt-grid-row:hover .vt-grid-cell {\n  background: #fffae6;\n}\n.vt-table .vt-table-footer .vt-grid-row .vt-grid-cell {\n  background: #fffae6;\n  border-bottom: none;\n  border-top: 1px solid #d1d3d8;\n}\n.vt-table .vt-selection {\n  position: relative;\n  cursor: pointer;\n  width: 16px;\n  height: 16px;\n}\n.vt-table .vt-selection input {\n  display: none;\n}\n.vt-table .vt-selection input:checked + .vt-show-box:before {\n  border: solid #ff8040;\n  border-width: 0 2px 2px 0;\n}\n.vt-table .vt-selection .vt-show-box {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 16px;\n  height: 16px;\n  border-radius: 2px;\n  border: 1px solid #d1d3d8;\n  background: #fff;\n}\n.vt-table .vt-selection .vt-show-box:hover {\n  border-color: #ff8040;\n}\n.vt-table .vt-selection .vt-show-box:before {\n  content: '';\n  position: absolute;\n  top: 2px;\n  left: 5px;\n  width: 5px;\n  height: 8px;\n  border: solid #fff;\n  border-width: 0 2px 2px 0;\n  transform: rotate(45deg);\n}\n.vt-table .vt-selection-disabled {\n  cursor: not-allowed;\n}\n.vt-table .vt-selection-disabled .vt-show-box {\n  background: #eee;\n}\n.vt-table .vt-selection-disabled .vt-show-box:hover {\n  border-color: #d1d3d8;\n}\n.vt-table .vt-selection-disabled .vt-show-box:before {\n  border: solid transparent;\n}\n.vt-table .vt-table-loading {\n  z-index: 20;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  opacity: 0.8;\n  background: #fff;\n}\n.vt-table .vt-table-empty {\n  z-index: 20;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  pointer-events: none;\n}\n", ""]);
+exports.push([module.i, ".vt-table {\n  /* vvv todo 待优化 支持table有border*/\n  /* ^^^ */\n  position: relative;\n}\n.vt-table .vt-table-header .vt-grid-container::-webkit-scrollbar {\n  display: none;\n}\n.vt-table .vt-table-header.vt-header-sticky {\n  z-index: 3;\n  position: sticky;\n  top: 0;\n}\n.vt-table .vt-table-header .vt-grid-row {\n  contain: none;\n}\n.vt-table .vt-table-header .vt-grid-row:hover .vt-grid-cell {\n  background: #e9ebf0;\n}\n.vt-table .vt-table-header .vt-grid-row .vt-grid-cell {\n  background: #e9ebf0 !important;\n  font-weight: 700;\n}\n.vt-table .vt-table-footer {\n  margin-top: -1px;\n}\n.vt-table .vt-table-footer .vt-grid-container::-webkit-scrollbar {\n  display: none;\n}\n.vt-table .vt-table-footer.vt-footer-sticky {\n  z-index: 3;\n  position: sticky;\n  bottom: 0;\n}\n.vt-table .vt-table-footer .vt-grid-row:hover .vt-grid-cell {\n  background: #fffae6;\n}\n.vt-table .vt-table-footer .vt-grid-row .vt-grid-cell {\n  background: #fffae6;\n  border-bottom: none;\n  border-top: 1px solid #d1d3d8;\n}\n.vt-table .vt-selection {\n  position: relative;\n  cursor: pointer;\n  width: 16px;\n  height: 16px;\n}\n.vt-table .vt-selection input {\n  display: none;\n}\n.vt-table .vt-selection input:checked + .vt-show-box:before {\n  border: solid #ff8040;\n  border-width: 0 2px 2px 0;\n}\n.vt-table .vt-selection .vt-show-box {\n  box-sizing: border-box;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 16px;\n  height: 16px;\n  border-radius: 2px;\n  border: 1px solid #d1d3d8;\n  background: #fff;\n}\n.vt-table .vt-selection .vt-show-box:hover {\n  border-color: #ff8040;\n}\n.vt-table .vt-selection .vt-show-box:before {\n  content: '';\n  position: absolute;\n  top: 1px;\n  left: 4px;\n  width: 5px;\n  height: 8px;\n  border: solid #fff;\n  border-width: 0 2px 2px 0;\n  transform: rotate(45deg);\n}\n.vt-table .vt-selection-disabled {\n  cursor: not-allowed;\n}\n.vt-table .vt-selection-disabled .vt-show-box {\n  background: #eee;\n}\n.vt-table .vt-selection-disabled .vt-show-box:hover {\n  border-color: #d1d3d8;\n}\n.vt-table .vt-selection-disabled .vt-show-box:before {\n  border: solid transparent;\n}\n.vt-table .vt-grid-row.vt-grid-row-hover .vt-grid-cell {\n  background: #ebf5ff;\n}\n.vt-table .vt-grid-row.vt-grid-row-hover .vt-row-remove {\n  position: absolute;\n  top: -20px;\n  left: -20px;\n  border: 20px solid;\n  border-color: red transparent transparent transparent;\n  transform: rotate(135deg);\n  cursor: pointer;\n}\n.vt-table .vt-grid-row.vt-grid-row-hover .vt-row-remove:after {\n  content: \"x\";\n  position: absolute;\n  top: -20px;\n  left: -2px;\n  color: #fff;\n  transform: rotate(45deg);\n}\n.vt-table .vt-grid-row:hover .vt-row-remove {\n  position: absolute;\n  top: -20px;\n  left: -20px;\n  border: 20px solid;\n  border-color: red transparent transparent transparent;\n  transform: rotate(135deg);\n  cursor: pointer;\n}\n.vt-table .vt-grid-row:hover .vt-row-remove:after {\n  content: \"x\";\n  position: absolute;\n  top: -20px;\n  left: -2px;\n  color: #fff;\n  transform: rotate(45deg);\n}\n.vt-table .vt-table-loading {\n  z-index: 20;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  opacity: 0.8;\n  background: #fff;\n}\n.vt-table .vt-table-empty {\n  z-index: 20;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  pointer-events: none;\n}\n", ""]);
 
 
 
@@ -5017,7 +4705,7 @@ var printWarning = function() {};
 if (true) {
   var ReactPropTypesSecret = __webpack_require__(/*! ./lib/ReactPropTypesSecret */ "./node_modules/prop-types/lib/ReactPropTypesSecret.js");
   var loggedTypeFailures = {};
-  var has = Function.call.bind(Object.prototype.hasOwnProperty);
+  var has = __webpack_require__(/*! ./lib/has */ "./node_modules/prop-types/lib/has.js");
 
   printWarning = function(text) {
     var message = 'Warning: ' + text;
@@ -5029,7 +4717,7 @@ if (true) {
       // This error was thrown as a convenience so that you can use this stack
       // to find the callsite that caused this warning to fire.
       throw new Error(message);
-    } catch (x) {}
+    } catch (x) { /**/ }
   };
 }
 
@@ -5058,7 +4746,8 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
           if (typeof typeSpecs[typeSpecName] !== 'function') {
             var err = Error(
               (componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' +
-              'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.'
+              'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' +
+              'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.'
             );
             err.name = 'Invariant Violation';
             throw err;
@@ -5130,9 +4819,9 @@ var ReactIs = __webpack_require__(/*! react-is */ "./node_modules/react-is/index
 var assign = __webpack_require__(/*! object-assign */ "./node_modules/object-assign/index.js");
 
 var ReactPropTypesSecret = __webpack_require__(/*! ./lib/ReactPropTypesSecret */ "./node_modules/prop-types/lib/ReactPropTypesSecret.js");
+var has = __webpack_require__(/*! ./lib/has */ "./node_modules/prop-types/lib/has.js");
 var checkPropTypes = __webpack_require__(/*! ./checkPropTypes */ "./node_modules/prop-types/checkPropTypes.js");
 
-var has = Function.call.bind(Object.prototype.hasOwnProperty);
 var printWarning = function() {};
 
 if (true) {
@@ -5233,6 +4922,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
   // Keep this list in sync with production version in `./factoryWithThrowingShims.js`.
   var ReactPropTypes = {
     array: createPrimitiveTypeChecker('array'),
+    bigint: createPrimitiveTypeChecker('bigint'),
     bool: createPrimitiveTypeChecker('boolean'),
     func: createPrimitiveTypeChecker('function'),
     number: createPrimitiveTypeChecker('number'),
@@ -5278,8 +4968,9 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
    * is prohibitively expensive if they are created too often, such as what
    * happens in oneOfType() for any type before the one that matched.
    */
-  function PropTypeError(message) {
+  function PropTypeError(message, data) {
     this.message = message;
+    this.data = data && typeof data === 'object' ? data: {};
     this.stack = '';
   }
   // Make `instanceof Error` still work for returned errors.
@@ -5314,7 +5005,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
           ) {
             printWarning(
               'You are manually calling a React.PropTypes validation ' +
-              'function for the `' + propFullName + '` prop on `' + componentName  + '`. This is deprecated ' +
+              'function for the `' + propFullName + '` prop on `' + componentName + '`. This is deprecated ' +
               'and will throw in the standalone `prop-types` package. ' +
               'You may be seeing this warning due to a third-party PropTypes ' +
               'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.'
@@ -5353,7 +5044,10 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
         // 'of type `object`'.
         var preciseType = getPreciseType(propValue);
 
-        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + preciseType + '` supplied to `' + componentName + '`, expected ') + ('`' + expectedType + '`.'));
+        return new PropTypeError(
+          'Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + preciseType + '` supplied to `' + componentName + '`, expected ') + ('`' + expectedType + '`.'),
+          {expectedType: expectedType}
+        );
       }
       return null;
     }
@@ -5497,14 +5191,19 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
     }
 
     function validate(props, propName, componentName, location, propFullName) {
+      var expectedTypes = [];
       for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
         var checker = arrayOfTypeCheckers[i];
-        if (checker(props, propName, componentName, location, propFullName, ReactPropTypesSecret) == null) {
+        var checkerResult = checker(props, propName, componentName, location, propFullName, ReactPropTypesSecret);
+        if (checkerResult == null) {
           return null;
         }
+        if (checkerResult.data && has(checkerResult.data, 'expectedType')) {
+          expectedTypes.push(checkerResult.data.expectedType);
+        }
       }
-
-      return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`.'));
+      var expectedTypesMessage = (expectedTypes.length > 0) ? ', expected one of type [' + expectedTypes.join(', ') + ']': '';
+      return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`' + expectedTypesMessage + '.'));
     }
     return createChainableTypeChecker(validate);
   }
@@ -5519,6 +5218,13 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
     return createChainableTypeChecker(validate);
   }
 
+  function invalidValidatorError(componentName, location, propFullName, key, type) {
+    return new PropTypeError(
+      (componentName || 'React class') + ': ' + location + ' type `' + propFullName + '.' + key + '` is invalid; ' +
+      'it must be a function, usually from the `prop-types` package, but received `' + type + '`.'
+    );
+  }
+
   function createShapeTypeChecker(shapeTypes) {
     function validate(props, propName, componentName, location, propFullName) {
       var propValue = props[propName];
@@ -5528,8 +5234,8 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
       }
       for (var key in shapeTypes) {
         var checker = shapeTypes[key];
-        if (!checker) {
-          continue;
+        if (typeof checker !== 'function') {
+          return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
         }
         var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
         if (error) {
@@ -5548,16 +5254,18 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
       if (propType !== 'object') {
         return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
       }
-      // We need to check all keys in case some are required but missing from
-      // props.
+      // We need to check all keys in case some are required but missing from props.
       var allKeys = assign({}, props[propName], shapeTypes);
       for (var key in allKeys) {
         var checker = shapeTypes[key];
+        if (has(shapeTypes, key) && typeof checker !== 'function') {
+          return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
+        }
         if (!checker) {
           return new PropTypeError(
             'Invalid ' + location + ' `' + propFullName + '` key `' + key + '` supplied to `' + componentName + '`.' +
             '\nBad object: ' + JSON.stringify(props[propName], null, '  ') +
-            '\nValid keys: ' +  JSON.stringify(Object.keys(shapeTypes), null, '  ')
+            '\nValid keys: ' + JSON.stringify(Object.keys(shapeTypes), null, '  ')
           );
         }
         var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
@@ -5758,6 +5466,18 @@ if (true) {
 var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
+
+
+/***/ }),
+
+/***/ "./node_modules/prop-types/lib/has.js":
+/*!********************************************!*\
+  !*** ./node_modules/prop-types/lib/has.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = Function.call.bind(Object.prototype.hasOwnProperty);
 
 
 /***/ }),

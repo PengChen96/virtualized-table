@@ -12,12 +12,13 @@
   font-size: 14px;
   color: #333333;
   .@{prefix}-grid-row {
-    position: inherit;
+    position: relative;
     display: flex;
     contain: layout paint; // 使row间paint不影响
     &:hover .@{prefix}-grid-cell {
       background: #ebf5ff;
     }
+
     &.@{prefix}-grid-row-selected {
       .@{prefix}-grid-cell {
         background: #ebf5ff;

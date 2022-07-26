@@ -154,7 +154,7 @@ const Grid = (props, ref) => {
     //
     if (type === 'body' && mgType === 'mainMultiGrid') {
       setTimeout(() => {
-        _VTableContext.getBodyScrollBarWidth({ref: gridContainer});
+        _VTableContext.getBodyScrollBar({ref: gridContainer});
       }, 0);
     }
 
