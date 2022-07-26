@@ -26,7 +26,8 @@ const MultiGrid =  (props, ref) => {
     dataSource,
     fixedLeftColumnCount = 0,
     fixedRightColumnCount = 0,
-    bodyScrollBarHeight
+    bodyScrollBarWidth,
+    bodyScrollBarHeight,
   } = props;
   //
   const multiGridContainerLeft = useRef(null);
@@ -168,7 +169,7 @@ const MultiGrid =  (props, ref) => {
           }
           {
             getFixedRightColumns.length > 0 ? <div className="vt-multi-grid-fixed-right" style={{
-              marginRight: type === 'body' ? bodyScrollBarHeight : undefined
+              marginRight: type === 'body' ? bodyScrollBarWidth : undefined
             }}>
               <Grid
                 {...props}
@@ -201,6 +202,7 @@ MultiGrid.propTypes = {
   hasFixed: PropTypes.bool,
   fixedLeftColumnCount: PropTypes.number,
   fixedRightColumnCount: PropTypes.number,
+  bodyScrollBarWidth: PropTypes.number,
   bodyScrollBarHeight: PropTypes.number,
 };
 

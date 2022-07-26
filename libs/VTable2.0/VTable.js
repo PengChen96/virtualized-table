@@ -284,6 +284,7 @@ const VTable = (props) => {
             columns={headerColumns}
             dataSource={headerTitle}
             hasFixed={hasFixed}
+            bodyScrollBarWidth={bodyScrollBarWidth}
             bodyScrollBarHeight={bodyScrollBarHeight}
           />
         }
@@ -296,6 +297,7 @@ const VTable = (props) => {
           minRowHeight={rowHeight}
           columns={columns}
           hasFixed={hasFixed}
+          bodyScrollBarWidth={bodyScrollBarWidth}
           bodyScrollBarHeight={bodyScrollBarHeight}
         />
         {
@@ -309,6 +311,7 @@ const VTable = (props) => {
             columns={footerColumns}
             dataSource={summaryData}
             hasFixed={hasFixed}
+            bodyScrollBarWidth={bodyScrollBarWidth}
             bodyScrollBarHeight={bodyScrollBarHeight}
           />
         }
