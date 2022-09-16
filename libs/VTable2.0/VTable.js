@@ -198,7 +198,7 @@ const VTable = (props) => {
       const k = getRowKey(rowKeyProps, v, i);
       return _selectedRowKeys.includes(k);
     });
-    onChange(_selectedRowKeys, _selectedRows);
+    onChange(_selectedRows.map((v, i) => getRowKey(rowKeyProps, v, i)), _selectedRows);
     onSelect(row, selected, _selectedRows, e);
   };
   // 勾选全部
