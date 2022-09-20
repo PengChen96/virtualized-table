@@ -538,7 +538,8 @@ const Grid = (props, ref) => {
       data-key={`row_${_rowKey}`}
       className={classNames(
         'vt-grid-row',
-        {'vt-grid-row-selected': selected}
+        {'vt-grid-row-selected': selected},
+        additionalRowProps.className
       )}
       style={{
         height,
