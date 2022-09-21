@@ -193,12 +193,16 @@ const VTable = (props) => {
       rowKeysSet.add(rowKey);
       selected = true;
     }
-    const _selectedRowKeys = Array.from(rowKeysSet);
+    const _selectedRowKeys = [];
+    const __selectedRowKeys = Array.from(rowKeysSet);
     const _selectedRows = dataSource.filter((v, i) => {
       const k = getRowKey(rowKeyProps, v, i);
-      return _selectedRowKeys.includes(k);
+      if (__selectedRowKeys.includes(k)) {
+        _selectedRowKeys.push(k);
+        return true;
+      }
     });
-    onChange(_selectedRows.map((v, i) => getRowKey(rowKeyProps, v, i)), _selectedRows);
+    onChange(_selectedRowKeys, _selectedRows);
     onSelect(row, selected, _selectedRows, e);
   };
   // 勾选全部
@@ -243,15 +247,6 @@ const VTable = (props) => {
         vtBody.current.gridContainer.scrollLeft = scrollLeft;
       }
     });
-
-    // vtBody.current.scrollLeft = scrollLeft;
-    // console.log(vtHeader.current);
-    // console.log(vtHeader.current.scrollLeft, vtBody.current.scrollLeft);
-    // [vtHeader, vtBody].forEach((vt) => {
-    //   if(vt.current.gridContainer.scrollLeft !== scrollLeft) {
-    //     vt.current.gridContainer.scrollLeft = scrollLeft;
-    //   }
-    // });
   };
   // 获取body的滚动条宽度，然后去设置header的最后一列宽度
   const getBodyScrollBar = ({ref}) => {
