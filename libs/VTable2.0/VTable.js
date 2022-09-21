@@ -193,12 +193,16 @@ const VTable = (props) => {
       rowKeysSet.add(rowKey);
       selected = true;
     }
-    const _selectedRowKeys = Array.from(rowKeysSet);
+    const _selectedRowKeys = [];
+    const __selectedRowKeys = Array.from(rowKeysSet);
     const _selectedRows = dataSource.filter((v, i) => {
       const k = getRowKey(rowKeyProps, v, i);
-      return _selectedRowKeys.includes(k);
+      if (__selectedRowKeys.includes(k)) {
+        _selectedRowKeys.push(k);
+        return true;
+      }
     });
-    onChange(_selectedRows.map((v, i) => getRowKey(rowKeyProps, v, i)), _selectedRows);
+    onChange(_selectedRowKeys, _selectedRows);
     onSelect(row, selected, _selectedRows, e);
   };
   // 勾选全部

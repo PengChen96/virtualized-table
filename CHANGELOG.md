@@ -1,4 +1,7 @@
 
+## 0.2.5
+### 修复勾选onChange时，selectedRowKeys值不对的问题
+
 ## 0.2.1-0.2.4
 ### 支持onRow能在RowComponent上添加className
 
