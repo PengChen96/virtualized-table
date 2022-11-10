@@ -102,7 +102,7 @@ const VTable = (props) => {
     });
     // 加上勾选列
     if (rowSelection) {
-      const {columnWidth = 60, selectedRowKeys = [], getCheckboxProps, rowRemoveVisible, onRowRemove} = rowSelection;
+      const {columnProps = {}, columnWidth = 60, columnTitle, selectedRowKeys = [], getCheckboxProps, rowRemoveVisible, onRowRemove} = rowSelection;
       //
       const __onRowRemove = (e, row, rowIndex, realRowIndex) => {
         e.stopPropagation();
@@ -113,18 +113,23 @@ const VTable = (props) => {
         dataIndex: 'checkBox',
         width: columnWidth,
         align: 'center',
+        ...columnProps,
         _headerCellProps: (value, row, rowIndex) => {
           return {rowSpan: rowIndex === 0 ? headerLevel : 0};
         },
         title: () => {
           const checked = getCheckedAll({selectedRowKeys, getCheckboxProps});
-          return <div
-            className={'vt-selection'}
-            onClick={_onSelectAll}
-          >
-            <input type="checkbox" checked={checked} readOnly/>
-            <div className="vt-show-box"/>
-          </div>;
+          return [
+            <div
+              key={0}
+              className={'vt-selection'}
+              onClick={_onSelectAll}
+            >
+              <input type="checkbox" checked={checked} readOnly/>
+              <div className="vt-show-box"/>
+            </div>,
+            columnTitle
+          ];
         },
         render: (value, row, rowIndex, realRowIndex) => {
           // 是否选中
