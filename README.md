@@ -100,7 +100,8 @@ onRow | 设置行属性 | function(row, realRowIndex) | -
 #### columns
 参数 | 说明 | 类型 | 默认值
 ---|---|---|---
-align | 设置列的对齐方式 | string | 'left'，'right'，'center'
+headerAlign | 设置列表头的对齐方式 | string / 'left'，'right'，'center' | 'center'
+align | 设置列的对齐方式 | string / 'left'，'right'，'center' | 'left'
 dataIndex | 列数据在数据项中对应的路径，暂不支持通过数组查询嵌套路径 | string | -
 ellipsis | 是否显示省略号 | boolean | false
 key | 列数据的键值 | string | -
@@ -130,6 +131,8 @@ render(value) {
 参数 | 说明 | 类型 | 默认值
 ---|---|---|---
 columnWidth | 自定义列表选择框宽度 | number | 60
+columnTitle | 自定义列表选择框标题 | string / ReactNode | -
+columnProps | 自定义列属性 | object | -
 rowRemoveVisible | hover显示行删除图标 | boolean | false
 selectedRowKeys | 指定选中项的 key 数组，需要和 onChange 进行配合 | string[]/number[] | []
 getCheckboxProps | 选择框的默认属性配置 | function(record) | -

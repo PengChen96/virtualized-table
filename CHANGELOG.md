@@ -1,3 +1,5 @@
+## 0.2.6
+### rowSelection新增columnTitle、columnProps参数
 
 ## 0.2.5
 ### 修复勾选onChange时，selectedRowKeys值不对的问题
