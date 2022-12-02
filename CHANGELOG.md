@@ -1,3 +1,6 @@
+## 0.2.7
+### 设置column默认width为150，跟estimatedColumnWidth保持一致
+
 ## 0.2.6
 ### rowSelection新增columnTitle、columnProps参数
 

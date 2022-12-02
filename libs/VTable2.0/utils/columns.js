@@ -70,7 +70,7 @@ export const flattenColumns = (
       if (childColumns && childColumns.length > 0) {
         flatten(childColumns, index);
       } else {
-        column.width = column.width || 100;
+        column.width = column.width || 150;
         newColumns.push(column);
       }
     });
