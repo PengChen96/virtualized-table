@@ -1,3 +1,6 @@
+## 0.2.8
+### 支持rowSelection的getCheckboxProps可通过notVisible设置勾选框不可见
+
 ## 0.2.7
 ### 设置column默认width为150，跟estimatedColumnWidth保持一致
 
