@@ -136,12 +136,18 @@ const VTable = (props) => {
           const rowKey = getRowKey(rowKeyProps, row, realRowIndex);
           const checked = selectedRowKeys.includes(rowKey);
           // 是否禁用
-          let disabled = getCheckboxProps ? getCheckboxProps(row).disabled : false;
+          let disabled = false;
+          let visible = true;
+          if (getCheckboxProps) {
+            const checkboxProps = getCheckboxProps(row) || {};
+            disabled = checkboxProps.disabled;
+            visible = checkboxProps.visible !== false;
+          }
           return [
             rowRemoveVisible && <div key={0} onClick={(e) => __onRowRemove(e, row, rowIndex, realRowIndex)}>
               {props.rowRemoveText || <div className="vt-row-remove"/>}
             </div>,
-            <div
+            visible && <div
               key={1}
               className={classNames(
                 'vt-selection',
