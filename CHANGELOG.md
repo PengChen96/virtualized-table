@@ -1,4 +1,4 @@
-## 0.2.8
+## 0.2.8-0.2.9
 ### 支持rowSelection的getCheckboxProps可通过notVisible设置勾选框不可见
 
 ## 0.2.7
