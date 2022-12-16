@@ -178,8 +178,10 @@ const VTable = (props) => {
   }) => {
     const allEffectiveRowKeys = [];
     dataSource.forEach((r, i) => {
-      // 没有被禁用
-      if (getCheckboxProps ? !getCheckboxProps(r).disabled : true) {
+      const disabled = getCheckboxProps ? getCheckboxProps(r).disabled : false;
+      const notVisible = getCheckboxProps ? getCheckboxProps(r).notVisible : false;
+      // 没有被禁用 && 可见
+      if (!disabled && !notVisible) {
         allEffectiveRowKeys.push(getRowKey(rowKeyProps, r, i));
       }
     });
@@ -230,11 +232,12 @@ const VTable = (props) => {
       let _selectedRowKeys = [];
       let _selectedRows = dataSource.filter((v, i) => {
         const disabled = getCheckboxProps ? getCheckboxProps(v).disabled : false;
-        if (!disabled) {
+        const notVisible = getCheckboxProps ? getCheckboxProps(v).notVisible : false;
+        if (!disabled && !notVisible) {
           const k = getRowKey(rowKeyProps, v, i);
           _selectedRowKeys.push(k);
         }
-        return !disabled;
+        return !disabled && !notVisible;
       });
       onChange(_selectedRowKeys, _selectedRows);
       // selected, selectedRows
