@@ -136,12 +136,18 @@ const VTable = (props) => {
           const rowKey = getRowKey(rowKeyProps, row, realRowIndex);
           const checked = selectedRowKeys.includes(rowKey);
           // 是否禁用
-          let disabled = getCheckboxProps ? getCheckboxProps(row).disabled : false;
+          let disabled = false;
+          let notVisible = false;
+          if (getCheckboxProps) {
+            const checkboxProps = getCheckboxProps(row) || {};
+            disabled = checkboxProps.disabled;
+            notVisible = checkboxProps.notVisible;
+          }
           return [
             rowRemoveVisible && <div key={0} onClick={(e) => __onRowRemove(e, row, rowIndex, realRowIndex)}>
               {props.rowRemoveText || <div className="vt-row-remove"/>}
             </div>,
-            <div
+            notVisible ? null : <div
               key={1}
               className={classNames(
                 'vt-selection',
@@ -172,8 +178,10 @@ const VTable = (props) => {
   }) => {
     const allEffectiveRowKeys = [];
     dataSource.forEach((r, i) => {
-      // 没有被禁用
-      if (getCheckboxProps ? !getCheckboxProps(r).disabled : true) {
+      const disabled = getCheckboxProps ? getCheckboxProps(r).disabled : false;
+      const notVisible = getCheckboxProps ? getCheckboxProps(r).notVisible : false;
+      // 没有被禁用 && 可见
+      if (!disabled && !notVisible) {
         allEffectiveRowKeys.push(getRowKey(rowKeyProps, r, i));
       }
     });
@@ -224,11 +232,12 @@ const VTable = (props) => {
       let _selectedRowKeys = [];
       let _selectedRows = dataSource.filter((v, i) => {
         const disabled = getCheckboxProps ? getCheckboxProps(v).disabled : false;
-        if (!disabled) {
+        const notVisible = getCheckboxProps ? getCheckboxProps(v).notVisible : false;
+        if (!disabled && !notVisible) {
           const k = getRowKey(rowKeyProps, v, i);
           _selectedRowKeys.push(k);
         }
-        return !disabled;
+        return !disabled && !notVisible;
       });
       onChange(_selectedRowKeys, _selectedRows);
       // selected, selectedRows
