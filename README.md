@@ -70,6 +70,7 @@ fixedRightColumnCount | 右边固定列 列数 | number | 0
 fixedRowHeight | 固定行高(需要行合并/分组表头时设置为true) | boolean | false
 headerBordered | 是否显示表头边框,不设置则按bordered | boolean | false
 isSticky | 是否使用粘性布局 | boolean | - 看浏览器是否支持sticky
+headerNotSticky | 表头不使用粘性布局 | boolean | false
 loading | 页面是否加载中 | boolean / Spin props | false
 locale | 默认文案设置，目前包括空数据文案 | object | emptyText: 暂无数据
 rowHeight | 表格行高 | number | 40

@@ -19,6 +19,7 @@ const VTable = (props) => {
 
   const {
     isSticky: isStickyProps,
+    headerNotSticky = false,
     rowKey: rowKeyProps,
     rowSelection,
     columns: columnsProps = [],
@@ -274,13 +275,18 @@ const VTable = (props) => {
   let spinning = sameType(loading, 'Object') ? loading.spinning : loading;
   const headerHeight = rowHeight * headerLevel; // 表头高度
   const footerHeight = summaryData ? rowHeight * summaryData.length : 0; // 总结栏高度
-  const bodyHeight = !isSticky ? visibleHeight - headerHeight - footerHeight : visibleHeight; // body高度
+  // const bodyHeight = !isSticky ? visibleHeight - headerHeight - footerHeight : visibleHeight; // body高度
+  let bodyHeight = !isSticky ? visibleHeight - footerHeight : visibleHeight;
+  if (!isSticky || headerNotSticky) {
+    bodyHeight = bodyHeight - headerHeight;
+  }
   return <>
     <VTableContext.Provider
       value={{
         onScroll,
         getBodyScrollBar,
         isSticky: isSticky,
+        headerNotSticky,
         headerTitle: headerTitle,
         summaryData: summaryData
       }}
@@ -291,7 +297,7 @@ const VTable = (props) => {
         style={{height: visibleHeight}}
       >
         {
-          !isSticky && <MultiGrid
+          (!isSticky || headerNotSticky) && <MultiGrid
             {...props}
             ref={vtHeader}
             type={'header'}
