@@ -344,10 +344,11 @@ const Grid = (props, ref) => {
       footer: sameType(column.onFooterCell, 'Function') ? column.onFooterCell(column, realRowIndex) : undefined,
     };
     const additionalCellProps = cellPropsMap[type] || defaultCellProps;
+    const cellKey = `cell_${type === 'body' ? realRowIndex : type}_${realColumnIndex}`;
     return <CellComponent
       {...additionalCellProps}
-      key={`cell_${realRowIndex}_${realColumnIndex}`}
-      data-key={`cell_${realRowIndex}_${realColumnIndex}`}
+      key={cellKey}
+      data-key={cellKey}
       className={`vt-grid-cell ${cellFixedShadow} ${cellBordered} ${align} ${className}`}
       onClick={(e) => __onCellTap(e,
         value,
@@ -560,7 +561,7 @@ const Grid = (props, ref) => {
   };
 
   const onScrollCapture = (e) => {
-    if (!_VTableContext.isSticky && mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
+    if ((!_VTableContext.isSticky || _VTableContext.headerNotSticky) && mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
     if (type === 'body' && onScrollTopSync) onScrollTopSync(e);
     _onScrollEvent();
     // 设置元素不对指针事件做出反应
@@ -602,7 +603,8 @@ const Grid = (props, ref) => {
       }}>
         {
           // sticky header
-          _VTableContext.isSticky && <div className="vt-table-header vt-header-sticky">
+          (_VTableContext.isSticky && !_VTableContext.headerNotSticky) &&
+          <div className="vt-table-header vt-header-sticky">
             {
               _VTableContext.headerTitle.map((row, rowIndex) => {
                 // 行渲染
