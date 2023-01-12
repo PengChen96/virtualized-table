@@ -1,3 +1,6 @@
+## 0.2.10
+### headerNotSticky 表头不使用粘性布局
+
 ## 0.2.8-0.2.9
 ### 支持rowSelection的getCheckboxProps可通过notVisible设置勾选框不可见
 
