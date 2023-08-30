@@ -1,6 +1,6 @@
 {
   "name": "virtualized-table",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "Large data volume table",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"

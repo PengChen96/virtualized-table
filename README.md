@@ -105,6 +105,7 @@ headerAlign | 设置列表头的对齐方式 | string / 'left'，'right'，'cent
 align | 设置列的对齐方式 | string / 'left'，'right'，'center' | 'left'
 dataIndex | 列数据在数据项中对应的路径，暂不支持通过数组查询嵌套路径 | string | -
 ellipsis | 是否显示省略号 | boolean | false
+ellipsisTitle | 设置了ellipsis的列是否显示默认title | boolean | true
 key | 列数据的键值 | string | -
 render | 生成复杂数据的渲染函数,@return 里面可以设置表格[行/列合并](https://pengchen96.github.io/virtualized-table/?path=/story/vtable2-0-grid--colspan-rowspan) | function(value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex) | -
 title | 列头显示文字（函数用法暂不支持多级表头） | ReactNode/(value, row, rowIndex)=>ReactNode | -

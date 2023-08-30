@@ -1,3 +1,6 @@
+## 0.2.11
+### columns新增ellipsisTitle参数
+
 ## 0.2.10
 ### headerNotSticky 表头不使用粘性布局
 
