@@ -333,7 +333,7 @@ const Grid = (props, ref) => {
     const cellFixedShadow = getCellFixedShadow({cellInfo});
     const cellFixedStyle = getFixedCellStyle({cellInfo});
     // className
-    const {className = ''} = column;
+    const {className = '', ellipsisTitle = true} = column;
     // 有要重写对应header|body|footer的cell
     const CellComponent = Components[type].cell;
     // {width, onResize}
@@ -370,9 +370,9 @@ const Grid = (props, ref) => {
     >
       {
         /* 因flex布局下省略号不生效 故加一层div*/
-        column.ellipsis ? <div className={'vt-ellipsis'} title={value}>
-          { childNode }
-        </div>
+        column.ellipsis ? <div className={'vt-ellipsis'} title={ellipsisTitle ? value : undefined}>
+            {childNode}
+          </div>
           : childNode
       }
     </CellComponent>;
