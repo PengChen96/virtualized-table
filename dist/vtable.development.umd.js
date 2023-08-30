@@ -2370,7 +2370,9 @@ var Grid = function Grid(props, ref) {
     }); // className
 
     var _column$className = column.className,
-        className = _column$className === void 0 ? '' : _column$className; // 有要重写对应header|body|footer的cell
+        className = _column$className === void 0 ? '' : _column$className,
+        _column$ellipsisTitle = column.ellipsisTitle,
+        ellipsisTitle = _column$ellipsisTitle === void 0 ? true : _column$ellipsisTitle; // 有要重写对应header|body|footer的cell
 
     var CellComponent = Components[type].cell; // {width, onResize}
 
@@ -2381,9 +2383,10 @@ var Grid = function Grid(props, ref) {
       footer: Object(_utils_base__WEBPACK_IMPORTED_MODULE_7__["sameType"])(column.onFooterCell, 'Function') ? column.onFooterCell(column, realRowIndex) : undefined
     };
     var additionalCellProps = cellPropsMap[type] || defaultCellProps;
+    var cellKey = "cell_".concat(type === 'body' ? realRowIndex : type, "_").concat(realColumnIndex);
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(CellComponent, _extends({}, additionalCellProps, {
-      key: "cell_".concat(realRowIndex, "_").concat(realColumnIndex),
-      "data-key": "cell_".concat(realRowIndex, "_").concat(realColumnIndex),
+      key: cellKey,
+      "data-key": cellKey,
       className: "vt-grid-cell ".concat(cellFixedShadow, " ").concat(cellBordered, " ").concat(align, " ").concat(className),
       onClick: function onClick(e) {
         return __onCellTap(e, value, row, rowIndex, realRowIndex, column, columnIndex, realColumnIndex);
@@ -2402,7 +2405,7 @@ var Grid = function Grid(props, ref) {
     /* 因flex布局下省略号不生效 故加一层div*/
     column.ellipsis ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: 'vt-ellipsis',
-      title: value
+      title: ellipsisTitle ? value : undefined
     }, childNode) : childNode);
   };
   /**
@@ -2606,7 +2609,7 @@ var Grid = function Grid(props, ref) {
       "data-key": "row_".concat(_rowKey),
       className: Object(_utils_base__WEBPACK_IMPORTED_MODULE_7__["classNames"])('vt-grid-row', {
         'vt-grid-row-selected': selected
-      }),
+      }, additionalRowProps.className),
       style: {
         height: height,
         contain: stateProps.fixedRowHeight ? 'none' : '' // height: stateProps.estimatedRowHeight,
@@ -2622,7 +2625,7 @@ var Grid = function Grid(props, ref) {
   };
 
   var onScrollCapture = function onScrollCapture(e) {
-    if (!_VTableContext.isSticky && mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
+    if ((!_VTableContext.isSticky || _VTableContext.headerNotSticky) && mgType === 'mainMultiGrid') _VTableContext.onScroll(e);
     if (type === 'body' && onScrollTopSync) onScrollTopSync(e);
 
     _onScrollEvent(); // 设置元素不对指针事件做出反应
@@ -2665,7 +2668,7 @@ var Grid = function Grid(props, ref) {
       paddingRight: grid.endHorizontalOffset
     }
   }, // sticky header
-  _VTableContext.isSticky && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  _VTableContext.isSticky && !_VTableContext.headerNotSticky && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "vt-table-header vt-header-sticky"
   }, _VTableContext.headerTitle.map(function (row, rowIndex) {
     // 行渲染
@@ -2797,6 +2800,7 @@ var MultiGrid = function MultiGrid(props, ref) {
       fixedLeftColumnCount = _props$fixedLeftColum === void 0 ? 0 : _props$fixedLeftColum,
       _props$fixedRightColu = props.fixedRightColumnCount,
       fixedRightColumnCount = _props$fixedRightColu === void 0 ? 0 : _props$fixedRightColu,
+      bodyScrollBarWidth = props.bodyScrollBarWidth,
       bodyScrollBarHeight = props.bodyScrollBarHeight; //
 
   var multiGridContainerLeft = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
@@ -2948,7 +2952,7 @@ var MultiGrid = function MultiGrid(props, ref) {
   }))) : null, getFixedRightColumns.length > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "vt-multi-grid-fixed-right",
     style: {
-      marginRight: type === 'body' ? bodyScrollBarHeight : undefined
+      marginRight: type === 'body' ? bodyScrollBarWidth : undefined
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Grid__WEBPACK_IMPORTED_MODULE_1__["default"], _extends({}, props, {
     ref: multiGridContainerRight,
@@ -2973,6 +2977,7 @@ MultiGrid.propTypes = {
   hasFixed: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.bool,
   fixedLeftColumnCount: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.number,
   fixedRightColumnCount: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.number,
+  bodyScrollBarWidth: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.number,
   bodyScrollBarHeight: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.number
 };
 /* harmony default export */ __webpack_exports__["default"] = (react__WEBPACK_IMPORTED_MODULE_0___default.a.memo(react__WEBPACK_IMPORTED_MODULE_0___default.a.forwardRef(MultiGrid)));
@@ -3040,6 +3045,8 @@ var VTable = function VTable(props) {
   var vtBody = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
   var vtFooter = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
   var isStickyProps = props.isSticky,
+      _props$headerNotStick = props.headerNotSticky,
+      headerNotSticky = _props$headerNotStick === void 0 ? false : _props$headerNotStick,
       rowKeyProps = props.rowKey,
       rowSelection = props.rowSelection,
       _props$columns = props.columns,
@@ -3170,8 +3177,11 @@ var VTable = function VTable(props) {
     }); // 加上勾选列
 
     if (rowSelection) {
-      var _rowSelection$columnW2 = rowSelection.columnWidth,
+      var _rowSelection$columnP = rowSelection.columnProps,
+          columnProps = _rowSelection$columnP === void 0 ? {} : _rowSelection$columnP,
+          _rowSelection$columnW2 = rowSelection.columnWidth,
           _columnWidth = _rowSelection$columnW2 === void 0 ? 60 : _rowSelection$columnW2,
+          columnTitle = rowSelection.columnTitle,
           _rowSelection$selecte = rowSelection.selectedRowKeys,
           selectedRowKeys = _rowSelection$selecte === void 0 ? [] : _rowSelection$selecte,
           getCheckboxProps = rowSelection.getCheckboxProps,
@@ -3184,11 +3194,12 @@ var VTable = function VTable(props) {
         onRowRemove(e, row, rowIndex, realRowIndex);
       };
 
-      autoColumns.unshift({
+      autoColumns.unshift(_objectSpread(_objectSpread({
         type: 'checkBox',
         dataIndex: 'checkBox',
         width: _columnWidth,
-        align: 'center',
+        align: 'center'
+      }, columnProps), {}, {
         _headerCellProps: function _headerCellProps(value, row, rowIndex) {
           return {
             rowSpan: rowIndex === 0 ? headerLevel : 0
@@ -3199,7 +3210,8 @@ var VTable = function VTable(props) {
             selectedRowKeys: selectedRowKeys,
             getCheckboxProps: getCheckboxProps
           });
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          return [/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            key: 0,
             className: 'vt-selection',
             onClick: _onSelectAll
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
@@ -3208,14 +3220,22 @@ var VTable = function VTable(props) {
             readOnly: true
           }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             className: "vt-show-box"
-          }));
+          })), columnTitle];
         },
         render: function render(value, row, rowIndex, realRowIndex) {
           // 是否选中
           var rowKey = Object(_utils_rowKey__WEBPACK_IMPORTED_MODULE_7__["getRowKey"])(rowKeyProps, row, realRowIndex);
           var checked = selectedRowKeys.includes(rowKey); // 是否禁用
 
-          var disabled = getCheckboxProps ? getCheckboxProps(row).disabled : false;
+          var disabled = false;
+          var notVisible = false;
+
+          if (getCheckboxProps) {
+            var checkboxProps = getCheckboxProps(row) || {};
+            disabled = checkboxProps.disabled;
+            notVisible = checkboxProps.notVisible;
+          }
+
           return [rowRemoveVisible && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             key: 0,
             onClick: function onClick(e) {
@@ -3223,7 +3243,7 @@ var VTable = function VTable(props) {
             }
           }, props.rowRemoveText || /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             className: "vt-row-remove"
-          })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          })), notVisible ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             key: 1,
             className: Object(_utils_base__WEBPACK_IMPORTED_MODULE_5__["classNames"])('vt-selection', {
               'vt-selection-disabled': disabled
@@ -3241,7 +3261,7 @@ var VTable = function VTable(props) {
             className: "vt-show-box"
           }))];
         }
-      });
+      }));
     }
 
     setHeaderLevel(headerLevel); // 表头层级
@@ -3258,8 +3278,10 @@ var VTable = function VTable(props) {
         getCheckboxProps = _ref.getCheckboxProps;
     var allEffectiveRowKeys = [];
     dataSource.forEach(function (r, i) {
-      // 没有被禁用
-      if (getCheckboxProps ? !getCheckboxProps(r).disabled : true) {
+      var disabled = getCheckboxProps ? getCheckboxProps(r).disabled : false;
+      var notVisible = getCheckboxProps ? getCheckboxProps(r).notVisible : false; // 没有被禁用 && 可见
+
+      if (!disabled && !notVisible) {
         allEffectiveRowKeys.push(Object(_utils_rowKey__WEBPACK_IMPORTED_MODULE_7__["getRowKey"])(rowKeyProps, r, i));
       }
     });
@@ -3290,11 +3312,18 @@ var VTable = function VTable(props) {
       selected = true;
     }
 
-    var _selectedRowKeys = Array.from(rowKeysSet);
+    var _selectedRowKeys = [];
+
+    var __selectedRowKeys = Array.from(rowKeysSet);
 
     var _selectedRows = dataSource.filter(function (v, i) {
       var k = Object(_utils_rowKey__WEBPACK_IMPORTED_MODULE_7__["getRowKey"])(rowKeyProps, v, i);
-      return _selectedRowKeys.includes(k);
+
+      if (__selectedRowKeys.includes(k)) {
+        _selectedRowKeys.push(k);
+
+        return true;
+      }
     });
 
     onChange(_selectedRowKeys, _selectedRows);
@@ -3321,14 +3350,15 @@ var VTable = function VTable(props) {
 
       var _selectedRows = dataSource.filter(function (v, i) {
         var disabled = getCheckboxProps ? getCheckboxProps(v).disabled : false;
+        var notVisible = getCheckboxProps ? getCheckboxProps(v).notVisible : false;
 
-        if (!disabled) {
+        if (!disabled && !notVisible) {
           var k = Object(_utils_rowKey__WEBPACK_IMPORTED_MODULE_7__["getRowKey"])(rowKeyProps, v, i);
 
           _selectedRowKeys.push(k);
         }
 
-        return !disabled;
+        return !disabled && !notVisible;
       });
 
       onChange(_selectedRowKeys, _selectedRows); // selected, selectedRows
@@ -3354,14 +3384,7 @@ var VTable = function VTable(props) {
       if (vtBody.current) {
         vtBody.current.gridContainer.scrollLeft = scrollLeft;
       }
-    }); // vtBody.current.scrollLeft = scrollLeft;
-    // console.log(vtHeader.current);
-    // console.log(vtHeader.current.scrollLeft, vtBody.current.scrollLeft);
-    // [vtHeader, vtBody].forEach((vt) => {
-    //   if(vt.current.gridContainer.scrollLeft !== scrollLeft) {
-    //     vt.current.gridContainer.scrollLeft = scrollLeft;
-    //   }
-    // });
+    });
   }; // 获取body的滚动条宽度，然后去设置header的最后一列宽度
 
 
@@ -3383,14 +3406,20 @@ var VTable = function VTable(props) {
   var headerHeight = rowHeight * headerLevel; // 表头高度
 
   var footerHeight = summaryData ? rowHeight * summaryData.length : 0; // 总结栏高度
+  // const bodyHeight = !isSticky ? visibleHeight - headerHeight - footerHeight : visibleHeight; // body高度
 
-  var bodyHeight = !isSticky ? visibleHeight - headerHeight - footerHeight : visibleHeight; // body高度
+  var bodyHeight = !isSticky ? visibleHeight - footerHeight : visibleHeight;
+
+  if (!isSticky || headerNotSticky) {
+    bodyHeight = bodyHeight - headerHeight;
+  }
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_context_VTableContext__WEBPACK_IMPORTED_MODULE_2__["default"].Provider, {
     value: {
       onScroll: onScroll,
       getBodyScrollBar: getBodyScrollBar,
       isSticky: isSticky,
+      headerNotSticky: headerNotSticky,
       headerTitle: headerTitle,
       summaryData: summaryData
     }
@@ -3400,7 +3429,7 @@ var VTable = function VTable(props) {
     style: {
       height: visibleHeight
     }
-  }, !isSticky && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MultiGrid__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({}, props, {
+  }, (!isSticky || headerNotSticky) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MultiGrid__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({}, props, {
     ref: vtHeader,
     type: 'header' // className={classNames('vt-table-header', className)}
     ,
@@ -3410,6 +3439,7 @@ var VTable = function VTable(props) {
     columns: headerColumns,
     dataSource: headerTitle,
     hasFixed: hasFixed,
+    bodyScrollBarWidth: bodyScrollBarWidth,
     bodyScrollBarHeight: bodyScrollBarHeight
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MultiGrid__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({}, props, {
     ref: vtBody,
@@ -3419,6 +3449,7 @@ var VTable = function VTable(props) {
     minRowHeight: rowHeight,
     columns: columns,
     hasFixed: hasFixed,
+    bodyScrollBarWidth: bodyScrollBarWidth,
     bodyScrollBarHeight: bodyScrollBarHeight
   })), !isSticky && summaryData && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_MultiGrid__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({}, props, {
     ref: vtFooter,
@@ -3429,6 +3460,7 @@ var VTable = function VTable(props) {
     columns: footerColumns,
     dataSource: summaryData,
     hasFixed: hasFixed,
+    bodyScrollBarWidth: bodyScrollBarWidth,
     bodyScrollBarHeight: bodyScrollBarHeight
   })), !spinning && dataSource.length < 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "vt-table-empty"
@@ -3889,7 +3921,7 @@ var flattenColumns = function flattenColumns(_ref2) {
       if (childColumns && childColumns.length > 0) {
         flatten(childColumns, index);
       } else {
-        column.width = column.width || 100;
+        column.width = column.width || 150;
         newColumns.push(column);
       }
     });
