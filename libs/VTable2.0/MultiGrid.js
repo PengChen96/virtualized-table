@@ -41,14 +41,15 @@ const MultiGrid =  (props, ref) => {
   useEffect(() => {
     // 同步固定列的高度
     if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && hasFixed) {
-      let timer = setTimeout(() => {
+      const timer = setTimeout(() => {
         // syncRowHeight({forceUpdate: true});
         const {current} = multiGridContainer;
         if (current) {
-          current.gridContainer.scrollTop += 1;
-          window.requestAnimationFrame(() => {
-            current.gridContainer.scrollTop -= 1;
-          });
+          current.gridContainer.scrollLeft += 1;
+          const slTimer = setTimeout(() => {
+            current.gridContainer.scrollLeft -= 1;
+            clearTimeout(slTimer);
+          }, 50);
         }
         clearTimeout(timer);
       }, 150);
