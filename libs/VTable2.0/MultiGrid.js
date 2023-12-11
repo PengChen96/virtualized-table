@@ -37,27 +37,41 @@ const MultiGrid =  (props, ref) => {
 
   // let [rowsHeightCacheId, setRowsHeightCacheId] = useState([]);
   let [rowsHeightArr, setRowsHeightArr] = useState([]);
+  let [syncRowHeightTriggered, setSyncRowHeightTriggered] = useState(false);
+
+  // 同步固定列的高度
+  const syncRowHeightByScroll = function () {
+    const timer = setTimeout(() => {
+      // syncRowHeight({forceUpdate: true});
+      const {current} = multiGridContainer;
+      if (current) {
+        current.gridContainer.scrollLeft += 1;
+        const t = setTimeout(() => {
+          current.gridContainer.scrollLeft -= 1;
+          setSyncRowHeightTriggered(false);
+          clearTimeout(t)
+        }, 50);
+      }
+      clearTimeout(timer);
+    }, 150);
+  }
 
   useEffect(() => {
-    // 同步固定列的高度
     if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && hasFixed) {
-      let timer = setTimeout(() => {
-        // syncRowHeight({forceUpdate: true});
-        const {current} = multiGridContainer;
-        if (current) {
-          current.gridContainer.scrollTop += 1;
-          window.requestAnimationFrame(() => {
-            current.gridContainer.scrollTop -= 1;
-          });
-        }
-        clearTimeout(timer);
-      }, 150);
+      setSyncRowHeightTriggered(true);
     }
   }, [columns, dataSource, hasFixed]);
+  useEffect(() => {
+    if (syncRowHeightTriggered) {
+      syncRowHeightByScroll();
+    }
+  }, [syncRowHeightTriggered]);
 
   // main columns
   const getColumns = useMemo(() => {
-    if (!hasFixed) { return columns; }
+    if (!hasFixed) {
+      return columns;
+    }
     const end = fixedRightColumnCount ? -fixedRightColumnCount : undefined;
     return (fixedLeftColumnCount || fixedRightColumnCount) ? deepClone(columns).slice(fixedLeftColumnCount, end) : columns;
   }, [hasFixed, columns, fixedLeftColumnCount, fixedRightColumnCount]);

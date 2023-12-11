@@ -2805,24 +2805,40 @@ var MultiGrid = function MultiGrid(props, ref) {
       rowsHeightArr = _useState2[0],
       setRowsHeightArr = _useState2[1];
 
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      syncRowHeightTriggered = _useState4[0],
+      setSyncRowHeightTriggered = _useState4[1]; // 同步固定列的高度
+
+
+  var syncRowHeightByScroll = function syncRowHeightByScroll() {
+    var timer = setTimeout(function () {
+      // syncRowHeight({forceUpdate: true});
+      var current = multiGridContainer.current;
+
+      if (current) {
+        current.gridContainer.scrollLeft += 1;
+        var t = setTimeout(function () {
+          current.gridContainer.scrollLeft -= 1;
+          setSyncRowHeightTriggered(false);
+          clearTimeout(t);
+        }, 50);
+      }
+
+      clearTimeout(timer);
+    }, 150);
+  };
+
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    // 同步固定列的高度
     if (shouldRowHeightSync && !_VTableContext.isSticky && type === 'body' && hasFixed) {
-      var timer = setTimeout(function () {
-        // syncRowHeight({forceUpdate: true});
-        var current = multiGridContainer.current;
-
-        if (current) {
-          current.gridContainer.scrollTop += 1;
-          window.requestAnimationFrame(function () {
-            current.gridContainer.scrollTop -= 1;
-          });
-        }
-
-        clearTimeout(timer);
-      }, 150);
+      setSyncRowHeightTriggered(true);
     }
-  }, [columns, dataSource, hasFixed]); // main columns
+  }, [columns, dataSource, hasFixed]);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    if (syncRowHeightTriggered) {
+      syncRowHeightByScroll();
+    }
+  }, [syncRowHeightTriggered]); // main columns
 
   var getColumns = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
     if (!hasFixed) {
@@ -3619,7 +3635,7 @@ if(false) {}
 /*!**************************************!*\
   !*** ./libs/VTable2.0/utils/base.js ***!
   \**************************************/
-/*! exports provided: sameType, isRenderCellObj, classNames, queryCustomAttributeDOM */
+/*! exports provided: sameType, isRenderCellObj, classNames, queryCustomAttributeDOM, throttle */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3628,6 +3644,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isRenderCellObj", function() { return isRenderCellObj; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "classNames", function() { return classNames; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "queryCustomAttributeDOM", function() { return queryCustomAttributeDOM; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "throttle", function() { return throttle; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -3730,6 +3747,25 @@ function queryCustomAttributeDOM(scopeDOM, name, value) {
   }
 
   return selectDom;
+} // 节流
+
+function throttle(fn) {
+  var delayTime = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
+  var canRun = true;
+  return function () {
+    var _arguments2 = arguments,
+        _this = this;
+
+    if (!canRun) {
+      return;
+    }
+
+    canRun = false;
+    setTimeout(function () {
+      fn.apply(_this, _arguments2);
+      canRun = true;
+    }, delayTime);
+  };
 }
 
 /***/ }),
