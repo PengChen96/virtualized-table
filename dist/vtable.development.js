@@ -2813,20 +2813,17 @@ var MultiGrid = function MultiGrid(props, ref) {
 
   var syncRowHeightByScroll = function syncRowHeightByScroll() {
     var timer = setTimeout(function () {
-      // syncRowHeight({forceUpdate: true});
       var current = multiGridContainer.current;
 
-      if (current) {
-        current.gridContainer.scrollLeft += 1;
-        var t = setTimeout(function () {
-          current.gridContainer.scrollLeft -= 1;
-          setSyncRowHeightTriggered(false);
-          clearTimeout(t);
-        }, 50);
+      if (current.gridContainer && current.gridContainer.querySelector('.vt-grid-row')) {
+        syncRowHeight('setState');
+        setSyncRowHeightTriggered(false);
+      } else {
+        syncRowHeightByScroll();
       }
 
       clearTimeout(timer);
-    }, 150);
+    }, 50);
   };
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
@@ -3635,7 +3632,7 @@ if(false) {}
 /*!**************************************!*\
   !*** ./libs/VTable2.0/utils/base.js ***!
   \**************************************/
-/*! exports provided: sameType, isRenderCellObj, classNames, queryCustomAttributeDOM, throttle */
+/*! exports provided: sameType, isRenderCellObj, classNames, queryCustomAttributeDOM */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3644,7 +3641,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isRenderCellObj", function() { return isRenderCellObj; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "classNames", function() { return classNames; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "queryCustomAttributeDOM", function() { return queryCustomAttributeDOM; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "throttle", function() { return throttle; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -3747,25 +3743,6 @@ function queryCustomAttributeDOM(scopeDOM, name, value) {
   }
 
   return selectDom;
-} // 节流
-
-function throttle(fn) {
-  var delayTime = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
-  var canRun = true;
-  return function () {
-    var _arguments2 = arguments,
-        _this = this;
-
-    if (!canRun) {
-      return;
-    }
-
-    canRun = false;
-    setTimeout(function () {
-      fn.apply(_this, _arguments2);
-      canRun = true;
-    }, delayTime);
-  };
 }
 
 /***/ }),

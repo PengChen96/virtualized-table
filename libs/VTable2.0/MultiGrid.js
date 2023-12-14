@@ -42,18 +42,15 @@ const MultiGrid =  (props, ref) => {
   // 同步固定列的高度
   const syncRowHeightByScroll = function () {
     const timer = setTimeout(() => {
-      // syncRowHeight({forceUpdate: true});
       const {current} = multiGridContainer;
-      if (current) {
-        current.gridContainer.scrollLeft += 1;
-        const t = setTimeout(() => {
-          current.gridContainer.scrollLeft -= 1;
-          setSyncRowHeightTriggered(false);
-          clearTimeout(t)
-        }, 50);
+      if (current.gridContainer && current.gridContainer.querySelector('.vt-grid-row')) {
+        syncRowHeight('setState');
+        setSyncRowHeightTriggered(false);
+      } else {
+        syncRowHeightByScroll();
       }
       clearTimeout(timer);
-    }, 150);
+    }, 50);
   }
 
   useEffect(() => {
