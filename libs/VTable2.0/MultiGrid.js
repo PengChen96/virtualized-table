@@ -44,7 +44,10 @@ const MultiGrid =  (props, ref) => {
     const timer = setTimeout(() => {
       const {current} = multiGridContainer;
       if (current.gridContainer && current.gridContainer.querySelector('.vt-grid-row')) {
-        syncRowHeight('setState');
+        const t = setTimeout(() => {
+          syncRowHeight('setState');
+          clearTimeout(t);
+        }, 50);
         setSyncRowHeightTriggered(false);
       } else {
         syncRowHeightByScroll();
