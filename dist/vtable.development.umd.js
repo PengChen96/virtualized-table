@@ -2825,7 +2825,10 @@ var MultiGrid = function MultiGrid(props, ref) {
       var current = multiGridContainer.current;
 
       if (current.gridContainer && current.gridContainer.querySelector('.vt-grid-row')) {
-        syncRowHeight('setState');
+        var t = setTimeout(function () {
+          syncRowHeight('setState');
+          clearTimeout(t);
+        }, 50);
         setSyncRowHeightTriggered(false);
       } else {
         syncRowHeightByScroll();
